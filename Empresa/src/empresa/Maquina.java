@@ -27,6 +27,7 @@ public class Maquina {
         return listadoMateriales;
     }
     
+    
     /**
      * Metodo: agregarMaterial
      * Agrega un nuevo material a la lista de materiales de la maquina.

@@ -8,7 +8,8 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 public class Pedido {
-    private static int ultPedido;
+    private static int ultPedido = 0;
+    private static int ultLote = 0;
     private int nroPedido;
     private Calendar fechaPedido;
     private Maquina maquina;
@@ -105,24 +106,33 @@ public class Pedido {
      * El pedido debe encontrarse en estado de inciado.
      * PostCondicion:
      * El pedido cambia su estado a en evaluacion.
+     * @param fechaPropuesta
+     * Calendar: fecha de fabricación propuesta por el departamento
+     * de produccion.
      */
-    public void estadoEvaluacion()
+    public void estadoEvaluacion(Calendar fechaPropuesta)
     {
         assert(estado == INICIADO) : ("Pedido no esta en estado de iniciado.");
-        estado = EN_EVALUACION;        
+        estado = EN_EVALUACION;
+        this.fechaPropProduccion = fechaPropuesta;
     }
     
     /**
      * Metodo: estadoAceptado
      * Cambia el estado de un pedido de en evaluacion a aceptado.
+     * Genera automaticamente el numero de lote.
      * PreCondicion:
      * El pedido debe encontrarse en estado de en evaluacion.
      * PostCondicion:
      * El pedido cambia su estado a aceptado.
+     * @param fechaDefinitiva
+     * Calendar: fecha definitiva de produccion.
      */
-    public void estadoAceptado(){
+    public void estadoAceptado(Calendar fechaDefinitiva){
         assert(estado == EN_EVALUACION) : ("Pedido no se encuentra en estado de evaluacion.");
         estado = ACEPTADO;
+        this.fechaDefinitiva = fechaDefinitiva;
+        nroLote = ++ultLote;
     }
     
     /**

@@ -123,7 +123,7 @@ public class Empresa {
      * un listado con los materiales que no puedan satisfacer 
      * el pedido en el inventario y las respectivas cantidades.
      * PreCondicion:
-     * 
+     * El pedido se encuentra en estado: en_evaluacion.
      * PostCondicion:
      * Listado con la cantidad de cada material que no pueda satisfacer
      * el inventario. Si puede satisfacer completamente, listado vacio.
@@ -141,6 +141,7 @@ public class Empresa {
     {
         if(!pedidos.containsKey(nPed))
             throw new EmpresaException("Pedidio inexistente.");
+        assert(pedidos.get(nPed).getEstado() == Pedido.EN_EVALUACION) : ("Pedido no esta en estado de evaluacion.");
         HashMap<Integer, Material> faltante = new HashMap<Integer, Material>();
         Iterator<Material> it = pedidos.get(nPed).materialesNecesarios().values().iterator();
         while(it.hasNext()){
@@ -214,30 +215,70 @@ public class Empresa {
      * Acepta un pedido solicitado por su codigo de pedido del listado de pedidos.
      * PreCondicion: 
      * El empleado debe poseer permisos para realizar la operación.
+     * La fechaPropuesta no debe ser nula y debe encontrarse
+     * en el futuro.
      * PostCondicion:
-     * El listado de pedidos tiene un pedido mas en estado de iniciado.
+     * El listado de pedidos tiene un pedido mas en estado de en evaluacion.
      * @param nPed
      * int: Numero de pedido a aceptar.
      * @throws EmpresaException
      * Si el pedido no existe o su estado no es iniciado se lanza esta excepcion.
      */
-    public void aceptarPedido(int nPed)
+    public void aceptarPedido(int nPed, Calendar fechaPropuesta)
         throws EmpresaException
     {
         assert(user.autorizaOperacion(OP_ACEPTPED)) : ("Usuario no autorizado para realizar operación");
+        assert(fechaPropuesta != null) : ("Fecha nula.");
+        assert(fechaPropuesta.after(GregorianCalendar.getInstance())) : ("Fecha propuesta en el pasado.");
         if(!pedidos.containsKey(nPed))
             throw new EmpresaException("Pedido inexistente.");
         Pedido p = pedidos.get(nPed);
         if(!(p.getEstado() == Pedido.INICIADO))
             throw new EmpresaException("Pedido no esta en estado de iniciado.");
-        p.estadoEvaluacion();
+        p.estadoEvaluacion(fechaPropuesta);
     }
+    
+    /**
+     * Metodo: reservarMateriales
+     * A partir de un pedido, reserva(retira del stock) todos los materiales
+     * necesarios para cumplimentarlo.
+     * Precondicon:
+     * Este es un metodo privado, se supone que los materiales en la
+     * receta se encuentran en el inventario (hecho que corroboran otros
+     * metodos de la clase).
+     * PostCondicion:
+     * Las existencias del inventario se reducen en las cantidades 
+     * requeridas por la receta de la maquina multiplicada
+     * por la cantidad de maquinas del pedido.
+     * @param nPed
+     * int: numero de pedido
+     * @throws EmpresaException
+     * Si el inventario no fuese suficiente para cumplir algun pedido
+     * se lanza esta excepcion
+     */
+    private void reservarMateriales(int nPed)
+        throws EmpresaException
+    {
+        if(!consultaFaltantes(nPed).isEmpty())
+            throw new EmpresaException("Stock de materiales insuficiente.");
+        Iterator<Material> it = pedidos.get(nPed).materialesNecesarios().values().iterator();
+        while(it.hasNext()){
+            Material matReceta = it.next();
+            Material matStock = inventario.get(matReceta.getCodigoMaterial());
+            matStock.registrarRetiro(matReceta.getCantidad());
+        }
+    }
+    
     
     /**
      * Metodo generarLote
      * Genera un lote de produccion a partir de un pedido que se encuentra en estado de evaluacion.
+     * Al hacerlo el estado del pedido pasa a ser ACEPTADO y se asigna 
+     * una fecha definitiva.
      * Precondicion:
      * El empleado debe poseer permisos para realizar la operación.
+     * La fecha definitiva no puede ser nula.
+     * La fecha definitiva debe estar en el futuro.
      * PostCondicion:
      * El listado de pedidos tiene un pedido mas en estado de aceptado.
      * @param nPed
@@ -245,16 +286,19 @@ public class Empresa {
      * @throws EmpresaException
      * Si el pedido no existe o su estado no es en evaluacion se lanza esta excepcion.
      */
-    public void generarLote(int nPed)
+    public void generarLote(int nPed, Calendar fechaDefinitiva)
         throws EmpresaException
     {
         assert(user.autorizaOperacion(OP_GENLOTE)) : ("Usuario no esta autorizado para realizar operación.");
+        assert(fechaDefinitiva != null) : ("Fecha definitiva nula");
+        assert(fechaDefinitiva.after(GregorianCalendar.getInstance())) : ("Fecha definitiva en el pasado.");
         if(!pedidos.containsKey(nPed))
             throw new EmpresaException("Pedido inexistente.");
         Pedido p = pedidos.get(nPed);
         if(!(p.getEstado() == Pedido.EN_EVALUACION))
             throw new EmpresaException("Pedido no esta en estado de evaluacion.");
-        p.estadoAceptado();
+        reservarMateriales(nPed);
+        p.estadoAceptado(fechaDefinitiva);
     }
     
     /**
@@ -286,23 +330,24 @@ public class Empresa {
         Pedido p = pedidos.get(nPed);
         if(!(p.getEstado() != Pedido.EN_EVALUACION))
             throw new EmpresaException("Pedido no esta en estado de evaluacion.");
-        Observacion o = new Observacion(tema, user, obs);
+        Observacion o = new Observacion(tema, user.getLegajo(), obs);
         p.insertarObservacion(o);
     }
     
     /**
      * Metodo: materialesNecesarios
-     * Devuelve un listado de los materiales necesarios para cumplir con un pedido.
+     * Devuelve un listado de los materiales necesarios
+     * para cumplir un pedido.
      * PreCondicion:
      * 
      * PostCondicion:
      * Se devuelve una cadena con el listado de materiales necesarios.
      * @param nPed
-     * int: codigo de pedido.
+     * int: numero de pedido.
      * @return
      * String: cadena que contiene el listado de materiales.
      * @throws EmpresaException
-     * Si el numero de pedido no existe se lanza esta excepcion.
+     * Si el codigo de maquina no existe se lanza esta excepcion.
      */
     public String materialesNecesaarios(int nPed)
         throws EmpresaException
@@ -388,6 +433,34 @@ public class Empresa {
             throw new EmpresaException("Maquina inexistente.");
         Maquina m = productos.get(codMaq);
         m.eliminarMaterial(codMat);
+    }
+    
+    /**
+     * Metodo: listarObservaciones
+     * Para un determinado numero de pedido se obtiene un listado
+     * de todas las observaciones realizadas.
+     * PreCondicion:
+     * 
+     * PostCondicion:
+     * Se obtiene cadena con todas las observaciones.
+     * @param nPed
+     * int: numero de pedido a consultar.
+     * @return
+     * String listado de Observaciones.
+     * @throws EmpresaException
+     * Si el pedido no se encuentra en la lista de pedidos se
+     * lanza esta excepcion.
+     */
+    public String listarObservaciones(int nPed)
+        throws EmpresaException
+    {
+        if(!pedidos.containsKey(nPed))
+            throw new EmpresaException("Pedido inexistente.");
+        Iterator<Observacion> it = pedidos.get(nPed).getListaObservaciones().iterator();
+        String info = "";
+        while(it.hasNext())
+            info += it.next().toString() + System.lineSeparator();
+        return info;
     }
     
 }

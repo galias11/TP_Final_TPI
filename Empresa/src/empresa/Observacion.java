@@ -1,23 +1,25 @@
 package empresa;
 
+import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Observacion implements Comparable{
     private String tema;
     private Calendar fecha;
-    private Empleado creador;
+    private int nLegCreador;
     private String observacion;
     
     public static final String FECHAS = "FECHAS";
     public static final String INSUMOS = "INSUMOS";
     public static final String OTROS = "OTROS";
     
-    public Observacion(String tema, Empleado creador, String observacion)
+    public Observacion(String tema, int nLegCreador, String observacion)
     {
         this.tema = tema;
         this.fecha = GregorianCalendar.getInstance();
-        this.creador = creador;
+        this.nLegCreador = nLegCreador;
         this.observacion = observacion;
     }
 
@@ -30,8 +32,8 @@ public class Observacion implements Comparable{
         return fecha;
     }
 
-    public Empleado getCreador() {
-        return creador;
+    public int getNLegCreador() {
+        return nLegCreador;
     }
 
     public String getObservacion() {
@@ -47,6 +49,14 @@ public class Observacion implements Comparable{
                 cmp = fecha.compareTo(((Observacion)o).fecha);
         }
         return cmp;
+    }
+    
+    @Override
+    public String toString(){
+        SimpleDateFormat format = new SimpleDateFormat("AAAA/MM/DD");
+        return String.format("TEMA: %-10.10s\tFECHA: %-10.10s\tEMITIO: LEG%6.6d\n%s",
+                             tema, format.format(fecha.getTime()), nLegCreador,
+                             observacion);
     }
     
 }
