@@ -1,6 +1,7 @@
 package empresa;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -117,7 +118,7 @@ public class Empresa {
     }
     
     /**
-     * Metodo: ConsultaInventario
+     * Metodo: consultaFaltantes
      * Consulta al inventario para ver si satisface un pedido. Devuelve
      * un listado con los materiales que no puedan satisfacer 
      * el pedido en el inventario y las respectivas cantidades.
@@ -135,13 +136,13 @@ public class Empresa {
      * Si codigo de pedido no se encuentra en el listado de pedidos
      * lanza esta excepcion.
      */
-    private HashMap<Integer, Material> consultaInventario(int nPed)
+    private HashMap<Integer, Material> consultaFaltantes(int nPed)
         throws EmpresaException
     {
         if(!pedidos.containsKey(nPed))
             throw new EmpresaException("Pedidio inexistente.");
         HashMap<Integer, Material> faltante = new HashMap<Integer, Material>();
-        Iterator<Material> it = pedidos.get(nPed).getMaquina().getListadoMateriales().values().iterator();
+        Iterator<Material> it = pedidos.get(nPed).materialesNecesarios().values().iterator();
         while(it.hasNext()){
             Material auxM = it.next();
             if(inventario.containsKey(auxM.getCodigoMaterial())){
@@ -183,18 +184,28 @@ public class Empresa {
      * Inserta un pedido al listado de pedidos.
      * PreCondicion: 
      * El empleado debe poseer permisos para realizar la operacion.
+     * Se asume que la fecha de entrega no sera nula y será una fecha
+     * en el futuro.
+     * Se asume una cantidad a producir mayor que cero.
      * PostCondicion:
      * Se agrega un pedido nuevo al listado de pedidos.
      * @param codMaq
      * int: Codigo de la maquina que se desea fabricar en el pedido.
+     * @param cantidad
+     * int: Cantidad de maquinas a producir para el pedido.
+     * @param fechaEntrega
+     * Calendar: fecha de entrega solicitada.
      */
-    public void iniciarPedido(int codMaq)
+    public void iniciarPedido(int codMaq, int cantidad, Calendar fechaEntrega)
         throws EmpresaException
     {
         assert(user.autorizaOperacion(OP_INIPED)) : ("Usuario no autorizado para realizar operación");
+        assert(fechaEntrega != null) : ("Fecha de entrega nula");
+        assert(GregorianCalendar.getInstance().before(fechaEntrega)) : ("Fecha de entrega en el pasado.");
+        assert(cantidad > 0) : ("Cantidad no valida.");
         if(!productos.containsKey(codMaq))
             throw new EmpresaException("Producto a fabricar inexistente.");
-        Pedido p = new Pedido(productos.get(codMaq), GregorianCalendar.getInstance());
+        Pedido p = new Pedido(productos.get(codMaq), cantidad, fechaEntrega);
         pedidos.put(p.getNroPedido(), p);
     }
     

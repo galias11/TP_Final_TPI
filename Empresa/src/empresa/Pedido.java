@@ -12,6 +12,7 @@ public class Pedido {
     private int nroPedido;
     private Calendar fechaPedido;
     private Maquina maquina;
+    private int cantidad;
     private Calendar fechaEntrega;
     private Calendar fechaPropProduccion;
     private Calendar fechaDefinitiva;
@@ -24,7 +25,7 @@ public class Pedido {
     public static final int EN_EVALUACION = 1;
     public static final int ACEPTADO = 2;
     
-    public Pedido(Maquina maquina, Calendar fechaEntrega) {
+    public Pedido(Maquina maquina, int cantidad, Calendar fechaEntrega) {
         this.nroPedido = ++ultPedido;
         this.fechaPedido = GregorianCalendar.getInstance();
         this.maquina = maquina;
@@ -78,6 +79,25 @@ public class Pedido {
         return nroLote;
     }
     
+    /**
+     * Metodo: materialesNecesarios
+     * Metodo que devuelve la receta para la maquina que se 
+     * pide por pedido multiplicada por la cantidad solicitada
+     * por el pedido.
+     * @return
+     * HashMap: Listado de materiales necesarios
+     * para cumplimentar el pedido.
+     */
+    public HashMap<Integer, Material> materialesNecesarios(){
+        HashMap<Integer, Material> necesidad = new HashMap<Integer, Material>();
+        Iterator<Material> it = maquina.getListadoMateriales().values().iterator();
+        while(it.hasNext()){
+            Material itMat = it.next();
+            Material auxM = new Material(itMat.getCodigoMaterial(), itMat.getDescripcion(), itMat.getCantidad() * cantidad);
+            necesidad.put(auxM.getCodigoMaterial(), auxM);
+        }
+        return necesidad;
+    }
     /**
      * Metodo: estadoEvaluacion.
      * Cambia el estado del pedido iniciado a en evaluacion.
@@ -140,7 +160,10 @@ public class Pedido {
         String info = "";
         while(it.hasNext()){
             Material auxM = it.next();
-            info += auxM.toString() + System.lineSeparator();
+            info += String.format("Cod: MAT%5.5d\t%-100.100s\t%3.4f" + System.lineSeparator(), 
+                                  auxM.getCodigoMaterial() , auxM.getDescripcion(),
+                                  auxM.getCantidad() * cantidad);
+            
         }
         return info;
     }
