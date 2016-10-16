@@ -18,11 +18,20 @@ public class Empresa {
     private final int OP_GENLOTE = 3;
     private final int OP_OBSERVAR = 4;
     
+    
+    
     public Empresa() 
     {
         user = null;
         inventario = new HashMap<Integer, Material>();
         listaEmpleados = new HashMap<Integer, Empleado>();
+        pedidos = new HashMap<Integer, Pedido>();
+        
+        /*
+         * Las siguientes lineas inicializan los sectores, los
+         * privilegios y los empleados necesarios para realizar
+         * el testeo (no disponemos de persistencia)
+         */
         sectores = new HashMap<String, Sector>();
         Sector s1 = new Sector("Ventas");
         Sector s2 = new Sector("Produccion");
@@ -56,9 +65,19 @@ public class Empresa {
         sectores.put(s1.getNombre(), s4);
         sectores.put(s1.getNombre(), s5);
         sectores.put(s1.getNombre(), s6);
+        Empleado eVentas = new Empleado(1, "Empleado ventas", s1);
+        Empleado eProduccion = new Empleado(2, "Empleado produccion", s2);
+        Empleado eContabilidad = new Empleado(3, "Empleado contabilidad", s3);
+        Empleado eInspeccion = new Empleado(4, "Empleado Inspeccion", s4);
+        Empleado eCalidad = new Empleado(5, "Empleado calidad", s5);
         Empleado admin = new Empleado(9999, "ADMIN", s6);
         listaEmpleados.put(admin.getLegajo(), admin);
-        pedidos = new HashMap<Integer, Pedido>();
+        listaEmpleados.put(eVentas.getLegajo(), eVentas);
+        listaEmpleados.put(eProduccion.getLegajo(), eProduccion);
+        listaEmpleados.put(eContabilidad.getLegajo(), eContabilidad);
+        listaEmpleados.put(eInspeccion.getLegajo(), eInspeccion);
+        listaEmpleados.put(eCalidad.getLegajo(), eCalidad);
+        
     }
     
     /**
@@ -84,9 +103,45 @@ public class Empresa {
         user = listaEmpleados.get(nroLegajo);
     }
     
-    private HashMap<Integer, Material> consultaInventario(HashMap<Integer, Material> listaMateriales){
+    /**
+     * Metodo: deslog
+     * Este metodo desloguea al usuario del sistema.
+     * PreCondicion:
+     * Debe haber un usuario logueado.
+     * PostCondicion:
+     * El atributo user toma el valor null.
+     */
+    public void deslog(){
+        assert(user != null) : ("No hay ningun usuario logueado.");
+        user = null;
+    }
+    
+    /**
+     * Metodo: ConsultaInventario
+     * Consulta al inventario para ver si satisface un pedido. Devuelve
+     * un listado con los materiales que no puedan satisfacer 
+     * el pedido en el inventario y las respectivas cantidades.
+     * PreCondicion:
+     * 
+     * PostCondicion:
+     * Listado con la cantidad de cada material que no pueda satisfacer
+     * el inventario. Si puede satisfacer completamente, listado vacio.
+     * @param nPed
+     * int: el numero de pedido sobre el cual se consultaran las existencias.
+     * @return
+     * HashMap<Integer, Material>: Listado con los materiales en falta y
+     * sus respectivas cantidades.
+     * @throws EmpresaException
+     * Si codigo de pedido no se encuentra en el listado de pedidos
+     * lanza esta excepcion.
+     */
+    private HashMap<Integer, Material> consultaInventario(int nPed)
+        throws EmpresaException
+    {
+        if(!pedidos.containsKey(nPed))
+            throw new EmpresaException("Pedidio inexistente.");
         HashMap<Integer, Material> faltante = new HashMap<Integer, Material>();
-        Iterator<Material> it = listaMateriales.values().iterator();
+        Iterator<Material> it = pedidos.get(nPed).getMaquina().getListadoMateriales().values().iterator();
         while(it.hasNext()){
             Material auxM = it.next();
             if(inventario.containsKey(auxM.getCodigoMaterial())){
@@ -98,28 +153,32 @@ public class Empresa {
         return faltante;
     }
     
-    public String informeFalatantes(HashMap<Integer, Material> listaMateriales){
-        String info = "";
-        HashMap<Integer, Material> faltante = consultaInventario(listaMateriales);
-        if(faltante.isEmpty())
-            info = "Invetario suficiente.";
-        else{
-            Iterator<Material> it = faltante.values().iterator();
-            while(it.hasNext())
-                info += it.next().toString() + System.lineSeparator();
-        }
-        return info;
-    }
-    
-    public double consultaStock(int codigo){
-        double existencia = 0.0;
-        if(inventario.containsKey(codigo))
-            existencia = inventario.get(codigo).getCantidad();
+    /**
+     * Metodo: consultaStock
+     * Retorna la cantidad de existencias para un determinado
+     * material a partir de su codigo.
+     * PreCondicion: 
+     * 
+     * PostCondicion:
+     * 
+     * @param codigo
+     * int: codigo del material buscado.
+     * @return
+     * double: cantidad de material.
+     * @throws EmpresaException
+     * Si codigo de material no existe en el inventario lanza
+     * esta excepcion.
+     */
+    public double consultaStock(int codigo)
+        throws EmpresaException
+    {
+        if(!inventario.containsKey(codigo))
+            throw new EmpresaException("Material inexistente.");
+        double existencia = inventario.get(codigo).getCantidad();
         return existencia;
     }
     
     /**
-     *
      * Metodo: iniciarPedido
      * Inserta un pedido al listado de pedidos.
      * PreCondicion: 
