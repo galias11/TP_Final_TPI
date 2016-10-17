@@ -62,7 +62,7 @@
       <string v="oracle.adfdtinternal.model.ide.settings.ADFMSettings/adfmContentSet"/>
       <string v="oracle.toplink.workbench.addin/toplinkContentSet"/>
    </list>
-   <value n="defaultPackage" v="empresa"/>
+   <value n="defaultPackage" v="interfazgrafica"/>
    <hash n="oracle.ide.model.TechnologyScopeConfiguration">
       <list n="technologyScope">
          <string v="Java"/>
@@ -78,7 +78,6 @@
          </list>
          <list n="url-path">
             <url path="src/"/>
-            <url path="../InterfazGrafica/src/"/>
          </list>
       </hash>
    </hash>
