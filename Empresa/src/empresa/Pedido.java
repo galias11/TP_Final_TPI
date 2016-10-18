@@ -30,6 +30,7 @@ public class Pedido {
         this.nroPedido = ++ultPedido;
         this.fechaPedido = GregorianCalendar.getInstance();
         this.maquina = maquina;
+        this.cantidad = cantidad;
         this.fechaEntrega = fechaEntrega;
         this.fechaPropProduccion = null;
         this.fechaDefinitiva = null;
@@ -58,6 +59,11 @@ public class Pedido {
 
     public Calendar getFechaPropProduccion() {
         return fechaPropProduccion;
+    }
+
+
+    public int getCantidad() {
+        return cantidad;
     }
 
     public Calendar getFechaDefinitiva() {
@@ -115,6 +121,7 @@ public class Pedido {
         assert(estado == INICIADO) : ("Pedido no esta en estado de iniciado.");
         estado = EN_EVALUACION;
         this.fechaPropProduccion = fechaPropuesta;
+        this.fechaAceptacion = GregorianCalendar.getInstance();
     }
     
     /**

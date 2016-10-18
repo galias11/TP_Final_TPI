@@ -14,10 +14,10 @@ public class Empresa {
     private HashMap<Integer, Maquina> productos;
     private HashMap<String, Sector> sectores;
     
-    private final int OP_INIPED = 1;
-    private final int OP_ACEPTPED = 2;
-    private final int OP_GENLOTE = 3;
-    private final int OP_OBSERVAR = 4;
+    public final int OP_INIPED = 1;
+    public final int OP_ACEPTPED = 2;
+    public final int OP_GENLOTE = 3;
+    public final int OP_OBSERVAR = 4;
     
     
     
@@ -27,6 +27,7 @@ public class Empresa {
         inventario = new HashMap<Integer, Material>();
         listaEmpleados = new HashMap<Integer, Empleado>();
         pedidos = new HashMap<Integer, Pedido>();
+        productos = new HashMap<Integer, Maquina>();
         
         /*
          * Las siguientes lineas inicializan los sectores, los
@@ -46,7 +47,7 @@ public class Empresa {
         Operacion op4 = new Operacion(OP_OBSERVAR, "Realizar observacion a pedido.");
         try{
             s1.agregarPermiso(op1);
-            s1.agregarPermiso(op3);
+            s1.agregarPermiso(op4);
             s2.agregarPermiso(op2);
             s2.agregarPermiso(op3);
             s2.agregarPermiso(op4);
@@ -78,9 +79,31 @@ public class Empresa {
         listaEmpleados.put(eContabilidad.getLegajo(), eContabilidad);
         listaEmpleados.put(eInspeccion.getLegajo(), eInspeccion);
         listaEmpleados.put(eCalidad.getLegajo(), eCalidad);
-        
+        Simulador m1 = new Simulador();
+        Flipper m2 = new Flipper();
+        ConsolaIndividual m3 = new ConsolaIndividual();
+        ConsolaGrupal m4 = new ConsolaGrupal();
+        productos.put(m1.getCodigo(), m1);
+        productos.put(m2.getCodigo(), m2);
+        productos.put(m3.getCodigo(), m3);
+        productos.put(m4.getCodigo(), m4);
     }
-    
+
+
+    public Empleado getUser() {
+        return user;
+    }
+
+
+    public HashMap<Integer, Pedido> getPedidos() {
+        return pedidos;
+    }
+
+
+    public HashMap<Integer, Material> getInventario() {
+        return inventario;
+    }
+
     /**
      * Metodo: login.
      * Intenta ingresar al sistema con nro de legajo.
@@ -91,7 +114,7 @@ public class Empresa {
      * @param nroLegajo
      * int: numero de legajo del empledado.
      * @return
-     * 
+     *
      * @throws EmpresaException
      * Si el empleado no se encuentra en el listado de empledos tira esta excepcion.
      */
@@ -196,6 +219,9 @@ public class Empresa {
      * int: Cantidad de maquinas a producir para el pedido.
      * @param fechaEntrega
      * Calendar: fecha de entrega solicitada.
+     * @throws EmpresaException
+     * Si codigo de maquina no existe o la fecha de entrega esta en
+     * el pasado lanza esta excepcion.
      */
     public void iniciarPedido(int codMaq, int cantidad, Calendar fechaEntrega)
         throws EmpresaException
@@ -204,6 +230,8 @@ public class Empresa {
         assert(fechaEntrega != null) : ("Fecha de entrega nula");
         assert(GregorianCalendar.getInstance().before(fechaEntrega)) : ("Fecha de entrega en el pasado.");
         assert(cantidad > 0) : ("Cantidad no valida.");
+        if(fechaEntrega.before(GregorianCalendar.getInstance()))
+            throw new EmpresaException("Fecha de entrega en el pasado");
         if(!productos.containsKey(codMaq))
             throw new EmpresaException("Producto a fabricar inexistente.");
         Pedido p = new Pedido(productos.get(codMaq), cantidad, fechaEntrega);
