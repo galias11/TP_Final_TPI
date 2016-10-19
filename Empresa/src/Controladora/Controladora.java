@@ -13,6 +13,7 @@ import empresa.Empresa;
 
 import empresa.EmpresaException;
 
+import empresa.Material;
 import empresa.Observacion;
 import empresa.Pedido;
 
@@ -27,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import java.util.Calendar;
+
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -70,6 +73,7 @@ public class Controladora implements ActionListener{
         //Desconectarse del sistema
         if(e.getActionCommand().equals(InterfazPrincipal.DESLOG)){
             princ.cerrar();
+            modelo.deslog();
             login.mostrar();
         }
         if(e.getActionCommand().equals(InterfazPrincipal.NPED)){
@@ -207,11 +211,11 @@ public class Controladora implements ActionListener{
             observaciones.mostrar();
             observaciones.refresh();
         }
-        // Confirmar agregar informacion
+        // Confirmar agregar Observacion
         if(e.getActionCommand().equals(InterfazNuevaObservacion.AGREGAR)){
             Pedido pedActivo = observaciones.getPedido();
-            Observacion auxObs = new Observacion(nuevaObservac.getTema(), modelo.getUser().getLegajo(), nuevaObservac.getObservacion());
             try {
+                Observacion auxObs = new Observacion(nuevaObservac.getTema(), modelo.getUser().getLegajo(), nuevaObservac.getObservacion());
                 pedActivo.insertarObservacion(auxObs);
                 JOptionPane.showMessageDialog(null, "Observacion agregada al pedido.",
                                               "GuiLeoCriasAl S.A.", JOptionPane.INFORMATION_MESSAGE);
@@ -221,6 +225,32 @@ public class Controladora implements ActionListener{
             } catch (EmpresaException ex){
                 JOptionPane.showMessageDialog(null, "Error al insertar la observacion: " + ex.toString(),
                                               "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
+            } catch (InterfazException ex){
+                JOptionPane.showMessageDialog(null, "Observacion mayor a 500 caracteres",
+                                              "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
+                        
+            }
+        }
+        //Ver listado materiales necesarios
+        if(e.getActionCommand().equals(InterfazPrincipal.MATNEC)){
+            Pedido pedActual = princ.pedidoSeleccionado();
+            try {
+                String listado = modelo.materialesNecesaarios(pedActual.getNroPedido());
+                princ.lanzarCartel(listado);
+            } catch(EmpresaException ex){
+                JOptionPane.showMessageDialog(null, "Error al obtener listado de materiales: " + ex.toString(),
+                                              "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE); 
+            }
+        }
+        //Ver listado de materiales faltantes
+        if(e.getActionCommand().equals(InterfazPrincipal.MATFALT)){
+            Pedido pedActual = princ.pedidoSeleccionado();
+            try{
+                Iterator<Material> it = modelo.consultaFaltantes(pedActual.getNroPedido()).values().iterator();
+                princ.lanzarCartelConLista(it);
+            } catch (EmpresaException ex){
+                JOptionPane.showMessageDialog(null, "Error al obtener listado de faltantes: " + ex.toString(),
+                                              "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE); 
             }
         }
     }

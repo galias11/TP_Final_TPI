@@ -150,7 +150,7 @@ public class Empresa {
      * un listado con los materiales que no puedan satisfacer 
      * el pedido en el inventario y las respectivas cantidades.
      * PreCondicion:
-     * El pedido se encuentra en estado: en_evaluacion.
+     * 
      * PostCondicion:
      * Listado con la cantidad de cada material que no pueda satisfacer
      * el inventario. Si puede satisfacer completamente, listado vacio.
@@ -161,16 +161,18 @@ public class Empresa {
      * sus respectivas cantidades.
      * @throws EmpresaException
      * Si codigo de pedido no se encuentra en el listado de pedidos
-     * lanza esta excepcion.
+     * o el pedido no esta en estado de evaluacion lanza esta excepcion.
      */
-    private HashMap<Integer, Material> consultaFaltantes(int nPed)
+    public HashMap<Integer, Material> consultaFaltantes(int nPed)
         throws EmpresaException
     {
         if(!pedidos.containsKey(nPed))
-            throw new EmpresaException("Pedidio inexistente.");
-        assert(pedidos.get(nPed).getEstado() == Pedido.EN_EVALUACION) : ("Pedido no esta en estado de evaluacion.");
+            throw new EmpresaException("Pedido inexistente.");
+        Pedido p = pedidos.get(nPed);
+        if(p.getEstado() != Pedido.EN_EVALUACION)
+            throw new EmpresaException("Pedido no esta en estado de evaluacion.");
         HashMap<Integer, Material> faltante = new HashMap<Integer, Material>();
-        Iterator<Material> it = pedidos.get(nPed).materialesNecesarios().values().iterator();
+        Iterator<Material> it = p.materialesNecesarios().values().iterator();
         while(it.hasNext()){
             Material auxM = it.next();
             if(inventario.containsKey(auxM.getCodigoMaterial())){
@@ -389,6 +391,7 @@ public class Empresa {
         Pedido p = pedidos.get(nPed);
         return p.listadoMateriales();
     }
+    
     
     /**
      * Metodo: modificarCantidadReceta

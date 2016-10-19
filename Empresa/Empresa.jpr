@@ -86,6 +86,7 @@
       <hash n="runConfigurationDefinitions">
          <hash n="Default">
             <value n="custom" v="false"/>
+            <value n="javaOptions" v="-ea"/>
             <value n="name" v="Default"/>
             <url n="targetURL" path="src/Run/Ejec.java"/>
          </hash>

@@ -22,9 +22,12 @@ import java.util.Iterator;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -65,6 +68,8 @@ public class Principal
         genLote.addActionListener(c);
         observaciones.addActionListener(c);
         admProductos.addActionListener(c);
+        matNecesarios.addActionListener(c);
+        faltantes.addActionListener(c);
     }
     
     @Override
@@ -77,12 +82,14 @@ public class Principal
     
     private void inicializar(){
         inicializarTablas();
-        deslog.setActionCommand(DESLOG);
-        nuevoPedido.setActionCommand(NPED);
-        aceptPedido.setActionCommand(APED);
-        genLote.setActionCommand(GLOT);
-        observaciones.setActionCommand(OBS);
-        admProductos.setActionCommand(APROD);
+        deslog.setActionCommand(InterfazPrincipal.DESLOG);
+        nuevoPedido.setActionCommand(InterfazPrincipal.NPED);
+        aceptPedido.setActionCommand(InterfazPrincipal.APED);
+        genLote.setActionCommand(InterfazPrincipal.GLOT);
+        observaciones.setActionCommand(InterfazPrincipal.OBS);
+        admProductos.setActionCommand(InterfazPrincipal.APROD);
+        faltantes.setActionCommand(InterfazPrincipal.MATFALT);
+        matNecesarios.setActionCommand(InterfazPrincipal.MATNEC);
         nuevoPedido.setEnabled(false);
         aceptPedido.setEnabled(false);
         genLote.setEnabled(false);
@@ -120,6 +127,40 @@ public class Principal
     @Override
     public void cerrar(){
         this.dispose();
+    }
+    
+    @Override
+    public void lanzarCartel(String str){
+        JTextArea comp = new JTextArea();
+        comp.setText(str);
+        JOptionPane.showMessageDialog(comp, "Materiales necesarios:",
+                                      "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    @Override
+    public void lanzarCartelConLista(Iterator it){
+        JTable tabla = new JTable();
+        tabla.removeAll();
+        TableColumn col1 = new TableColumn();
+        TableColumn col2 = new TableColumn();
+        TableColumn col3 = new TableColumn();
+        col1.setHeaderValue("Codigo");
+        col2.setHeaderValue("Descripcion");
+        col3.setHeaderValue("Cantidad");
+        tabla.addColumn(col1);
+        tabla.addColumn(col2);
+        tabla.addColumn(col3);
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        Object row[] = new Object[3];
+        while(it.hasNext()){
+            Material auxM = (Material) it.next();
+            row[0] = String.format("MAT%06d", auxM.getCodigoMaterial());
+            row[1] = auxM.getDescripcion();
+            row[2] = String.format("%4.3f", auxM.getCantidad());
+            model.addRow(row);
+        }
+        JOptionPane.showMessageDialog(tabla, "Materiales faltantes:",
+                                      "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
     }
     
     /**

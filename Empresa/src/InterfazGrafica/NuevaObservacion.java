@@ -2,6 +2,7 @@
 package InterfazGrafica;
 
 import Controladora.Controladora;
+import Controladora.InterfazException;
 import Controladora.InterfazNuevaObservacion;
 
 import Controladora.InterfazNuevoPed;
@@ -56,7 +57,12 @@ public class NuevaObservacion
     }
     
     @Override
-    public String getObservacion(){
+    public String getObservacion()
+        throws InterfazException
+    {
+        if(observacion.getText().length() > 500)
+            throw new InterfazException("Observación excede cantidad" +
+                "de caracteres maximos.");
         return observacion.getText();
     }
   
