@@ -1,10 +1,7 @@
 package Controladora;
 
-public interface InterfazLogin {
+public interface InterfazLogin extends Interfaz{
     public int getNroLegajo();
-    public void ocultar();
-    public void mostrar();
-    public void setControlador(Controladora c);
     
     public static String LOGIN = "LOGIN";
 }

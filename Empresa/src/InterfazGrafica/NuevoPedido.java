@@ -32,6 +32,12 @@ public class NuevoPedido
   {
     initComponents();
     setLocationRelativeTo(null);
+    inicializarComponentes();
+  }
+  
+  private void inicializarComponentes(){
+      agregar.setActionCommand(InterfazNuevoPed.AGREGAR);
+      volver.setActionCommand(InterfazNuevoPed.VOLVER);
   }
   
   @Override
@@ -58,8 +64,8 @@ public class NuevoPedido
   
     @Override
     public void setControlador(Controladora c){
-        volver.setActionCommand(VOLVER);
-        agregar.setActionCommand(AGREGAR);
+        volver.addActionListener(c);
+        agregar.addActionListener(c);
     }
   
     @Override

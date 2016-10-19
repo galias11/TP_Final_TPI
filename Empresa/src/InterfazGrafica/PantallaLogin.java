@@ -49,6 +49,11 @@ public class PantallaLogin
       ingresar.addActionListener(c);
   }
   
+  @Override
+  public void cerrar(){
+      this.dispose();
+  }
+  
   
 
   /** This method is called from within the constructor to

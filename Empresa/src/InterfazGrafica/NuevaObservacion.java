@@ -1,6 +1,11 @@
 
 package InterfazGrafica;
 
+import Controladora.Controladora;
+import Controladora.InterfazNuevaObservacion;
+
+import Controladora.InterfazNuevoPed;
+
 import empresa.Empleado;
 import empresa.EmpresaException;
 import empresa.Observacion;
@@ -13,33 +18,52 @@ import javax.swing.JOptionPane;
  * @author bruno
  */
 public class NuevaObservacion
-  extends javax.swing.JFrame
+  extends javax.swing.JFrame implements InterfazNuevaObservacion
 {
-    private Pedido pedido;
-    private Empleado user;
-    private VentanaObservaciones caller;
 
   /** Creates new form NuevaObservacion */
-  public NuevaObservacion(Pedido pedido, Empleado user, VentanaObservaciones caller)
+  public NuevaObservacion()
   {
     initComponents();
     setLocationRelativeTo(null);
-    this.setVisible(true);
-    this.toFront();
-    this.user = user;
-    this.pedido = pedido;
-    this.caller = caller;
     inicializarComponentes();
   }
-  
-    private void volver(){
-        caller.setEnabled(true);
-        caller.setVisible(true);
-        caller.refresh();
+    
+    @Override
+    public void mostrar(){
+        this.setVisible(true);
+    }
+    
+    @Override
+    public void ocultar(){
+        this.setVisible(false);
+    }
+    
+    @Override
+    public void cerrar(){
         this.dispose();
     }
     
+    @Override
+    public void setControlador(Controladora c){
+        agregarObs.addActionListener(c);
+        cancelar.addActionListener(c);
+    }
+    
+    @Override
+    public String getTema(){
+        return (String) jComboBox1.getSelectedItem();
+    }
+    
+    @Override
+    public String getObservacion(){
+        return observacion.getText();
+    }
+  
+    
     private void inicializarComponentes(){
+        agregarObs.setActionCommand(InterfazNuevaObservacion.AGREGAR);
+        cancelar.setActionCommand(InterfazNuevaObservacion.CANCELAR);
         jComboBox1.removeAllItems();
         jComboBox1.addItem(Observacion.FECHAS);
         jComboBox1.addItem(Observacion.INSUMOS);
@@ -59,9 +83,9 @@ public class NuevaObservacion
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         observacion = new javax.swing.JTextArea();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
         jComboBox1 = new javax.swing.JComboBox<>();
+        agregarObs = new javax.swing.JButton();
+        cancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GuiLeoCrisAl S.A.");
@@ -77,43 +101,37 @@ public class NuevaObservacion
         observacion.setRows(5);
         jScrollPane1.setViewportView(observacion);
 
-        jToggleButton1.setText("Cancelar");
-        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton1ActionPerformed(evt);
-            }
-        });
-
-        jToggleButton2.setText("Agregar Observacion");
-        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton2ActionPerformed(evt);
-            }
-        });
-
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        agregarObs.setText("Agregar observacion");
+        agregarObs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                agregarObsActionPerformed(evt);
+            }
+        });
+
+        cancelar.setText("Cancelar");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(agregarObs, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -126,11 +144,11 @@ public class NuevaObservacion
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1)
-                    .addComponent(jToggleButton2))
-                .addContainerGap(15, Short.MAX_VALUE))
+                    .addComponent(agregarObs)
+                    .addComponent(cancelar))
+                .addGap(19, 19, 19))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -153,20 +171,9 @@ public class NuevaObservacion
         pack();
     }//GEN-END:initComponents
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+    private void agregarObsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarObsActionPerformed
         // TODO add your handling code here:
-        volver();
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
-
-    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        // TODO add your handling code here:
-        try {
-            pedido.insertarObservacion(new Observacion(jComboBox1.getItemAt(jComboBox1.getSelectedIndex()), user.getLegajo(), observacion.getText()));
-        } catch(EmpresaException e){
-            JOptionPane.showMessageDialog(null, "Error al agregar observacion: " + e.toString(),
-                                          "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_jToggleButton2ActionPerformed
+    }//GEN-LAST:event_agregarObsActionPerformed
 
   /**
    * @param args the command line arguments
@@ -214,13 +221,13 @@ public class NuevaObservacion
   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton agregarObs;
+    private javax.swing.JButton cancelar;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JTextArea observacion;
     // End of variables declaration//GEN-END:variables
 

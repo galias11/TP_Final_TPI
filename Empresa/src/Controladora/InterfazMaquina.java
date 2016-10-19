@@ -1,6 +1,4 @@
 package Controladora;
 
-public interface InterfazMaquina {
-    public void arranca();
-    public int nroLeg();
+public interface InterfazMaquina extends Interfaz{
 }

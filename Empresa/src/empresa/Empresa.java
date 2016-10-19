@@ -66,11 +66,11 @@ public class Empresa {
             
         }
         sectores.put(s1.getNombre(), s1);
-        sectores.put(s1.getNombre(), s2);
-        sectores.put(s1.getNombre(), s3);
-        sectores.put(s1.getNombre(), s4);
-        sectores.put(s1.getNombre(), s5);
-        sectores.put(s1.getNombre(), s6);
+        sectores.put(s2.getNombre(), s2);
+        sectores.put(s3.getNombre(), s3);
+        sectores.put(s4.getNombre(), s4);
+        sectores.put(s5.getNombre(), s5);
+        sectores.put(s6.getNombre(), s6);
         Empleado eVentas = new Empleado(1, "Empleado ventas", s1);
         Empleado eProduccion = new Empleado(2, "Empleado produccion", s2);
         Empleado eContabilidad = new Empleado(3, "Empleado contabilidad", s3);

@@ -33,22 +33,15 @@ import javax.swing.table.DefaultTableModel;
 public class Principal 
   extends javax.swing.JFrame implements InterfazPrincipal
 {
-    Iterator<Material> itMat;
-    Iterator<Pedido> itPed;
-    Pedido pedSeleccionado;
-    Material matSeleccionado;
+    Empresa empresa;
     Empleado usuario;
        
 
-    public Principal(Empleado usuario, Iterator<Pedido> itPed, Iterator<Material> itMat){
+    public Principal(Empleado usuario, Empresa empresa){
         assert (usuario != null) : ("Usuario nulo");
-        assert (itPed != null) : ("Listado pedidos nulo.");
-        assert (itMat != null) : ("Listado materiales nulo.");
+        assert (empresa != null) : ("Empresa nula");
         this.usuario = usuario;
-        this.itPed = itPed;
-        this.itMat = itMat;
-        pedSeleccionado = null;
-        matSeleccionado = null;
+        this.empresa = empresa;
         initComponents();
         inicializar();
         refresh();
@@ -76,7 +69,10 @@ public class Principal
     
     @Override
     public Pedido pedidoSeleccionado(){
-        return pedSeleccionado;
+        int row = tablaPedidos.getSelectedRow();
+        if(row == -1)
+            return null;
+        return (Pedido) tablaPedidos.getValueAt(row, 0);
     }
     
     private void inicializar(){
@@ -119,8 +115,6 @@ public class Principal
         mostrarUsuario();
         mostrarPedidos();
         mostrarStock();
-        pedSeleccionado = null;
-        matSeleccionado = null;
     }
     
     @Override
@@ -158,6 +152,7 @@ public class Principal
         tablaPedidos.removeAll();
         DefaultTableModel model = (DefaultTableModel) tablaPedidos.getModel();
         model.setRowCount(0);
+        Iterator<Pedido> itPed = empresa.getPedidos().values().iterator();
         while(itPed.hasNext()){
             Object row[] = new Object[10];
             Pedido auxP = itPed.next();
@@ -204,6 +199,7 @@ public class Principal
         tablaStock.removeAll();
         DefaultTableModel model = (DefaultTableModel) tablaStock.getModel();
         model.setRowCount(0);
+        Iterator<Material> itMat = empresa.getInventario().values().iterator();
         while(itMat.hasNext()){
             Object row[] = new Object[4];
             Material auxM = itMat.next();
@@ -241,6 +237,8 @@ public class Principal
         genLote = new javax.swing.JButton();
         observaciones = new javax.swing.JButton();
         admProductos = new javax.swing.JButton();
+        faltantes = new javax.swing.JButton();
+        matNecesarios = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPedidos = new javax.swing.JTable();
@@ -252,7 +250,6 @@ public class Principal
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GuiLeoCrisAl S.A");
-        setAlwaysOnTop(true);
         setResizable(false);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Informacion de usuario"));
@@ -358,6 +355,20 @@ public class Principal
             }
         });
 
+        faltantes.setText("Consultar faltantes");
+        faltantes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                faltantesActionPerformed(evt);
+            }
+        });
+
+        matNecesarios.setText("Consultar materiales pedido");
+        matNecesarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                matNecesariosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -369,7 +380,9 @@ public class Principal
                     .addComponent(aceptPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(genLote, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                     .addComponent(observaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                    .addComponent(admProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
+                    .addComponent(admProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(faltantes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(matNecesarios, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -383,9 +396,13 @@ public class Principal
                 .addComponent(genLote)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(observaciones)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(matNecesarios)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(faltantes)
+                .addGap(72, 72, 72)
                 .addComponent(admProductos)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(61, 61, 61))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedidos"));
@@ -562,41 +579,10 @@ public class Principal
 
     private void genLoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genLoteActionPerformed
         // TODO add your handling code here:
-        Calendar fechaDefinitiva = null;
-        if(pedSeleccionado == null)
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un pedido del listado de pedidos.",
-                                          "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-        else {
-            String str = JOptionPane.showInputDialog(null, "Ingrese la fecha programada de producción. (Formato: AAAA/MM/DD)",
-                                                     "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
-            try{
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                fechaDefinitiva = Calendar.getInstance();
-                fechaDefinitiva.setTime(sdf.parse(str));
-            } catch(ParseException e){
-                JOptionPane.showMessageDialog(null, "Error en formato de fecha.",
-                                              "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-            }
-            try{
-                empresa.generarLote(pedSeleccionado.getNroPedido(), fechaDefinitiva);
-                refresh();
-            } catch(EmpresaException e){
-                JOptionPane.showMessageDialog(null, "Error al regitrar generación de lote: " + e.toString(),
-                                              "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);    
-            }
-        }
     }//GEN-LAST:event_genLoteActionPerformed
 
     private void observacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_observacionesActionPerformed
         // TODO add your handling code here:
-        if(pedSeleccionado == null)
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un pedido.",
-                                          "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
-        else{
-            this.setEnabled(false);
-            this.toBack();
-            new VentanaObservaciones(pedSeleccionado, empresa.getUser(), this);
-        }
     }//GEN-LAST:event_observacionesActionPerformed
 
     private void admProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_admProductosActionPerformed
@@ -605,8 +591,6 @@ public class Principal
 
     private void tablaPedidosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPedidosMouseReleased
         // TODO add your handling code here:
-        int row = tablaPedidos.getSelectedRow();
-        pedSeleccionado = (Pedido) tablaPedidos.getValueAt(row, 0);
     }//GEN-LAST:event_tablaPedidosMouseReleased
 
     private void tablaStockMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaStockMouseReleased
@@ -619,30 +603,16 @@ public class Principal
 
     private void aceptPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptPedidoActionPerformed
         // TODO add your handling code here:
-        Calendar fechaPropuesta = null;
-        if(pedSeleccionado == null)
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un pedido del listado de pedidos.",
-                                          "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-        else {
-            String str = JOptionPane.showInputDialog(null, "Ingrese la fecha propuesta de producción. (Formato: AAAA/MM/DD)",
-                                                     "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
-            try{
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                fechaPropuesta = Calendar.getInstance();
-                fechaPropuesta.setTime(sdf.parse(str));
-            } catch(ParseException e){
-                JOptionPane.showMessageDialog(null, "Error en formato de fecha.",
-                                              "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-            }
-            try{
-                empresa.aceptarPedido(pedSeleccionado.getNroPedido(), fechaPropuesta);
-                refresh();
-            } catch(EmpresaException e){
-                JOptionPane.showMessageDialog(null, "Error al regitrar aceptacion del pedido: " + e.toString(),
-                                              "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);    
-            }
-        }
+ 
     }//GEN-LAST:event_aceptPedidoActionPerformed
+
+    private void faltantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_faltantesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_faltantesActionPerformed
+
+    private void matNecesariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matNecesariosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_matNecesariosActionPerformed
 
   /**
    * @param args the command line arguments
@@ -694,6 +664,7 @@ public class Principal
     private javax.swing.JButton admProductos;
     private javax.swing.JTextField ayn;
     private javax.swing.JButton deslog;
+    private javax.swing.JButton faltantes;
     private javax.swing.JButton genLote;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
@@ -706,6 +677,7 @@ public class Principal
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton matNecesarios;
     private javax.swing.JTextField nLeg;
     private javax.swing.JButton nuevoPedido;
     private javax.swing.JButton observaciones;

@@ -147,6 +147,7 @@ public class Pedido {
      * Agrega una observacion al pedido.
      * PreCondicion:
      * La observacion no es nula.
+     * La longitud de la observacion debe ser menor o igual a 500 caracteres.
      * PostCondicion:
      * El listado de observaciones contiene un elemento mas que antes de ejecutar el metodo.
      * @throws EmpresaException
@@ -157,6 +158,7 @@ public class Pedido {
         throws EmpresaException
     {
         assert(obs != null) : ("Observacion nula.");
+        assert(obs.getObservacion().length() <= 500) : ("Excede limite de caracteres");
         if(!(estado == EN_EVALUACION))
             throw new EmpresaException("El pedido no se encuentra en estado de evaluación");
         if(listaObservaciones.contains(obs))

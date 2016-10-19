@@ -1,6 +1,10 @@
 
 package InterfazGrafica;
 
+import Controladora.Controladora;
+import Controladora.InterfazNuevoPed;
+import Controladora.InterfazObservaciones;
+
 import empresa.Empleado;
 import empresa.Empresa;
 import empresa.Observacion;
@@ -10,6 +14,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Iterator;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,30 +22,63 @@ import javax.swing.table.DefaultTableModel;
  * @author bruno
  */
 public class VentanaObservaciones
-  extends javax.swing.JFrame
+  extends javax.swing.JFrame implements InterfazObservaciones
 {
     Pedido pedido;
-    Empleado user;
-    Principal caller;
-    Observacion obsSeleccionada;
-
+    
   /** Creates new form VentanaObservaciones */
-  public VentanaObservaciones(Pedido pedido, Empleado user, Principal caller)
+  public VentanaObservaciones(Pedido pedido)
   {
     initComponents();
     setLocationRelativeTo(null);
-    this.setVisible(true);
-    this.toFront();
     this.pedido = pedido;
-    this.caller = caller;
-    this.user = user;
-    obsSeleccionada = null;
-    refresh();
+    inicializarComponentes();
   }
   
-   public void refresh(){
+  private void inicializarComponentes(){
+      agregar.setActionCommand(InterfazObservaciones.AGREGAR);
+      volver.setActionCommand(InterfazObservaciones.VOLVER);
+  }
+  
+    @Override
+    public void refresh(){
         cargarPedido();
         mostrarObservaciones();
+    }
+    
+    @Override
+    public void mostrar(){
+        this.setVisible(true);
+    }
+    
+    @Override
+    public void ocultar(){
+        this.setVisible(false);
+    }
+    
+    @Override
+    public void cerrar(){
+        this.dispose();
+    }
+    
+    @Override
+    public void setControlador(Controladora c){
+        agregar.addActionListener(c);
+        volver.addActionListener(c);
+    }
+    
+    @Override
+    public Observacion getObsSeleccionada(){
+        int row = tablaObservaciones.getSelectedRow();
+        Observacion obs = null;
+        if(row != -1)
+            obs = (Observacion) tablaObservaciones.getValueAt(row, 0);
+        return obs;
+    }
+    
+    @Override
+    public Pedido getPedido(){
+        return pedido;
     }
   
     private void cargarPedido(){
@@ -98,13 +136,6 @@ public class VentanaObservaciones
             model.addRow(row);
         }
     }
-    
-    private void volver(){
-        caller.setEnabled(true);
-        caller.toFront();
-        caller.refresh();
-        this.dispose();
-    }
 
   /** This method is called from within the constructor to
    * initialize the form.
@@ -138,10 +169,11 @@ public class VentanaObservaciones
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaObservaciones = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        volver = new javax.swing.JButton();
+        agregar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("GuiLeoCrisAl S.A.");
         setResizable(false);
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedido"));
@@ -303,17 +335,17 @@ public class VentanaObservaciones
             tablaObservaciones.getColumnModel().getColumn(3).setHeaderValue("Empleado");
         }
 
-        jButton1.setText("Volver");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        volver.setText("Volver");
+        volver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                volverActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Agregar observacion");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        agregar.setText("Agregar observacion");
+        agregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                agregarActionPerformed(evt);
             }
         });
 
@@ -327,9 +359,9 @@ public class VentanaObservaciones
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)
+                        .addComponent(agregar)
                         .addGap(28, 28, 28)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -339,8 +371,8 @@ public class VentanaObservaciones
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(volver)
+                    .addComponent(agregar))
                 .addContainerGap())
         );
 
@@ -368,25 +400,26 @@ public class VentanaObservaciones
         pack();
     }//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
         // TODO add your handling code here:
-        volver();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_volverActionPerformed
 
     private void tablaObservacionesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaObservacionesMouseReleased
         // TODO add your handling code here:
         int row = tablaObservaciones.getSelectedRow();
-        if(row != -1)
-            obsSeleccionada = (Observacion) tablaObservaciones.getValueAt(row, 0);
+        if(row != -1){
+            Observacion obs = (Observacion) tablaObservaciones.getValueAt(row, 0);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            String msg = String.format("TEMA: %s           EMISOR: LEG%06d        FECHA: %s" 
+                                       + System.lineSeparator() + "OBSERVACION: " + System.lineSeparator() + "%s"  , obs.getTema(), obs.getNLegCreador(),
+                                       sdf.format(obs.getFecha().getTime()), obs.getObservacion());
+            JOptionPane.showMessageDialog(null, msg, "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_tablaObservacionesMouseReleased
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarActionPerformed
         // TODO add your handling code here:
-        this.setEnabled(false);
-        this.setVisible(false);
-        new NuevaObservacion(pedido, user, this);
-        volver();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_agregarActionPerformed
 
   /**
    * @param args the command line arguments
@@ -434,8 +467,7 @@ public class VentanaObservaciones
   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton agregar;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
@@ -460,6 +492,7 @@ public class VentanaObservaciones
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
     private javax.swing.JTable tablaObservaciones;
+    private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 
 }
