@@ -14,10 +14,11 @@ public class Empresa {
     private HashMap<Integer, Maquina> productos;
     private HashMap<String, Sector> sectores;
     
-    public final int OP_INIPED = 1;
-    public final int OP_ACEPTPED = 2;
-    public final int OP_GENLOTE = 3;
-    public final int OP_OBSERVAR = 4;
+    public static final int OP_INIPED = 1;
+    public static final int OP_ACEPTPED = 2;
+    public static final int OP_GENLOTE = 3;
+    public static final int OP_OBSERVAR = 4;
+    public static final int OP_MODREC = 5;
     
     
     
@@ -45,12 +46,14 @@ public class Empresa {
         Operacion op2 = new Operacion(OP_ACEPTPED, "Aceptar pedido.");
         Operacion op3 = new Operacion(OP_GENLOTE, "Generar lote para pedido.");
         Operacion op4 = new Operacion(OP_OBSERVAR, "Realizar observacion a pedido.");
+        Operacion op5 = new Operacion(OP_MODREC, "Modificar receta producto.");
         try{
             s1.agregarPermiso(op1);
             s1.agregarPermiso(op4);
             s2.agregarPermiso(op2);
             s2.agregarPermiso(op3);
             s2.agregarPermiso(op4);
+            s2.agregarPermiso(op5);
             s3.agregarPermiso(op4);
             s4.agregarPermiso(op4);
             s5.agregarPermiso(op4);
@@ -58,6 +61,7 @@ public class Empresa {
             s6.agregarPermiso(op2);
             s6.agregarPermiso(op3);
             s6.agregarPermiso(op4);
+            s6.agregarPermiso(op5);
         } catch(EmpresaException e){
             
         }

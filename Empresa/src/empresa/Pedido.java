@@ -149,11 +149,16 @@ public class Pedido {
      * La observacion no es nula.
      * PostCondicion:
      * El listado de observaciones contiene un elemento mas que antes de ejecutar el metodo.
+     * @throws EmpresaException
+     * Si el pedido no se encuentra en estado de evaluacion lanza
+     * esta excepcion.
      */
     public void insertarObservacion(Observacion obs)
         throws EmpresaException
     {
         assert(obs != null) : ("Observacion nula.");
+        if(!(estado == EN_EVALUACION))
+            throw new EmpresaException("El pedido no se encuentra en estado de evaluación");
         if(listaObservaciones.contains(obs))
             throw new EmpresaException("La observacion ya existe (?).");
         listaObservaciones.add(obs);

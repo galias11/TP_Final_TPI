@@ -1,6 +1,9 @@
 
 package InterfazGrafica;
 
+import Controladora.Controladora;
+import Controladora.InterfazLogin;
+
 import empresa.Empresa;
 
 import empresa.EmpresaException;
@@ -12,24 +15,41 @@ import javax.swing.JOptionPane;
  *
  * @author bruno
  */
-public class NuevaSesion
-  extends javax.swing.JFrame
+public class PantallaLogin 
+  extends javax.swing.JFrame implements InterfazLogin
 {
-    private Empresa empresa;
     
   /** Creates new form NuevaSecion */
-  public NuevaSesion()
+  public PantallaLogin()
   {
     initComponents();
-    empresa = new Empresa();
     setLocationRelativeTo(null);
+    ingresar.setActionCommand(InterfazLogin.LOGIN);
   }
   
-  public NuevaSesion(Empresa empresa){
-      initComponents();
-      this.empresa = empresa;
-      setLocationRelativeTo(null);
+  @Override
+  public int getNroLegajo()
+    throws NumberFormatException
+  {
+      return Integer.parseInt(jTextField1.getText());
   }
+  
+  @Override
+  public void mostrar(){
+      this.setVisible(true);
+  }
+  
+  @Override
+  public void ocultar(){
+      this.setVisible(false);
+  }
+  
+  @Override
+  public void setControlador(Controladora c){
+      ingresar.addActionListener(c);
+  }
+  
+  
 
   /** This method is called from within the constructor to
    * initialize the form.
@@ -41,7 +61,7 @@ public class NuevaSesion
 
         jPanel1 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        ingresar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -57,10 +77,10 @@ public class NuevaSesion
             }
         });
 
-        jButton1.setText("Ingresar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        ingresar.setText("Ingresar");
+        ingresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                ingresarActionPerformed(evt);
             }
         });
 
@@ -79,7 +99,7 @@ public class NuevaSesion
                         .addGap(0, 90, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
+                        .addComponent(ingresar)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -90,7 +110,7 @@ public class NuevaSesion
                 .addGap(18, 18, 18)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1)
+                .addComponent(ingresar)
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -119,22 +139,9 @@ public class NuevaSesion
     // TODO add your handling code here:
   }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
         // TODO add your handling code here:
-        int nLeg = -1;
-        try{
-            nLeg = Integer.parseInt(jTextField1.getText());
-            empresa.login(nLeg);
-            this.dispose();
-            VentanaProduccion main = new VentanaProduccion(empresa);
-        } catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Formato numerico incorrecto.", 
-                                        "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-        } catch(EmpresaException e){
-            JOptionPane.showMessageDialog(null, "Empleado inexistente.",
-                                          "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);        
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_ingresarActionPerformed
 
   /**
    * @param args the command line arguments
@@ -159,19 +166,19 @@ public class NuevaSesion
     }
     catch (ClassNotFoundException ex)
     {
-      java.util.logging.Logger.getLogger(NuevaSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(PantallaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
     catch (InstantiationException ex)
     {
-      java.util.logging.Logger.getLogger(NuevaSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(PantallaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
     catch (IllegalAccessException ex)
     {
-      java.util.logging.Logger.getLogger(NuevaSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(PantallaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
     catch (javax.swing.UnsupportedLookAndFeelException ex)
     {
-      java.util.logging.Logger.getLogger(NuevaSesion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      java.util.logging.Logger.getLogger(PantallaLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
     }
     //</editor-fold>
 
@@ -180,13 +187,13 @@ public class NuevaSesion
     {
       public void run()
       {
-        new NuevaSesion().setVisible(true);
+        new PantallaLogin().setVisible(true);
       }
     });
   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton ingresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;

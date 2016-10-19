@@ -1,6 +1,10 @@
 
 package InterfazGrafica;
 
+import Controladora.Controladora;
+import Controladora.InterfazPrincipal;
+
+import empresa.Empleado;
 import empresa.Empresa;
 
 import empresa.EmpresaException;
@@ -26,38 +30,78 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author bruno
  */
-public class VentanaProduccion
-  extends javax.swing.JFrame
+public class Principal 
+  extends javax.swing.JFrame implements InterfazPrincipal
 {
-    Empresa empresa;
+    Iterator<Material> itMat;
+    Iterator<Pedido> itPed;
     Pedido pedSeleccionado;
     Material matSeleccionado;
+    Empleado usuario;
+       
 
-    public VentanaProduccion(Empresa empresa){
-        this.empresa = empresa;
+    public Principal(Empleado usuario, Iterator<Pedido> itPed, Iterator<Material> itMat){
+        assert (usuario != null) : ("Usuario nulo");
+        assert (itPed != null) : ("Listado pedidos nulo.");
+        assert (itMat != null) : ("Listado materiales nulo.");
+        this.usuario = usuario;
+        this.itPed = itPed;
+        this.itMat = itMat;
         pedSeleccionado = null;
         matSeleccionado = null;
         initComponents();
-        setLocationRelativeTo(null);
-        this.setVisible(true);
-        setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        inicializarTablas();
+        inicializar();
         refresh();
     }
     
+    @Override
+    public void mostrar(){
+        this.setVisible(true);
+    }
+    
+    @Override
+    public void ocultar(){
+        this.setVisible(false);
+    }
+
+    @Override
+    public void setControlador(Controladora c){
+        deslog.addActionListener(c);
+        nuevoPedido.addActionListener(c);
+        aceptPedido.addActionListener(c);
+        genLote.addActionListener(c);
+        observaciones.addActionListener(c);
+        admProductos.addActionListener(c);
+    }
+    
+    @Override
+    public Pedido pedidoSeleccionado(){
+        return pedSeleccionado;
+    }
+    
     private void inicializar(){
+        inicializarTablas();
+        deslog.setActionCommand(DESLOG);
+        nuevoPedido.setActionCommand(NPED);
+        aceptPedido.setActionCommand(APED);
+        genLote.setActionCommand(GLOT);
+        observaciones.setActionCommand(OBS);
+        admProductos.setActionCommand(APROD);
         nuevoPedido.setEnabled(false);
         aceptPedido.setEnabled(false);
         genLote.setEnabled(false);
         observaciones.setEnabled(false);
-        if(empresa.getUser().autorizaOperacion(empresa.OP_INIPED))
+        admProductos.setEnabled(false);
+        if(usuario.autorizaOperacion(Empresa.OP_INIPED))
             nuevoPedido.setEnabled(true);
-        if(empresa.getUser().autorizaOperacion(empresa.OP_ACEPTPED))
+        if(usuario.autorizaOperacion(Empresa.OP_ACEPTPED))
             aceptPedido.setEnabled(true);
-        if(empresa.getUser().autorizaOperacion(empresa.OP_GENLOTE))
+        if(usuario.autorizaOperacion(Empresa.OP_GENLOTE))
             genLote.setEnabled(true);
-        if(empresa.getUser().autorizaOperacion(empresa.OP_OBSERVAR))
+        if(usuario.autorizaOperacion(Empresa.OP_OBSERVAR))
             observaciones.setEnabled(true);
+        if(usuario.autorizaOperacion(Empresa.OP_MODREC))
+            admProductos.setEnabled(true);
         
     }
     
@@ -79,22 +123,25 @@ public class VentanaProduccion
         matSeleccionado = null;
     }
     
+    @Override
+    public void cerrar(){
+        this.dispose();
+    }
+    
     /**
      * Metodo mostrarUsuario
      * Metodo privado de la ventana principal que actualiza los
      * datos del usuario logueado en el formulario.
      * PreCondicion:
-     * El atributo empresa no es nulo.
      * El atributo user de la empresa no debe ser nulo.
      * PostCondicion:
      * Se actualiza el formulario con los datos del usuario activo.
      */
     private void mostrarUsuario(){
-        assert(empresa != null) : ("Empresa nula.");
-        assert(empresa.getUser() != null) : ("Usuario nulo");
-        nLeg.setText(String.format("LEG%06d", empresa.getUser().getLegajo()));
-        ayn.setText(empresa.getUser().getAyn());
-        sector.setText(empresa.getUser().getSector().getNombre());
+        assert(usuario != null) : ("Usuario nulo");
+        nLeg.setText(String.format("LEG%06d", usuario.getLegajo()));
+        ayn.setText(usuario.getAyn());
+        sector.setText(usuario.getSector().getNombre());
     }
     
     /**
@@ -102,17 +149,15 @@ public class VentanaProduccion
      * Enlista en la tabla de pedidos todos los pedidos que tiene 
      * pendientes la empresa.
      * PreCondicion:
-     * La empresa no es nula.
+     * 
      * PostCondicion:
      * Los datos de todos los pedidos se muestran por pantalla.
      */
     private void mostrarPedidos(){
-        assert (empresa != null) : ("Empresa nula.");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         tablaPedidos.removeAll();
         DefaultTableModel model = (DefaultTableModel) tablaPedidos.getModel();
         model.setRowCount(0);
-        Iterator<Pedido> itPed = empresa.getPedidos().values().iterator();
         while(itPed.hasNext()){
             Object row[] = new Object[10];
             Pedido auxP = itPed.next();
@@ -149,21 +194,19 @@ public class VentanaProduccion
      * Refresca el listado de Stock, que corresponde al inventario
      * disponible de la empresa.
      * PreCondicion:
-     * Atributo empresa no nulo.
+     * 
      * PostCondicion:
      * Listado actualizado de acuerdo al inventario del atributo
      * empresa.
      */
     private void mostrarStock(){
-        assert (empresa != null) : ("Empresa nula");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         tablaStock.removeAll();
         DefaultTableModel model = (DefaultTableModel) tablaStock.getModel();
         model.setRowCount(0);
-        Iterator<Material> itStock = empresa.getInventario().values().iterator();
-        while(itStock.hasNext()){
+        while(itMat.hasNext()){
             Object row[] = new Object[4];
-            Material auxM = itStock.next();
+            Material auxM = itMat.next();
             row[0] = auxM;
             row[1] = String.format("MAT%05d", auxM.getCodigoMaterial());
             row[2] = auxM.getDescripcion();
@@ -184,7 +227,7 @@ public class VentanaProduccion
 
         jComboBox1 = new javax.swing.JComboBox();
         jPanel1 = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
+        deslog = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -197,7 +240,7 @@ public class VentanaProduccion
         aceptPedido = new javax.swing.JButton();
         genLote = new javax.swing.JButton();
         observaciones = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        admProductos = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPedidos = new javax.swing.JTable();
@@ -214,10 +257,10 @@ public class VentanaProduccion
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Informacion de usuario"));
 
-        jButton5.setText("Cerrar Sesion");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        deslog.setText("Cerrar Sesion");
+        deslog.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                deslogActionPerformed(evt);
             }
         });
 
@@ -242,7 +285,7 @@ public class VentanaProduccion
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(deslog, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
@@ -274,7 +317,7 @@ public class VentanaProduccion
                     .addComponent(jLabel4)
                     .addComponent(sector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                .addComponent(jButton5)
+                .addComponent(deslog)
                 .addContainerGap())
         );
 
@@ -308,10 +351,10 @@ public class VentanaProduccion
             }
         });
 
-        jButton6.setText("Administrar productos");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        admProductos.setText("Administrar productos");
+        admProductos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                admProductosActionPerformed(evt);
             }
         });
 
@@ -326,7 +369,7 @@ public class VentanaProduccion
                     .addComponent(aceptPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(genLote, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                     .addComponent(observaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
+                    .addComponent(admProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -341,7 +384,7 @@ public class VentanaProduccion
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(observaciones)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton6)
+                .addComponent(admProductos)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -512,14 +555,10 @@ public class VentanaProduccion
         pack();
     }//GEN-END:initComponents
 
-  private void jButton5ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton5ActionPerformed
-  {//GEN-HEADEREND:event_jButton5ActionPerformed
+  private void deslogActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_deslogActionPerformed
+  {//GEN-HEADEREND:event_deslogActionPerformed
     // TODO add your handling code here:
-      empresa.deslog();
-      NuevaSesion log = new NuevaSesion(empresa);
-      log.setVisible(true);
-      this.dispose();
-  }//GEN-LAST:event_jButton5ActionPerformed
+  }//GEN-LAST:event_deslogActionPerformed
 
     private void genLoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genLoteActionPerformed
         // TODO add your handling code here:
@@ -556,13 +595,13 @@ public class VentanaProduccion
         else{
             this.setEnabled(false);
             this.toBack();
-            new VentanaObservaciones(pedSeleccionado, this);
+            new VentanaObservaciones(pedSeleccionado, empresa.getUser(), this);
         }
     }//GEN-LAST:event_observacionesActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void admProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_admProductosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_admProductosActionPerformed
 
     private void tablaPedidosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPedidosMouseReleased
         // TODO add your handling code here:
@@ -572,15 +611,10 @@ public class VentanaProduccion
 
     private void tablaStockMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaStockMouseReleased
         // TODO add your handling code here:
-        int row = tablaStock.getSelectedRow();
-        matSeleccionado = (Material) tablaStock.getValueAt(row, 0);
     }//GEN-LAST:event_tablaStockMouseReleased
 
     private void nuevoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoPedidoActionPerformed
         // TODO add your handling code here:
-        this.setEnabled(false);
-        this.toBack();
-        new NuevoPedido(empresa, this);
     }//GEN-LAST:event_nuevoPedidoActionPerformed
 
     private void aceptPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptPedidoActionPerformed
@@ -633,22 +667,22 @@ public class VentanaProduccion
     }
     catch (ClassNotFoundException ex)
     {
-      java.util.logging.Logger.getLogger(VentanaProduccion.class.getName()).log(java.util.logging.Level.SEVERE, null,
+      java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null,
                                                                                 ex);
     }
     catch (InstantiationException ex)
     {
-      java.util.logging.Logger.getLogger(VentanaProduccion.class.getName()).log(java.util.logging.Level.SEVERE, null,
+      java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null,
                                                                                 ex);
     }
     catch (IllegalAccessException ex)
     {
-      java.util.logging.Logger.getLogger(VentanaProduccion.class.getName()).log(java.util.logging.Level.SEVERE, null,
+      java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null,
                                                                                 ex);
     }
     catch (javax.swing.UnsupportedLookAndFeelException ex)
     {
-      java.util.logging.Logger.getLogger(VentanaProduccion.class.getName()).log(java.util.logging.Level.SEVERE, null,
+      java.util.logging.Logger.getLogger(Principal.class.getName()).log(java.util.logging.Level.SEVERE, null,
                                                                                 ex);
     }
     //</editor-fold>
@@ -657,10 +691,10 @@ public class VentanaProduccion
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aceptPedido;
+    private javax.swing.JButton admProductos;
     private javax.swing.JTextField ayn;
+    private javax.swing.JButton deslog;
     private javax.swing.JButton genLote;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

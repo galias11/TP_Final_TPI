@@ -1,6 +1,7 @@
 
 package InterfazGrafica;
 
+import empresa.Empleado;
 import empresa.Empresa;
 import empresa.Observacion;
 import empresa.Pedido;
@@ -19,11 +20,12 @@ public class VentanaObservaciones
   extends javax.swing.JFrame
 {
     Pedido pedido;
-    VentanaProduccion caller;
+    Empleado user;
+    Principal caller;
     Observacion obsSeleccionada;
 
   /** Creates new form VentanaObservaciones */
-  public VentanaObservaciones(Pedido pedido, VentanaProduccion caller)
+  public VentanaObservaciones(Pedido pedido, Empleado user, Principal caller)
   {
     initComponents();
     setLocationRelativeTo(null);
@@ -31,11 +33,12 @@ public class VentanaObservaciones
     this.toFront();
     this.pedido = pedido;
     this.caller = caller;
+    this.user = user;
     obsSeleccionada = null;
     refresh();
   }
   
-    private void refresh(){
+   public void refresh(){
         cargarPedido();
         mostrarObservaciones();
     }
@@ -308,6 +311,11 @@ public class VentanaObservaciones
         });
 
         jButton2.setText("Agregar observacion");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -371,6 +379,14 @@ public class VentanaObservaciones
         if(row != -1)
             obsSeleccionada = (Observacion) tablaObservaciones.getValueAt(row, 0);
     }//GEN-LAST:event_tablaObservacionesMouseReleased
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        this.setEnabled(false);
+        this.setVisible(false);
+        new NuevaObservacion(pedido, user, this);
+        volver();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
   /**
    * @param args the command line arguments

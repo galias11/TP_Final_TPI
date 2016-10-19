@@ -1,9 +1,14 @@
 
 package InterfazGrafica;
 
+import Controladora.Controladora;
+import Controladora.InterfazNuevoPed;
+
 import empresa.Empresa;
 import empresa.EmpresaException;
 import empresa.Pedido;
+
+import java.awt.event.ActionListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,22 +23,63 @@ import javax.swing.JOptionPane;
  *
  * @author bruno
  */
-public class NuevoPedido
-  extends javax.swing.JFrame
+public class NuevoPedido 
+  extends javax.swing.JFrame implements InterfazNuevoPed
 {
-    Empresa empresa;
-    VentanaProduccion caller;
 
   /** Creates new form NuevoPedido */
-  public NuevoPedido(Empresa empresa, VentanaProduccion caller)
+  public NuevoPedido()
   {
     initComponents();
     setLocationRelativeTo(null);
-    this.setVisible(true);
-    this.toFront();
-    this.empresa = empresa;
-    this.caller = caller;
   }
+  
+  @Override
+  public void mostrar(){
+      this.setVisible(true);
+  }
+  
+  @Override
+  public void ocultar(){
+      this.setVisible(false);
+  }
+  
+  @Override
+  public void cerrar(){
+      this.dispose();
+  }
+  
+    @Override
+    public int getCodigoMaquina()
+        throws NumberFormatException
+    {
+        return Integer.parseInt(textTipoMaq.getText());  
+    }
+  
+    @Override
+    public void setControlador(Controladora c){
+        volver.setActionCommand(VOLVER);
+        agregar.setActionCommand(AGREGAR);
+    }
+  
+    @Override
+    public int getCantidad()
+        throws NumberFormatException
+    {
+        return Integer.parseInt(textCantMaq.getText());
+    }
+  
+    @Override
+    public Calendar getFecha()
+        throws ParseException
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar fecha = Calendar.getInstance();
+        fecha.setTime(sdf.parse(fechaSol.getText()));
+        return fecha;
+    }
+  
+  
 
   /** This method is called from within the constructor to
    * initialize the form.
@@ -49,9 +95,9 @@ public class NuevoPedido
         textCantMaq = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        textFecSol = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        fechaSol = new javax.swing.JTextField();
+        agregar = new javax.swing.JButton();
+        volver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -64,23 +110,23 @@ public class NuevoPedido
 
         jLabel5.setText("Fecha solicitada por Ventas:");
 
-        textFecSol.addActionListener(new java.awt.event.ActionListener() {
+        fechaSol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textFecSolActionPerformed(evt);
+                fechaSolActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Agregar Pedido");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        agregar.setText("Agregar Pedido");
+        agregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                agregarActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Volver");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        volver.setText("Volver");
+        volver.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                volverActionPerformed(evt);
             }
         });
 
@@ -100,11 +146,11 @@ public class NuevoPedido
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(textTipoMaq)
                             .addComponent(textCantMaq)
-                            .addComponent(textFecSol, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)))
+                            .addComponent(fechaSol, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(volver, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(agregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -121,11 +167,11 @@ public class NuevoPedido
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(textFecSol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(fechaSol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(agregar)
+                    .addComponent(volver))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
@@ -149,56 +195,17 @@ public class NuevoPedido
         pack();
     }//GEN-END:initComponents
 
-    private void volver(){
-        caller.setEnabled(true);
-        caller.toFront();
-        caller.refresh();
-        this.dispose();
-    }
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
         // TODO add your handling code here:
-        volver();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_volverActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarActionPerformed
         // TODO add your handling code here:
-        Pedido nPed = null;
-        int tipoMaq = 0;
-        int cantMaq = 0;
-        Calendar fechaSolicitada = null;
-        try {
-            tipoMaq = Integer.parseInt(textTipoMaq.getText());
-        } catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Formato numerico tipo maquina incorrecto.",
-                                          "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-        }
-        try {
-            cantMaq = Integer.parseInt(textCantMaq.getText());
-        } catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "Formato numerico cantidad maquinas incorrecto.",
-                                          "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-        }
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-            fechaSolicitada = Calendar.getInstance();
-            fechaSolicitada.setTime(sdf.parse(textFecSol.getText()));
-        } catch(ParseException e){
-            JOptionPane.showMessageDialog(null, "Formato fecha incorrecto: AAAA/MM/DD.",
-                                          "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);    
-        }
-        try {
-            empresa.iniciarPedido(tipoMaq, cantMaq, fechaSolicitada);
-        } catch(EmpresaException e){
-            JOptionPane.showMessageDialog(null, "Error al generar el pedido: " + e.toString(),
-                                          "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
-        }
-        volver();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_agregarActionPerformed
 
-    private void textFecSolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFecSolActionPerformed
+    private void fechaSolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaSolActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_textFecSolActionPerformed
+    }//GEN-LAST:event_fechaSolActionPerformed
 
   /**
    * @param args the command line arguments
@@ -242,15 +249,15 @@ public class NuevoPedido
   }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton agregar;
+    private javax.swing.JTextField fechaSol;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField textCantMaq;
-    private javax.swing.JTextField textFecSol;
     private javax.swing.JTextField textTipoMaq;
+    private javax.swing.JButton volver;
     // End of variables declaration//GEN-END:variables
 
 }
