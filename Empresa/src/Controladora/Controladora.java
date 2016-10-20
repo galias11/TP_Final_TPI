@@ -34,6 +34,8 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import project1.VentanaMateriales;
+
 
 public class Controladora implements ActionListener{
     private InterfazLogin login;
@@ -252,6 +254,13 @@ public class Controladora implements ActionListener{
                 JOptionPane.showMessageDialog(null, "Error al obtener listado de faltantes: " + ex.toString(),
                                               "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE); 
             }
+        }
+        //Abrir menu maquinas - recetas
+        if(e.getActionCommand().equals(InterfazPrincipal.APROD)){
+            princ.ocultar();
+            maquinas = new VentanaMateriales(modelo.getProductos(), modelo.getInventario());
+            maquinas.mostrar();
+            maquinas.refresh();
         }
     }
     

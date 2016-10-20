@@ -104,6 +104,11 @@ public class Empresa {
     }
 
 
+    public HashMap<Integer, Maquina> getProductos() {
+        return productos;
+    }
+
+
     public HashMap<Integer, Material> getInventario() {
         return inventario;
     }
