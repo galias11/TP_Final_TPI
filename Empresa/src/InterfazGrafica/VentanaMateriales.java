@@ -1,5 +1,5 @@
 
-package project1;
+package InterfazGrafica;
 
 import Controladora.Controladora;
 import Controladora.InterfazMaquina;

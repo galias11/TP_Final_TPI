@@ -91,6 +91,24 @@ public class Empresa {
         productos.put(m2.getCodigo(), m2);
         productos.put(m3.getCodigo(), m3);
         productos.put(m4.getCodigo(), m4);
+        Material mat1 = new Material(401,"Madera",500);
+        Material mat2 = new Material(402,"Plastico",500);
+        Material mat3 = new Material(403,"Vidrio",500);
+        Material mat4 = new Material(404,"Metal",500);
+        Material mat5 = new Material(405,"Goma",500);
+        Material mat6 = new Material(406,"Tornillos",2000);
+        Material mat7 = new Material(407,"Clavos",2000);
+        Material mat8 = new Material(408,"Alambre",2000);
+        Material mat9 = new Material(409,"Pegamento",50);
+        inventario.put(mat1.getCodigoMaterial(), mat1);
+        inventario.put(mat2.getCodigoMaterial(), mat2);
+        inventario.put(mat3.getCodigoMaterial(), mat3);
+        inventario.put(mat4.getCodigoMaterial(), mat4);
+        inventario.put(mat5.getCodigoMaterial(), mat5);
+        inventario.put(mat6.getCodigoMaterial(), mat6);
+        inventario.put(mat7.getCodigoMaterial(), mat7);
+        inventario.put(mat8.getCodigoMaterial(), mat8);
+        inventario.put(mat9.getCodigoMaterial(), mat9);
     }
 
 
