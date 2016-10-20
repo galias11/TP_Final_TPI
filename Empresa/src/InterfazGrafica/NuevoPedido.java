@@ -6,6 +6,7 @@ import Controladora.InterfazNuevoPed;
 
 import empresa.Empresa;
 import empresa.EmpresaException;
+import empresa.Maquina;
 import empresa.Pedido;
 
 import java.awt.event.ActionListener;
@@ -17,6 +18,8 @@ import java.util.Calendar;
 
 import java.util.GregorianCalendar;
 
+import java.util.HashMap;
+
 import javax.swing.JOptionPane;
 
 /**
@@ -27,12 +30,15 @@ public class NuevoPedido
   extends javax.swing.JFrame implements InterfazNuevoPed
 {
 
+  HashMap<Integer, Maquina> maquinas;
+  
   /** Creates new form NuevoPedido */
-  public NuevoPedido()
+  public NuevoPedido(HashMap<Integer, Maquina> maquinas)
   {
     initComponents();
     setLocationRelativeTo(null);
     inicializarComponentes();
+    this.maquinas = maquinas;
   }
   
   private void inicializarComponentes(){
@@ -59,15 +65,7 @@ public class NuevoPedido
     public int getCodigoMaquina()
         throws NumberFormatException
     {
-      int cod = 0;
-      switch(comboMaq.getSelectedIndex())
-      {
-        case 0: cod = 100001;
-        case 1: cod = 100002;
-        case 2: cod = 100003;
-        case 3: cod = 100004;
-      }
-      return cod;
+      return maquinas.get(new Integer(comboMaq.getSelectedIndex())).getCodigo();
     }
   
     @Override
