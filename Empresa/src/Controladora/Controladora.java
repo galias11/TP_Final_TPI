@@ -34,7 +34,7 @@ import java.util.Iterator;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import project1.VentanaMateriales;
+import InterfazGrafica.VentanaMateriales;
 
 
 public class Controladora implements ActionListener{
