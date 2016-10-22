@@ -3,8 +3,9 @@ package Controladora;
 import empresa.Material;
 
 public interface InterfazMaquina extends Interfaz{
-    public Material getMatStockSeleccionado();
-    public Material getMatProdSeleccionado();
+    public Material getMatStockSeleccionado() throws InterfazException;
+    public Material getMatProdSeleccionado() throws InterfazException;
+    public double getCantidad() throws InterfazException;
     public int getCodigoMaquina();
     public void refresh();
     

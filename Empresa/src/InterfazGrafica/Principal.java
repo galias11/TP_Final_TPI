@@ -2,6 +2,7 @@
 package InterfazGrafica;
 
 import Controladora.Controladora;
+import Controladora.InterfazException;
 import Controladora.InterfazPrincipal;
 
 import empresa.Empleado;
@@ -18,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 import java.util.Vector;
@@ -78,10 +80,28 @@ public class Principal
     }
     
     @Override
-    public Pedido pedidoSeleccionado(){
+    public Calendar getFecha()
+        throws InterfazException, ParseException
+    {
+        String str = JOptionPane.showInputDialog(null, "Ingrese la fecha propuesta de producción. (Formato: AAAA/MM/DD)",
+                                                 "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+        if(str == null)
+            throw new InterfazException("CANCEL");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar fecha = Calendar.getInstance();
+        fecha.setTime(sdf.parse(str));
+        if(fecha.before(GregorianCalendar.getInstance()))
+            throw new InterfazException("Fecha en el pasado.");
+        return fecha;
+    }
+    
+    @Override
+    public Pedido pedidoSeleccionado()
+        throws InterfazException
+    {
         int row = tablaPedidos.getSelectedRow();
         if(row == -1)
-            return null;
+            throw new InterfazException("No se ha seleccionado ningun pedido.");
         return (Pedido) tablaPedidos.getValueAt(row, 0);
     }
     

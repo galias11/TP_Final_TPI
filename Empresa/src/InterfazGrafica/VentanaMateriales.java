@@ -2,6 +2,7 @@
 package InterfazGrafica;
 
 import Controladora.Controladora;
+import Controladora.InterfazException;
 import Controladora.InterfazMaquina;
 
 import empresa.Maquina;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 
 import java.util.Iterator;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -81,21 +83,34 @@ public class VentanaMateriales
     }
     
     @Override
-     public Material getMatStockSeleccionado(){
+     public Material getMatStockSeleccionado()
+        throws InterfazException
+    {
         int row = jTable2.getSelectedRow();
-        Material matSel = null;
-        if(row != -1)
-            matSel = (Material) jTable2.getValueAt(row, 0);
-        return matSel;
+        if(row == -1)
+            throw new InterfazException("No se ha seleccionado material del inventario.");
+        return (Material) jTable2.getValueAt(row, 0);
     }
     
     @Override
-    public Material getMatProdSeleccionado(){
+    public Material getMatProdSeleccionado()
+        throws InterfazException
+    {
         int row = jTable1.getSelectedRow();
-        Material matSel = null;
-        if(row != -1)
-            matSel = (Material) jTable1.getValueAt(row, 0);
-        return matSel;    
+        if(row == -1)
+            throw new InterfazException("No se ha seleccionado material de la receta.");
+        return (Material) jTable1.getValueAt(row, 0);    
+    }
+    
+    @Override
+    public double getCantidad()
+        throws InterfazException, NumberFormatException
+    {
+        String strNumber = JOptionPane.showInputDialog(null, "Ingrese la cantidad.",
+                                                       "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+        if(strNumber == null || strNumber.isEmpty())
+            throw new InterfazException("No se ha ingresado la cantidad.");
+        return Double.parseDouble(strNumber);
     }
     
     private void cargarCombo(){

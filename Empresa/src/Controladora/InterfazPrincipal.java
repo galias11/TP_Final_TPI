@@ -2,11 +2,15 @@ package Controladora;
 
 import empresa.Pedido;
 
+import java.text.ParseException;
+
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
 public interface InterfazPrincipal extends Interfaz{
-    public Pedido pedidoSeleccionado();
+    public Calendar getFecha()throws InterfazException, ParseException;
+    public Pedido pedidoSeleccionado() throws InterfazException;
     public void refresh();
     
     public void lanzarCartel(String str);

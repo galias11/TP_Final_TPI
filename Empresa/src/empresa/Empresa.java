@@ -72,6 +72,9 @@ public class Empresa {
             s6.agregarPermiso(op3);
             s6.agregarPermiso(op4);
             s6.agregarPermiso(op5);
+            s6.agregarPermiso(op6);
+            s6.agregarPermiso(op7);
+            s6.agregarPermiso(op8);
         } catch(EmpresaException e){
             
         }
@@ -269,8 +272,6 @@ public class Empresa {
         assert(fechaEntrega != null) : ("Fecha de entrega nula");
         assert(GregorianCalendar.getInstance().before(fechaEntrega)) : ("Fecha de entrega en el pasado.");
         assert(cantidad > 0) : ("Cantidad no valida.");
-        if(fechaEntrega.before(GregorianCalendar.getInstance()))
-            throw new EmpresaException("Fecha de entrega en el pasado");
         if(!productos.containsKey(codMaq))
             throw new EmpresaException("Producto a fabricar inexistente.");
         Pedido p = new Pedido(productos.get(codMaq), cantidad, fechaEntrega);

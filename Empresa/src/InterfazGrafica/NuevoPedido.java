@@ -2,6 +2,7 @@
 package InterfazGrafica;
 
 import Controladora.Controladora;
+import Controladora.InterfazException;
 import Controladora.InterfazNuevoPed;
 
 import empresa.Empresa;
@@ -88,18 +89,23 @@ public class NuevoPedido
   
     @Override
     public int getCantidad()
-        throws NumberFormatException
+        throws NumberFormatException, InterfazException
     {
-        return Integer.parseInt(textCantMaq.getText());
+        int cantidad = Integer.parseInt(textCantMaq.getText());
+        if(!(cantidad > 0))
+            throw new InterfazException("Cantidad debe ser mayor que cero.");
+        return cantidad;
     }
   
     @Override
     public Calendar getFecha()
-        throws ParseException
+        throws ParseException, InterfazException
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         Calendar fecha = Calendar.getInstance();
         fecha.setTime(sdf.parse(fechaSol.getText()));
+        if(fecha.before(GregorianCalendar.getInstance()))
+            throw new InterfazException("Fecha solicitada en el pasado.");
         return fecha;
     }
   
