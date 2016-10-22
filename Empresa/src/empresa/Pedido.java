@@ -27,6 +27,14 @@ public class Pedido {
     public static final int ACEPTADO = 2;
     public static final int CANCELADO = 3;
     
+    /**
+     * Constructor vacio para serializacion.
+     * No utilizar.
+     */
+    public Pedido(){
+        
+    }
+    
     public Pedido(Maquina maquina, int cantidad, Calendar fechaEntrega) {
         this.nroPedido = ++ultPedido;
         this.fechaPedido = GregorianCalendar.getInstance();
@@ -40,6 +48,77 @@ public class Pedido {
         this.listaObservaciones = new TreeSet<Observacion>();
         this.nroLote = -1;
     }
+    
+    /*
+     * ***********************************************
+     * Getters y setters agregados para serializacion.
+     * ***********************************************
+     */
+
+
+    public static void setUltPedido(int ultPedido) {
+        Pedido.ultPedido = ultPedido;
+    }
+
+    public static int getUltPedido() {
+        return ultPedido;
+    }
+
+    public static void setUltLote(int ultLote) {
+        Pedido.ultLote = ultLote;
+    }
+
+    public static int getUltLote() {
+        return ultLote;
+    }
+
+    public void setNroPedido(int nroPedido) {
+        this.nroPedido = nroPedido;
+    }
+
+    public void setFechaPedido(Calendar fechaPedido) {
+        this.fechaPedido = fechaPedido;
+    }
+
+    public void setMaquina(Maquina maquina) {
+        this.maquina = maquina;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public void setFechaEntrega(Calendar fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
+    public void setFechaPropProduccion(Calendar fechaPropProduccion) {
+        this.fechaPropProduccion = fechaPropProduccion;
+    }
+
+    public void setFechaDefinitiva(Calendar fechaDefinitiva) {
+        this.fechaDefinitiva = fechaDefinitiva;
+    }
+
+    public void setFechaAceptacion(Calendar fechaAceptacion) {
+        this.fechaAceptacion = fechaAceptacion;
+    }
+
+    public void setEstado(int estado) {
+        this.estado = estado;
+    }
+
+    public void setListaObservaciones(TreeSet<Observacion> listaObservaciones) {
+        this.listaObservaciones = listaObservaciones;
+    }
+
+    public void setNroLote(int nroLote) {
+        this.nroLote = nroLote;
+    }
+
+    /*
+     * ***********************************************
+     */
 
 
     public int getNroPedido() {
@@ -205,5 +284,10 @@ public class Pedido {
             
         }
         return info;
+    }
+    
+    public static void actualizarVariablesClase(int nPed, int nLot){
+        ultPedido = nPed;
+        ultLote = nLot;
     }
 }

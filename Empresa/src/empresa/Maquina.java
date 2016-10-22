@@ -7,11 +7,42 @@ public class Maquina {
     private String descripcion;
     private HashMap<Integer, Material> listadoMateriales;
     
+    /**
+     * Constructor vacio para serializacion.
+     * No utilizar.
+     */
+    public Maquina(){
+        
+    }
+    
     public Maquina(int codigo, String descripcion){
         this.codigo = codigo;
         this.descripcion = descripcion;
         listadoMateriales = new HashMap<Integer, Material>();
     }
+    
+    /*
+     * ***********************************************
+     * Getters y setters agregados para serializacion.
+     * ***********************************************
+     */
+
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setListadoMateriales(HashMap<Integer, Material> listadoMateriales) {
+        this.listadoMateriales = listadoMateriales;
+    }
+
+    /*
+     * ***********************************************
+     */
 
 
     public String getDescripcion() {

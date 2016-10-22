@@ -36,6 +36,8 @@ import javax.swing.JOptionPane;
 
 import InterfazGrafica.VentanaMateriales;
 
+import java.io.FileNotFoundException;
+
 
 public class Controladora implements ActionListener{
     private InterfazLogin login;
@@ -48,7 +50,11 @@ public class Controladora implements ActionListener{
     private InterfazOptionPane optionPane;
     
     public Controladora(){
-        modelo = new Empresa();
+        try{
+            modelo = Empresa.deserializacion();
+        } catch(FileNotFoundException ex){
+            modelo = new Empresa();
+        }
         login = new PantallaLogin();
         login.setControlador(this);
         login.mostrar();
@@ -77,6 +83,12 @@ public class Controladora implements ActionListener{
             princ.cerrar();
             modelo.deslog();
             login.mostrar();
+            try{
+                Empresa.serializacion(modelo);
+            } catch(FileNotFoundException ex){
+                JOptionPane.showMessageDialog(null, "Error al guardar estado: " + ex.toString(),
+                           "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);
+            }
         }
         //Iniciar nuevo pedido
         if(e.getActionCommand().equals(InterfazPrincipal.NPED)){

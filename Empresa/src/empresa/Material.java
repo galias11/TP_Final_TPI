@@ -5,11 +5,42 @@ public class Material {
     private String descripcion;
     private double cantidad;
     
+    /**
+     * Constructor vacio para serializacion.
+     * No utilizar.
+     */
+    public Material(){
+        
+    }
+    
     public Material(int codigoMaterial, String descripcion, double cantidad) {
         this.codigoMaterial = codigoMaterial;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
     }
+    
+    /*
+     * ***********************************************
+     * Getters y setters agregados para serializacion.
+     * ***********************************************
+     */
+
+
+    public void setCodigoMaterial(int codigoMaterial) {
+        this.codigoMaterial = codigoMaterial;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setCantidad(double cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    /*
+     * ***********************************************
+     */
 
 
     public int getCodigoMaterial() {

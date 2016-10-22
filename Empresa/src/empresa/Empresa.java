@@ -133,8 +133,49 @@ public class Empresa {
         inventario.put(mat8.getCodigoMaterial(), mat8);
         inventario.put(mat9.getCodigoMaterial(), mat9);
     }
+    
+    /*
+     * ***********************************************
+     * Getters y setters agregados para serializacion.
+     * ***********************************************
+     */
 
+    public void setUser(Empleado user) {
+        this.user = user;
+    }
 
+    public void setListaEmpleados(HashMap<Integer, Empleado> listaEmpleados) {
+        this.listaEmpleados = listaEmpleados;
+    }
+
+    public HashMap<Integer, Empleado> getListaEmpleados() {
+        return listaEmpleados;
+    }
+
+    public void setPedidos(HashMap<Integer, Pedido> pedidos) {
+        this.pedidos = pedidos;
+    }
+
+    public void setInventario(HashMap<Integer, Material> inventario) {
+        this.inventario = inventario;
+    }
+
+    public void setProductos(HashMap<Integer, Maquina> productos) {
+        this.productos = productos;
+    }
+
+    public void setSectores(HashMap<String, Sector> sectores) {
+        this.sectores = sectores;
+    }
+
+    public HashMap<String, Sector> getSectores() {
+        return sectores;
+    }
+
+    /*
+     * ***********************************************
+     */
+    
     public Empleado getUser() {
         return user;
     }
@@ -571,7 +612,7 @@ public class Empresa {
     }
     
     public static void serializacion(Empresa empresa)
-    throws FileNotFoundException
+        throws FileNotFoundException
   {
       XMLEncoder encoder = null;
       encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("empresa.xml")));
@@ -586,6 +627,13 @@ public class Empresa {
       XMLDecoder decoder = null;
       decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream("empresa.xml")));
       empresa = (Empresa) decoder.readObject();
+      int ultPedido = empresa.getPedidos().size();
+      int ultLote = 0;
+      Iterator<Pedido> itPed = empresa.getPedidos().values().iterator();
+      while(itPed.hasNext())
+          if(itPed.next().getEstado() == Pedido.ACEPTADO)
+              ultLote++;
+      Pedido.actualizarVariablesClase(ultPedido, ultLote);
       decoder.close();
       return empresa;
     }

@@ -15,6 +15,14 @@ public class Observacion implements Comparable{
     public static final String INSUMOS = "INSUMOS";
     public static final String OTROS = "OTROS";
     
+    /**
+     * Constructor vacio para serializacion.
+     * No utilizar.
+     */
+    public Observacion(){
+        
+    }
+    
     public Observacion(String tema, int nLegCreador, String observacion)
     {
         this.tema = tema;
@@ -22,6 +30,33 @@ public class Observacion implements Comparable{
         this.nLegCreador = nLegCreador;
         this.observacion = observacion;
     }
+    
+    /*
+     * ***********************************************
+     * Getters y setters agregados para serializacion.
+     * ***********************************************
+     */
+
+
+    public void setTema(String tema) {
+        this.tema = tema;
+    }
+
+    public void setFecha(Calendar fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setNLegCreador(int nLegCreador) {
+        this.nLegCreador = nLegCreador;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    /*
+     * ***********************************************
+     */
 
 
     public String getTema() {
