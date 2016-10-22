@@ -545,6 +545,8 @@ public class Principal
                 return canEdit [columnIndex];
             }
         });
+        tablaPedidos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPedidos.setShowVerticalLines(false);
         tablaPedidos.getTableHeader().setReorderingAllowed(false);
         tablaPedidos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
@@ -555,6 +557,17 @@ public class Principal
         if (tablaPedidos.getColumnModel().getColumnCount() > 0) {
             tablaPedidos.getColumnModel().getColumn(0).setResizable(false);
             tablaPedidos.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tablaPedidos.getColumnModel().getColumn(0).setHeaderValue("Sel");
+            tablaPedidos.getColumnModel().getColumn(1).setHeaderValue("Numero");
+            tablaPedidos.getColumnModel().getColumn(2).setHeaderValue("Fecha");
+            tablaPedidos.getColumnModel().getColumn(3).setHeaderValue("Tipo de Maquina");
+            tablaPedidos.getColumnModel().getColumn(4).setHeaderValue("Cantidad");
+            tablaPedidos.getColumnModel().getColumn(5).setHeaderValue("Fecha de Entrega por Ventas");
+            tablaPedidos.getColumnModel().getColumn(6).setHeaderValue("Fecha de Entrega por Produccion");
+            tablaPedidos.getColumnModel().getColumn(7).setHeaderValue("Fecha Definitiva");
+            tablaPedidos.getColumnModel().getColumn(8).setHeaderValue("Pedido Aceptadol");
+            tablaPedidos.getColumnModel().getColumn(9).setHeaderValue("Estado");
+            tablaPedidos.getColumnModel().getColumn(10).setHeaderValue("Numero de Lote");
         }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -595,6 +608,8 @@ public class Principal
                 return canEdit [columnIndex];
             }
         });
+        tablaStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaStock.setShowVerticalLines(false);
         tablaStock.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseReleased(java.awt.event.MouseEvent evt) {
                 tablaStockMouseReleased(evt);
