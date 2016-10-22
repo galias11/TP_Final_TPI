@@ -160,6 +160,22 @@ public class Controladora implements ActionListener{
                                                   "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);    
             }
         }
+        //Cancelar pedido iniciado o en evaluacion
+        if(e.getActionCommand().equals(InterfazPrincipal.CANC)){
+            try{
+                Pedido pedSel = princ.pedidoSeleccionado();
+                String motivo = "[CANCELACION] " + princ.motivoCancelacion();
+                modelo.cancelarPedido(pedSel.getNroPedido(), motivo);
+                princ.refresh();
+            } catch(EmpresaException ex){
+                JOptionPane.showMessageDialog(null, "Error al cancelar pedido: " + ex.toString(),
+                                                  "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);        
+            } catch(InterfazException ex){
+                if(!ex.toString().equals("CANCEL"))
+                    JOptionPane.showMessageDialog(null, "Error: " + ex.toString(),
+                                                      "GuiLeoCrisAl S.A.", JOptionPane.ERROR_MESSAGE);            
+            }
+        }
         //Abrir Ventana observaciones
         if(e.getActionCommand().equals(InterfazPrincipal.OBS)){
             try {

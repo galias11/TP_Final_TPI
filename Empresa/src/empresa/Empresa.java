@@ -249,7 +249,6 @@ public class Empresa {
      * Metodo: iniciarPedido
      * Inserta un pedido al listado de pedidos.
      * PreCondicion: 
-     * El empleado debe poseer permisos para realizar la operacion.
      * Se asume que la fecha de entrega no sera nula y será una fecha
      * en el futuro.
      * Se asume una cantidad a producir mayor que cero.
@@ -304,6 +303,35 @@ public class Empresa {
         if(!(p.getEstado() == Pedido.INICIADO))
             throw new EmpresaException("Pedido no esta en estado de iniciado.");
         p.estadoEvaluacion(fechaPropuesta);
+    }
+    
+    /**
+     * Metodo: cancelarPedido
+     * Metodo que cancela un pedido, es decir, cambia su estado.
+     * PreCondicion:
+     * El usuario debe tener permisos para realizar la operacion.
+     * PostCondicion:
+     * El pedido cambia su estado a CANCELADO
+     * @param nPed
+     * int: numero de pedido a cancelar.
+     * @throws EmpresaException
+     * Si el pedido no existe, o no se encuentra en estado de evaluacion /
+     * iniciado se lanza esta excepcion
+     */
+    public void cancelarPedido(int nPed, String motivo)
+        throws EmpresaException
+    {
+        assert (user.autorizaOperacion(Empresa.OP_CANCELAR)) : ("Usuario no autorizado");
+        Pedido p = pedidos.get(nPed);
+        if(p == null)
+            throw new EmpresaException("Pedido inexistente.");
+        if(!(p.getEstado() == Pedido.INICIADO || p.getEstado() == Pedido.EN_EVALUACION))
+            throw new EmpresaException("Pedido no esta en fase de evaluacion/inciado.");
+        Observacion obs = new Observacion(Observacion.OTROS, user.getLegajo(), motivo);
+        if(p.getEstado() == Pedido.INICIADO)
+            p.estadoEvaluacion(GregorianCalendar.getInstance());
+        p.insertarObservacion(obs);
+        p.estadoCancelado();
     }
     
     /**

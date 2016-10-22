@@ -115,6 +115,7 @@ public class Principal
         admProductos.setActionCommand(InterfazPrincipal.APROD);
         faltantes.setActionCommand(InterfazPrincipal.MATFALT);
         matNecesarios.setActionCommand(InterfazPrincipal.MATNEC);
+        cancelar.setActionCommand(InterfazPrincipal.CANC);
         nuevoPedido.setEnabled(false);
         aceptPedido.setEnabled(false);
         genLote.setEnabled(false);
@@ -192,6 +193,19 @@ public class Principal
                                       "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
     }
     
+    @Override
+    public String motivoCancelacion()
+        throws InterfazException
+    {
+        String motivo = JOptionPane.showInputDialog(null, "Ingrese el motivo de la cancelación",
+                                                    "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+        if(motivo == null)
+            throw new InterfazException("CANCEL");
+        if(motivo.isEmpty())
+            throw new InterfazException("Motivo no valido (vacio).");
+        return motivo;
+    }
+    
     /**
      * Metodo mostrarUsuario
      * Metodo privado de la ventana principal que actualiza los
@@ -224,16 +238,17 @@ public class Principal
         model.setRowCount(0);
         Iterator<Pedido> itPed = empresa.getPedidos().values().iterator();
         while(itPed.hasNext()){
-            Object row[] = new Object[10];
+            Object row[] = new Object[11];
             Pedido auxP = itPed.next();
             row[0] = auxP;
             row[1] = String.format("PED%06d", auxP.getNroPedido());
             row[2] = sdf.format(auxP.getFechaPedido().getTime());
             row[3] = String.format("Cod: %d - %s", auxP.getMaquina().getCodigo(), auxP.getMaquina().getDescripcion());
-            row[4] = sdf.format(auxP.getFechaEntrega().getTime());
-            row[5] = auxP.getFechaPropProduccion() == null ? "" : sdf.format(auxP.getFechaPropProduccion().getTime());
-            row[6] = auxP.getFechaDefinitiva() == null ? "" : sdf.format(auxP.getFechaDefinitiva().getTime());
-            row[7] = auxP.getFechaAceptacion() == null ? "" : sdf.format(auxP.getFechaAceptacion().getTime());
+            row[4] = auxP.getCantidad();
+            row[5] = sdf.format(auxP.getFechaEntrega().getTime());
+            row[6] = auxP.getFechaPropProduccion() == null ? "" : sdf.format(auxP.getFechaPropProduccion().getTime());
+            row[7] = auxP.getFechaDefinitiva() == null ? "" : sdf.format(auxP.getFechaDefinitiva().getTime());
+            row[8] = auxP.getFechaAceptacion() == null ? "" : sdf.format(auxP.getFechaAceptacion().getTime());
             String estado = "";
             switch(auxP.getEstado()){
                 case Pedido.ACEPTADO:
@@ -245,11 +260,14 @@ public class Principal
                 case Pedido.INICIADO:
                     estado = "INICIADO";
                     break;
+                case Pedido.CANCELADO:
+                    estado = "CANCELADO";
+                    break;
                 default:
                     break;
             }
-            row[8] = estado;
-            row[9] = "" + (auxP.getNroLote() == -1 ? "" : String.format("LOT%06d", auxP.getNroLote()));
+            row[9] = estado;
+            row[10] = "" + (auxP.getNroLote() == -1 ? "" : String.format("LOT%06d", auxP.getNroLote()));
             model.addRow(row);
         }
     }
@@ -490,37 +508,37 @@ public class Principal
 
         tablaPedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Sel", "Numero", "Fecha", "Tipo de Maquina", "Fecha de Entrega por Ventas", "Fecha de Entrega por Produccion", "Fecha Definitiva", "Pedido Aceptadol", "Estado", "Numero de Lote"
+                "Sel", "Numero", "Fecha", "Tipo de Maquina", "Cantidad", "Fecha de Entrega por Ventas", "Fecha de Entrega por Produccion", "Fecha Definitiva", "Pedido Aceptadol", "Estado", "Numero de Lote"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -537,16 +555,6 @@ public class Principal
         if (tablaPedidos.getColumnModel().getColumnCount() > 0) {
             tablaPedidos.getColumnModel().getColumn(0).setResizable(false);
             tablaPedidos.getColumnModel().getColumn(0).setPreferredWidth(0);
-            tablaPedidos.getColumnModel().getColumn(0).setHeaderValue("Sel");
-            tablaPedidos.getColumnModel().getColumn(1).setHeaderValue("Numero");
-            tablaPedidos.getColumnModel().getColumn(2).setHeaderValue("Fecha");
-            tablaPedidos.getColumnModel().getColumn(3).setHeaderValue("Tipo de Maquina");
-            tablaPedidos.getColumnModel().getColumn(4).setHeaderValue("Fecha de Entrega por Ventas");
-            tablaPedidos.getColumnModel().getColumn(5).setHeaderValue("Fecha de Entrega por Produccion");
-            tablaPedidos.getColumnModel().getColumn(6).setHeaderValue("Fecha Definitiva");
-            tablaPedidos.getColumnModel().getColumn(7).setHeaderValue("Pedido Aceptadol");
-            tablaPedidos.getColumnModel().getColumn(8).setHeaderValue("Estado");
-            tablaPedidos.getColumnModel().getColumn(9).setHeaderValue("Numero de Lote");
         }
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);

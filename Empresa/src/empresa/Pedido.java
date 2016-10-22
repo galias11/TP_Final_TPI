@@ -25,6 +25,7 @@ public class Pedido {
     public static final int INICIADO = 0;
     public static final int EN_EVALUACION = 1;
     public static final int ACEPTADO = 2;
+    public static final int CANCELADO = 3;
     
     public Pedido(Maquina maquina, int cantidad, Calendar fechaEntrega) {
         this.nroPedido = ++ultPedido;
@@ -140,6 +141,20 @@ public class Pedido {
         estado = ACEPTADO;
         this.fechaDefinitiva = fechaDefinitiva;
         nroLote = ++ultLote;
+    }
+    
+    /**
+     * Metodo: estadoCancelado.
+     * Cancela un pedido, cambiando su estado.
+     * PreCondicion:
+     * El pedido se encuentra en estado de iniciado o en evaluacion.
+     * PostCondicion:
+     * El estado del pedido pasa a ser cancelado.
+     */
+    public void estadoCancelado(){
+        assert (estado == EN_EVALUACION || estado == INICIADO) :
+            ("Pedido no esta en estado de evaluacion / iniciado.");
+        estado = CANCELADO;
     }
     
     /**

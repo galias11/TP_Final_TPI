@@ -102,6 +102,9 @@ public class VentanaObservaciones
             case Pedido.INICIADO:
                 estado = "INICIADO";
                 break;
+            case Pedido.CANCELADO:
+                estado = "CANCELADO";
+                break;
             default:
                 break;
         }
