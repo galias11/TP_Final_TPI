@@ -1,5 +1,15 @@
 package empresa;
 
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -560,4 +570,23 @@ public class Empresa {
         return info;
     }
     
+    public static void serializacion(Empresa empresa)
+    throws FileNotFoundException
+  {
+      XMLEncoder encoder = null;
+      encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("empresa.xml")));
+      encoder.writeObject(empresa);
+      encoder.close();
+  }
+    
+    public static Empresa deserializacion()
+    throws FileNotFoundException
+  {
+      Empresa empresa = null;
+      XMLDecoder decoder = null;
+      decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream("empresa.xml")));
+      empresa = (Empresa) decoder.readObject();
+      decoder.close();
+      return empresa;
+    }
 }
