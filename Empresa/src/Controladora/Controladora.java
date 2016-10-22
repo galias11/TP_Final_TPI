@@ -80,7 +80,7 @@ public class Controladora implements ActionListener{
         }
         if(e.getActionCommand().equals(InterfazPrincipal.NPED)){
             princ.ocultar();
-            nuevoPed = new NuevoPedido();
+            nuevoPed = new NuevoPedido(modelo.getProductos());
             nuevoPed.setControlador(this);
             nuevoPed.mostrar();
         }
