@@ -184,7 +184,7 @@ public class Pedido {
         String info = "";
         while(it.hasNext()){
             Material auxM = it.next();
-            info += String.format("Cod: MAT%5.5d\t%-100.100s\t%3.4f" + System.lineSeparator(), 
+            info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
                                   auxM.getCodigoMaterial() , auxM.getDescripcion(),
                                   auxM.getCantidad() * cantidad);
             

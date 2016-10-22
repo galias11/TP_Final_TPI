@@ -207,6 +207,7 @@
                       <Component id="admProductos" alignment="0" pref="204" max="32767" attributes="0"/>
                       <Component id="faltantes" alignment="1" pref="204" max="32767" attributes="0"/>
                       <Component id="matNecesarios" alignment="0" pref="204" max="32767" attributes="0"/>
+                      <Component id="cancelar" alignment="1" pref="204" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -222,14 +223,16 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="genLote" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="observaciones" min="-2" max="-2" attributes="0"/>
+                  <Component id="cancelar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
+                  <Component id="observaciones" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
                   <Component id="matNecesarios" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="faltantes" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="72" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                   <Component id="admProductos" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -245,7 +248,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="aceptPedido">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Aceptar pedido"/>
+            <Property name="text" type="java.lang.String" value="Iniciar evaluacion pedido"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aceptPedidoActionPerformed"/>
@@ -253,7 +256,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="genLote">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Generar lote"/>
+            <Property name="text" type="java.lang.String" value="Aceptar pedido y Generar lote"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="genLoteActionPerformed"/>
@@ -261,7 +264,7 @@
         </Component>
         <Component class="javax.swing.JButton" name="observaciones">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Observaciones"/>
+            <Property name="text" type="java.lang.String" value="Adm. Observaciones pedido"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="observacionesActionPerformed"/>
@@ -289,6 +292,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="matNecesariosActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="cancelar">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Cancelar pedido"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelarActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

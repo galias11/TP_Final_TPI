@@ -19,6 +19,9 @@ public class Empresa {
     public static final int OP_GENLOTE = 3;
     public static final int OP_OBSERVAR = 4;
     public static final int OP_MODREC = 5;
+    public static final int OP_CANCELAR = 6;
+    public static final int OP_FALTANTES = 7;
+    public static final int OP_MATNEC = 8;
     
     
     
@@ -47,13 +50,20 @@ public class Empresa {
         Operacion op3 = new Operacion(OP_GENLOTE, "Generar lote para pedido.");
         Operacion op4 = new Operacion(OP_OBSERVAR, "Realizar observacion a pedido.");
         Operacion op5 = new Operacion(OP_MODREC, "Modificar receta producto.");
+        Operacion op6 = new Operacion(OP_FALTANTES, "Consultar faltantes para completar pedido.");
+        Operacion op7 = new Operacion(OP_MATNEC, "Consultar materiales necesarios para completar pedido.");
+        Operacion op8 = new Operacion(OP_CANCELAR, "Cancelar pedido.");
         try{
             s1.agregarPermiso(op1);
             s1.agregarPermiso(op4);
+            s1.agregarPermiso(op8);
             s2.agregarPermiso(op2);
             s2.agregarPermiso(op3);
             s2.agregarPermiso(op4);
             s2.agregarPermiso(op5);
+            s2.agregarPermiso(op6);
+            s2.agregarPermiso(op7);
+            s2.agregarPermiso(op8);
             s3.agregarPermiso(op4);
             s4.agregarPermiso(op4);
             s5.agregarPermiso(op4);
@@ -201,7 +211,7 @@ public class Empresa {
             if(inventario.containsKey(auxM.getCodigoMaterial())){
                 Material existencia = inventario.get(auxM.getCodigoMaterial());
                 if(!existencia.satisfacePedido(auxM.getCantidad()))
-                    faltante.put(auxM.getCodigoMaterial(), new Material(auxM.getCodigoMaterial(), auxM.getDescripcion(), auxM.getCantidad()));
+                    faltante.put(auxM.getCodigoMaterial(), new Material(auxM.getCodigoMaterial(), auxM.getDescripcion(), -(existencia.getCantidad() - auxM.getCantidad())));
             }
         }
         return faltante;

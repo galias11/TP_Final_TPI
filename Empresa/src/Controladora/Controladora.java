@@ -78,9 +78,10 @@ public class Controladora implements ActionListener{
             modelo.deslog();
             login.mostrar();
         }
+        //Iniciar nuevo pedido
         if(e.getActionCommand().equals(InterfazPrincipal.NPED)){
             princ.ocultar();
-            nuevoPed = new NuevoPedido();
+            nuevoPed = new NuevoPedido(modelo.getProductos());
             nuevoPed.setControlador(this);
             nuevoPed.mostrar();
         }
@@ -236,23 +237,34 @@ public class Controladora implements ActionListener{
         //Ver listado materiales necesarios
         if(e.getActionCommand().equals(InterfazPrincipal.MATNEC)){
             Pedido pedActual = princ.pedidoSeleccionado();
-            try {
-                String listado = modelo.materialesNecesaarios(pedActual.getNroPedido());
-                princ.lanzarCartel(listado);
-            } catch(EmpresaException ex){
-                JOptionPane.showMessageDialog(null, "Error al obtener listado de materiales: " + ex.toString(),
-                                              "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE); 
+            if(pedActual == null)
+                JOptionPane.showMessageDialog(null, "Debe seleccionar un pedido.",
+                                              "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);     
+            else {
+                try {
+                
+                    String listado = modelo.materialesNecesaarios(pedActual.getNroPedido());
+                    princ.lanzarCartel(listado);
+                } catch(EmpresaException ex){
+                    JOptionPane.showMessageDialog(null, "Error al obtener listado de materiales: " + ex.toString(),
+                                                  "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE); 
+                }
             }
         }
         //Ver listado de materiales faltantes
         if(e.getActionCommand().equals(InterfazPrincipal.MATFALT)){
             Pedido pedActual = princ.pedidoSeleccionado();
-            try{
-                Iterator<Material> it = modelo.consultaFaltantes(pedActual.getNroPedido()).values().iterator();
-                princ.lanzarCartelConLista(it);
-            } catch (EmpresaException ex){
-                JOptionPane.showMessageDialog(null, "Error al obtener listado de faltantes: " + ex.toString(),
+            if(pedActual == null)
+                JOptionPane.showMessageDialog(null, "Debe seleccionar un pedido.",
+                                              "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
+            else{
+                try{
+                    Iterator<Material> it = modelo.consultaFaltantes(pedActual.getNroPedido()).values().iterator();
+                    princ.lanzarCartelConLista(it);
+                } catch (EmpresaException ex){
+                    JOptionPane.showMessageDialog(null, "Error al obtener listado de faltantes: " + ex.toString(),
                                               "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE); 
+                }
             }
         }
         //Abrir menu maquinas - recetas
@@ -261,6 +273,90 @@ public class Controladora implements ActionListener{
             maquinas = new VentanaMateriales(modelo.getProductos(), modelo.getInventario());
             maquinas.mostrar();
             maquinas.refresh();
+            maquinas.setControlador(this);
+        }
+        //Cerrar menu maquinas - recetas
+        if(e.getActionCommand().equals(InterfazMaquina.VOLVER)){
+            maquinas.cerrar();
+            princ.mostrar();
+            princ.refresh();
+        }
+        //Agregar nuevo material a receta
+        if(e.getActionCommand().equals(InterfazMaquina.AGREGAR)){
+            Material nuevoMat = maquinas.getMatStockSeleccionado();
+            int codMaq = maquinas.getCodigoMaquina();
+            double cant;
+            try{
+                String strNumber = JOptionPane.showInputDialog(null, "Ingrese la cantidad.",
+                                                               "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+                if(strNumber != null && !strNumber.isEmpty()){
+                    cant = Double.parseDouble(strNumber);
+                    if(nuevoMat != null){
+                        try{
+                            modelo.agregarMaterialReceta(codMaq, nuevoMat.getCodigoMaterial(), cant);
+                            maquinas.refresh();
+                            JOptionPane.showMessageDialog(null, "Material agregado a la receta.",
+                                                          "GuiLeoCriasAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+                        } catch(EmpresaException ex){
+                            JOptionPane.showMessageDialog(null, "Error al agregar el material. " + ex.toString(),
+                                                          "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+                else
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar un material del inventario para" +
+                                              " agregarlo.", "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
+            } catch(NumberFormatException ex){
+                JOptionPane.showMessageDialog(null, "Formato numerico incorrecto. " + ex.toString(), 
+                                              "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);     
+            } 
+                
+        }
+        //Eliminar material
+        if(e.getActionCommand().equals(InterfazMaquina.ELIMINAR)){
+            Material aEliminar = maquinas.getMatProdSeleccionado();
+            if(aEliminar != null){
+                int codMaq = maquinas.getCodigoMaquina();
+                try{
+                    modelo.eliminarMaterialReceta(codMaq, aEliminar.getCodigoMaterial());
+                    maquinas.refresh();
+                    JOptionPane.showMessageDialog(null, "Material eliminado de la receta.",
+                                                  "GuiLeoCriasAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+                } catch(EmpresaException ex){
+                    JOptionPane.showMessageDialog(null, "Error al eliminar material de la receta. " + ex.toString()
+                                                  , "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);            
+                }
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Debe seleccionar un material de la receta para " +
+                                              " eliminarlo.", "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
+        }
+        //Modificar cantidad receta
+        if(e.getActionCommand().equals(InterfazMaquina.MODIFICAR)){
+            Material aModificar = maquinas.getMatProdSeleccionado();
+            if(aModificar != null){
+                try {
+                    int codMaq = maquinas.getCodigoMaquina();
+                    String strNumber = JOptionPane.showInputDialog(null, "Ingrese nueva cantidad.",
+                                                                               "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+                    if(strNumber != null && !strNumber.isEmpty()){
+                        double cant = Double.parseDouble(strNumber);  
+                        modelo.modificarCantidadReceta(codMaq, aModificar.getCodigoMaterial(), cant);
+                        maquinas.refresh();
+                        JOptionPane.showMessageDialog(null, "Cantidad material modificada.",
+                                                  "GuiLeoCriasAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch(NumberFormatException ex){
+                    JOptionPane.showMessageDialog(null, "Formato numerico incorrecto.", 
+                                                  "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
+                } catch(EmpresaException ex){
+                    JOptionPane.showMessageDialog(null, "Error al modificar la cantidad en la receta. " + ex.toString(), 
+                                                  "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);        
+                }
+            }
+            else
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un material de la receta para " +
+                                          " modificarlo.", "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);    
         }
     }
     

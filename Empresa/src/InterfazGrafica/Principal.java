@@ -20,10 +20,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import java.util.Vector;
+
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
@@ -70,6 +74,7 @@ public class Principal
         admProductos.addActionListener(c);
         matNecesarios.addActionListener(c);
         faltantes.addActionListener(c);
+        cancelar.addActionListener(c);
     }
     
     @Override
@@ -95,6 +100,9 @@ public class Principal
         genLote.setEnabled(false);
         observaciones.setEnabled(false);
         admProductos.setEnabled(false);
+        matNecesarios.setEnabled(false);
+        faltantes.setEnabled(false);
+        cancelar.setEnabled(false);
         if(usuario.autorizaOperacion(Empresa.OP_INIPED))
             nuevoPedido.setEnabled(true);
         if(usuario.autorizaOperacion(Empresa.OP_ACEPTPED))
@@ -105,7 +113,12 @@ public class Principal
             observaciones.setEnabled(true);
         if(usuario.autorizaOperacion(Empresa.OP_MODREC))
             admProductos.setEnabled(true);
-        
+        if(usuario.autorizaOperacion(Empresa.OP_MATNEC))
+            matNecesarios.setEnabled(true);
+        if(usuario.autorizaOperacion(Empresa.OP_FALTANTES))
+            faltantes.setEnabled(true);
+        if(usuario.autorizaOperacion(Empresa.OP_CANCELAR))
+            cancelar.setEnabled(true);
     }
     
     private void inicializarTablas(){
@@ -132,25 +145,21 @@ public class Principal
     @Override
     public void lanzarCartel(String str){
         JTextArea comp = new JTextArea();
-        comp.setText(str);
-        JOptionPane.showMessageDialog(comp, "Materiales necesarios:",
+        comp.setText("Materiales necesarios: " + System.lineSeparator() + str);
+        comp.setEditable(false);
+        JOptionPane.showMessageDialog(null, comp,
                                       "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
     }
     
     @Override
     public void lanzarCartelConLista(Iterator it){
+        Vector columns = new Vector();
         JTable tabla = new JTable();
-        tabla.removeAll();
-        TableColumn col1 = new TableColumn();
-        TableColumn col2 = new TableColumn();
-        TableColumn col3 = new TableColumn();
-        col1.setHeaderValue("Codigo");
-        col2.setHeaderValue("Descripcion");
-        col3.setHeaderValue("Cantidad");
-        tabla.addColumn(col1);
-        tabla.addColumn(col2);
-        tabla.addColumn(col3);
         DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        model.setRowCount(0);
+        model.addColumn("Codigo");
+        model.addColumn("Descripcion");
+        model.addColumn("Cantidad");
         Object row[] = new Object[3];
         while(it.hasNext()){
             Material auxM = (Material) it.next();
@@ -159,7 +168,7 @@ public class Principal
             row[2] = String.format("%4.3f", auxM.getCantidad());
             model.addRow(row);
         }
-        JOptionPane.showMessageDialog(tabla, "Materiales faltantes:",
+        JOptionPane.showMessageDialog(null, new JScrollPane(tabla),
                                       "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
     }
     
@@ -280,6 +289,7 @@ public class Principal
         admProductos = new javax.swing.JButton();
         faltantes = new javax.swing.JButton();
         matNecesarios = new javax.swing.JButton();
+        cancelar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPedidos = new javax.swing.JTable();
@@ -368,21 +378,21 @@ public class Principal
             }
         });
 
-        aceptPedido.setText("Aceptar pedido");
+        aceptPedido.setText("Iniciar evaluacion pedido");
         aceptPedido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 aceptPedidoActionPerformed(evt);
             }
         });
 
-        genLote.setText("Generar lote");
+        genLote.setText("Aceptar pedido y Generar lote");
         genLote.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 genLoteActionPerformed(evt);
             }
         });
 
-        observaciones.setText("Observaciones");
+        observaciones.setText("Adm. Observaciones pedido");
         observaciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 observacionesActionPerformed(evt);
@@ -410,6 +420,13 @@ public class Principal
             }
         });
 
+        cancelar.setText("Cancelar pedido");
+        cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -423,7 +440,8 @@ public class Principal
                     .addComponent(observaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                     .addComponent(admProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
                     .addComponent(faltantes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                    .addComponent(matNecesarios, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
+                    .addComponent(matNecesarios, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(cancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -436,14 +454,16 @@ public class Principal
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(genLote)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(observaciones)
+                .addComponent(cancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(observaciones)
+                .addGap(76, 76, 76)
                 .addComponent(matNecesarios)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(faltantes)
-                .addGap(72, 72, 72)
+                .addGap(36, 36, 36)
                 .addComponent(admProductos)
-                .addGap(61, 61, 61))
+                .addContainerGap())
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedidos"));
@@ -655,6 +675,10 @@ public class Principal
         // TODO add your handling code here:
     }//GEN-LAST:event_matNecesariosActionPerformed
 
+    private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cancelarActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -704,6 +728,7 @@ public class Principal
     private javax.swing.JButton aceptPedido;
     private javax.swing.JButton admProductos;
     private javax.swing.JTextField ayn;
+    private javax.swing.JButton cancelar;
     private javax.swing.JButton deslog;
     private javax.swing.JButton faltantes;
     private javax.swing.JButton genLote;
