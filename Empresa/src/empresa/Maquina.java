@@ -1,12 +1,19 @@
 package empresa;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Maquina {
     private int codigo;
     private String descripcion;
     private HashMap<Integer, Material> listadoMateriales;
-    
+
+    /**
+     * @associates <{empresa.Material}>
+     * @aggregation shared
+     */
+    private Map newAtt;
+
     /**
      * Constructor vacio para serializacion.
      * No utilizar.

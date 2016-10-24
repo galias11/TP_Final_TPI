@@ -2,11 +2,17 @@ package empresa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Sector {
     private String nombre;
     private HashMap<Integer,  Operacion> permisos;
-    
+
+    /**
+     * @associates <{empresa.Operacion}>
+     */
+    private Map newAtt;
+
     /**
      * Constructor vacio para serializacion.
      * No utilizar.

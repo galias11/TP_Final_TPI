@@ -15,8 +15,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class Empresa {
+    /**
+     * @aggregation composite
+     */
     private Empleado user;
     private HashMap<Integer, Empleado> listaEmpleados;
     private HashMap<Integer, Pedido> pedidos;
@@ -32,9 +36,19 @@ public class Empresa {
     public static final int OP_CANCELAR = 6;
     public static final int OP_FALTANTES = 7;
     public static final int OP_MATNEC = 8;
-    
-    
-    
+
+    /**
+     * @associates <{empresa.Material}>
+     */
+    private Map newAtt;
+
+    /**
+     * @associates <{empresa.Pedido}>
+     * @aggregation composite
+     */
+    private Map newAtt2;
+
+
     public Empresa() 
     {
         user = null;
