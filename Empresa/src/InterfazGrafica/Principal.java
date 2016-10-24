@@ -32,6 +32,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -140,6 +142,11 @@ public class Principal
             faltantes.setEnabled(true);
         if(usuario.autorizaOperacion(Empresa.OP_CANCELAR))
             cancelar.setEnabled(true);
+        filtro_iniciado.setSelected(true);
+        filtro_evaluacion.setSelected(true);
+        filtro_aceptado.setSelected(true);
+        filtro_cancelado.setSelected(true);
+        descPedido.setText("");
     }
     
     private void inicializarTablas(){
@@ -149,10 +156,22 @@ public class Principal
         tablaStock.getColumnModel().getColumn(0).setMaxWidth(0);
         tablaStock.getColumnModel().getColumn(0).setMinWidth(0);
         tablaStock.getColumnModel().getColumn(0).setPreferredWidth(0);
+        DefaultTableCellRenderer render = new DefaultTableCellRenderer();
+        render.setHorizontalAlignment(SwingConstants.CENTER);
+        tablaPedidos.getColumnModel().getColumn(1).setCellRenderer(render);
+        tablaPedidos.getColumnModel().getColumn(2).setCellRenderer(render);
+        tablaPedidos.getColumnModel().getColumn(3).setCellRenderer(render);
+        tablaPedidos.getColumnModel().getColumn(4).setCellRenderer(render);
+        tablaPedidos.getColumnModel().getColumn(5).setCellRenderer(render);
+        tablaPedidos.getColumnModel().getColumn(6).setCellRenderer(render);
+        tablaPedidos.getColumnModel().getColumn(7).setCellRenderer(render);
+        tablaPedidos.getColumnModel().getColumn(8).setCellRenderer(render);
+        tablaPedidos.getColumnModel().getColumn(10).setCellRenderer(render);
+        tablaStock.getColumnModel().getColumn(1).setCellRenderer(render);
+        tablaStock.getColumnModel().getColumn(3).setCellRenderer(render);
     }
     
-    public void refresh(){
-        inicializar();
+    public void refresh(){ 
         mostrarUsuario();
         mostrarPedidos();
         mostrarStock();
@@ -232,6 +251,7 @@ public class Principal
      * Los datos de todos los pedidos se muestran por pantalla.
      */
     private void mostrarPedidos(){
+        descPedido.setText("");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         tablaPedidos.removeAll();
         DefaultTableModel model = (DefaultTableModel) tablaPedidos.getModel();
@@ -240,35 +260,40 @@ public class Principal
         while(itPed.hasNext()){
             Object row[] = new Object[11];
             Pedido auxP = itPed.next();
-            row[0] = auxP;
-            row[1] = String.format("PED%06d", auxP.getNroPedido());
-            row[2] = sdf.format(auxP.getFechaPedido().getTime());
-            row[3] = String.format("Cod: %d - %s", auxP.getMaquina().getCodigo(), auxP.getMaquina().getDescripcion());
-            row[4] = auxP.getCantidad();
-            row[5] = sdf.format(auxP.getFechaEntrega().getTime());
-            row[6] = auxP.getFechaPropProduccion() == null ? "" : sdf.format(auxP.getFechaPropProduccion().getTime());
-            row[7] = auxP.getFechaDefinitiva() == null ? "" : sdf.format(auxP.getFechaDefinitiva().getTime());
-            row[8] = auxP.getFechaAceptacion() == null ? "" : sdf.format(auxP.getFechaAceptacion().getTime());
-            String estado = "";
-            switch(auxP.getEstado()){
-                case Pedido.ACEPTADO:
-                    estado = "ACEPTADO";
-                    break;
-                case Pedido.EN_EVALUACION:
-                    estado = "EN EVALUACION";
-                    break;
-                case Pedido.INICIADO:
-                    estado = "INICIADO";
-                    break;
-                case Pedido.CANCELADO:
-                    estado = "CANCELADO";
-                    break;
-                default:
-                    break;
+            if((filtro_iniciado.isSelected() && auxP.getEstado() == Pedido.INICIADO) ||
+                (filtro_evaluacion.isSelected() && auxP.getEstado() == Pedido.EN_EVALUACION) ||
+                (filtro_aceptado.isSelected() && auxP.getEstado() == Pedido.ACEPTADO) ||
+                (filtro_cancelado.isSelected() && auxP.getEstado() == Pedido.CANCELADO)){
+                row[0] = auxP;
+                row[1] = String.format("PED%06d", auxP.getNroPedido());
+                row[2] = sdf.format(auxP.getFechaPedido().getTime());
+                row[3] = String.format("TIP%06d", auxP.getMaquina().getCodigo());
+                row[4] = String.format("%03d", auxP.getCantidad());
+                row[5] = sdf.format(auxP.getFechaEntrega().getTime());
+                row[6] = auxP.getFechaPropProduccion() == null ? "" : sdf.format(auxP.getFechaPropProduccion().getTime());
+                row[7] = auxP.getFechaDefinitiva() == null ? "" : sdf.format(auxP.getFechaDefinitiva().getTime());
+                row[8] = auxP.getFechaAceptacion() == null ? "" : sdf.format(auxP.getFechaAceptacion().getTime());
+                String estado = "";
+                switch(auxP.getEstado()){
+                    case Pedido.ACEPTADO:
+                        estado = "ACEPTADO";
+                        break;
+                    case Pedido.EN_EVALUACION:
+                        estado = "EN EVALUACION";
+                        break;
+                    case Pedido.INICIADO:
+                        estado = "INICIADO";
+                        break;
+                    case Pedido.CANCELADO:
+                        estado = "CANCELADO";
+                        break;
+                    default:
+                        break;
+                }
+                row[9] = estado;
+                row[10] = "" + (auxP.getNroLote() == -1 ? "" : String.format("LOT%06d", auxP.getNroLote()));
+                model.addRow(row);
             }
-            row[9] = estado;
-            row[10] = "" + (auxP.getNroLote() == -1 ? "" : String.format("LOT%06d", auxP.getNroLote()));
-            model.addRow(row);
         }
     }
     
@@ -331,6 +356,13 @@ public class Principal
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPedidos = new javax.swing.JTable();
+        filtro_iniciado = new javax.swing.JCheckBox();
+        filtro_evaluacion = new javax.swing.JCheckBox();
+        filtro_aceptado = new javax.swing.JCheckBox();
+        filtro_cancelado = new javax.swing.JCheckBox();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        descPedido = new javax.swing.JTextArea();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaStock = new javax.swing.JTable();
@@ -534,7 +566,7 @@ public class Principal
                 {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Sel", "Numero", "Fecha", "Tipo de Maquina", "Cantidad", "Fecha de Entrega por Ventas", "Fecha de Entrega por Produccion", "Fecha Definitiva", "Pedido Aceptadol", "Estado", "Numero de Lote"
+                "Sel", "Numero", "F. Inic", "Tipo Maq.", "Cant.", "F. Ent. Ventas", "F. Ent. Prod.", "F. Definitiva", "F. Acept.", "Estado", "Nro. Lote"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -545,6 +577,7 @@ public class Principal
                 return canEdit [columnIndex];
             }
         });
+        tablaPedidos.setGridColor(java.awt.SystemColor.activeCaption);
         tablaPedidos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         tablaPedidos.setShowVerticalLines(false);
         tablaPedidos.getTableHeader().setReorderingAllowed(false);
@@ -558,32 +591,111 @@ public class Principal
             tablaPedidos.getColumnModel().getColumn(0).setResizable(false);
             tablaPedidos.getColumnModel().getColumn(0).setPreferredWidth(0);
             tablaPedidos.getColumnModel().getColumn(0).setHeaderValue("Sel");
+            tablaPedidos.getColumnModel().getColumn(1).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(1).setPreferredWidth(75);
             tablaPedidos.getColumnModel().getColumn(1).setHeaderValue("Numero");
-            tablaPedidos.getColumnModel().getColumn(2).setHeaderValue("Fecha");
-            tablaPedidos.getColumnModel().getColumn(3).setHeaderValue("Tipo de Maquina");
-            tablaPedidos.getColumnModel().getColumn(4).setHeaderValue("Cantidad");
-            tablaPedidos.getColumnModel().getColumn(5).setHeaderValue("Fecha de Entrega por Ventas");
-            tablaPedidos.getColumnModel().getColumn(6).setHeaderValue("Fecha de Entrega por Produccion");
-            tablaPedidos.getColumnModel().getColumn(7).setHeaderValue("Fecha Definitiva");
-            tablaPedidos.getColumnModel().getColumn(8).setHeaderValue("Pedido Aceptadol");
+            tablaPedidos.getColumnModel().getColumn(2).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(2).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(2).setHeaderValue("F. Inic");
+            tablaPedidos.getColumnModel().getColumn(3).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(3).setPreferredWidth(75);
+            tablaPedidos.getColumnModel().getColumn(3).setHeaderValue("Tipo Maq.");
+            tablaPedidos.getColumnModel().getColumn(4).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(4).setPreferredWidth(75);
+            tablaPedidos.getColumnModel().getColumn(4).setHeaderValue("Cant.");
+            tablaPedidos.getColumnModel().getColumn(5).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(5).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(5).setHeaderValue("F. Ent. Ventas");
+            tablaPedidos.getColumnModel().getColumn(6).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(6).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(6).setHeaderValue("F. Ent. Prod.");
+            tablaPedidos.getColumnModel().getColumn(7).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(7).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(7).setHeaderValue("F. Definitiva");
+            tablaPedidos.getColumnModel().getColumn(8).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(8).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(8).setHeaderValue("F. Acept.");
+            tablaPedidos.getColumnModel().getColumn(9).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(9).setPreferredWidth(100);
             tablaPedidos.getColumnModel().getColumn(9).setHeaderValue("Estado");
-            tablaPedidos.getColumnModel().getColumn(10).setHeaderValue("Numero de Lote");
+            tablaPedidos.getColumnModel().getColumn(10).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(10).setPreferredWidth(75);
+            tablaPedidos.getColumnModel().getColumn(10).setHeaderValue("Nro. Lote");
         }
+
+        filtro_iniciado.setText("Iniciado");
+        filtro_iniciado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtro_iniciadoActionPerformed(evt);
+            }
+        });
+
+        filtro_evaluacion.setText("En evaluación");
+        filtro_evaluacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtro_evaluacionActionPerformed(evt);
+            }
+        });
+
+        filtro_aceptado.setText("Aceptado");
+        filtro_aceptado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtro_aceptadoActionPerformed(evt);
+            }
+        });
+
+        filtro_cancelado.setText("Cancelado");
+        filtro_cancelado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtro_canceladoActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Filtro estado:");
+
+        descPedido.setEditable(false);
+        descPedido.setColumns(20);
+        descPedido.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
+        descPedido.setRows(5);
+        jScrollPane3.setViewportView(descPedido);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(filtro_iniciado)
+                .addGap(34, 34, 34)
+                .addComponent(filtro_evaluacion)
+                .addGap(29, 29, 29)
+                .addComponent(filtro_aceptado)
+                .addGap(35, 35, 35)
+                .addComponent(filtro_cancelado)
+                .addGap(156, 156, 156))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 993, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 993, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filtro_iniciado)
+                    .addComponent(filtro_evaluacion)
+                    .addComponent(filtro_aceptado)
+                    .addComponent(filtro_cancelado)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -620,8 +732,14 @@ public class Principal
             tablaStock.getColumnModel().getColumn(0).setResizable(false);
             tablaStock.getColumnModel().getColumn(0).setPreferredWidth(0);
             tablaStock.getColumnModel().getColumn(0).setHeaderValue("Sel");
+            tablaStock.getColumnModel().getColumn(1).setResizable(false);
+            tablaStock.getColumnModel().getColumn(1).setPreferredWidth(100);
             tablaStock.getColumnModel().getColumn(1).setHeaderValue("Codigo");
+            tablaStock.getColumnModel().getColumn(2).setResizable(false);
+            tablaStock.getColumnModel().getColumn(2).setPreferredWidth(600);
             tablaStock.getColumnModel().getColumn(2).setHeaderValue("Descripcion");
+            tablaStock.getColumnModel().getColumn(3).setResizable(false);
+            tablaStock.getColumnModel().getColumn(3).setPreferredWidth(100);
             tablaStock.getColumnModel().getColumn(3).setHeaderValue("Cantidad");
         }
 
@@ -638,7 +756,7 @@ public class Principal
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -695,6 +813,9 @@ public class Principal
 
     private void tablaPedidosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPedidosMouseReleased
         // TODO add your handling code here:
+        int row = tablaPedidos.getSelectedRow();
+        if(row != -1)
+            descPedido.setText(((Pedido)tablaPedidos.getValueAt(row, 0)).toString());
     }//GEN-LAST:event_tablaPedidosMouseReleased
 
     private void tablaStockMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaStockMouseReleased
@@ -721,6 +842,26 @@ public class Principal
     private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cancelarActionPerformed
+
+    private void filtro_iniciadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtro_iniciadoActionPerformed
+        // TODO add your handling code here:
+        refresh();
+    }//GEN-LAST:event_filtro_iniciadoActionPerformed
+
+    private void filtro_evaluacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtro_evaluacionActionPerformed
+        // TODO add your handling code here:
+        refresh();
+    }//GEN-LAST:event_filtro_evaluacionActionPerformed
+
+    private void filtro_aceptadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtro_aceptadoActionPerformed
+        // TODO add your handling code here:
+        refresh();
+    }//GEN-LAST:event_filtro_aceptadoActionPerformed
+
+    private void filtro_canceladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtro_canceladoActionPerformed
+        // TODO add your handling code here:
+        refresh();
+    }//GEN-LAST:event_filtro_canceladoActionPerformed
 
   /**
    * @param args the command line arguments
@@ -772,20 +913,27 @@ public class Principal
     private javax.swing.JButton admProductos;
     private javax.swing.JTextField ayn;
     private javax.swing.JButton cancelar;
+    private javax.swing.JTextArea descPedido;
     private javax.swing.JButton deslog;
     private javax.swing.JButton faltantes;
+    private javax.swing.JCheckBox filtro_aceptado;
+    private javax.swing.JCheckBox filtro_cancelado;
+    private javax.swing.JCheckBox filtro_evaluacion;
+    private javax.swing.JCheckBox filtro_iniciado;
     private javax.swing.JButton genLote;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton matNecesarios;
     private javax.swing.JTextField nLeg;
     private javax.swing.JButton nuevoPedido;

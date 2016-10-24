@@ -1,5 +1,7 @@
 package empresa;
 
+import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -289,5 +291,45 @@ public class Pedido {
     public static void actualizarVariablesClase(int nPed, int nLot){
         ultPedido = nPed;
         ultLote = nLot;
+    }
+    
+    @Override  
+    public String toString(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String strMaquina = String.format("TIP%06d  --  %s", maquina.getCodigo(), maquina.getDescripcion());
+        String fechaPed = fechaPedido != null ? sdf.format(fechaPedido.getTime()) : "";
+        String fechaEnt = fechaEntrega != null ? sdf.format(fechaEntrega.getTime()): "";
+        String fechaPro = fechaPropProduccion != null ? sdf.format(fechaPropProduccion.getTime()): "";
+        String fechaAce = fechaAceptacion != null ? sdf.format(fechaAceptacion.getTime()) : "";
+        String fechaDef = fechaDefinitiva != null ? sdf.format(fechaDefinitiva.getTime()) : "";
+        String strEstado = "";
+        switch(estado){
+            case ACEPTADO:
+                strEstado = "ACEPTADO";
+                break;
+            case INICIADO:
+                strEstado = "INICIADO";
+                break;
+            case EN_EVALUACION:
+                strEstado = "EN EVALUACION";
+                break;
+            case CANCELADO:
+                strEstado = "CANCELADO";
+                break;
+            default:
+                strEstado = "";
+                break;
+        }
+        String str = String.format("Numero de pedido: PED%06d        " +
+            "Fecha de pedido: %s" + System.lineSeparator() +
+            "Tipo de máquina: %-75.75s             Cantidad: %03d" + System.lineSeparator() +
+            "Fecha de entrega solicitada por ventas: %-10.10s" + System.lineSeparator() +
+            "Fecha propuesta por Producción: %-10.10s" + System.lineSeparator() +
+            "Fecha aceptado: %-10.10s          Fecha definitiva: %-10.10s" + System.lineSeparator() +
+            "Estado: %-15.15s" + System.lineSeparator() +
+            "Número de lote: LOT%06d", nroPedido, fechaPed, strMaquina,
+            cantidad, fechaEnt, fechaPro, fechaAce, fechaDef, 
+            strEstado, nroLote);
+        return str; 
     }
 }
