@@ -2,19 +2,14 @@
 <java version="1.8.0_77" class="java.beans.XMLDecoder">
  <object class="empresa.Empresa" id="Empresa0">
   <void id="HashMap0" property="inventario">
-   <void index="401">
-    <void property="cantidad">
-     <double>300.0</double>
-    </void>
-   </void>
    <void index="402">
     <void property="cantidad">
-     <double>350.0</double>
+     <double>375.0</double>
     </void>
    </void>
-   <void index="403">
+   <void index="408">
     <void property="cantidad">
-     <double>400.0</double>
+     <double>1950.0</double>
     </void>
    </void>
   </void>
@@ -23,13 +18,13 @@
     <int>1</int>
     <object class="empresa.Pedido">
      <void property="cantidad">
-      <int>5</int>
+      <int>15</int>
      </void>
      <void property="fechaEntrega">
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1481770800000</long>
+         <long>1480474800000</long>
         </object>
        </void>
       </object>
@@ -38,7 +33,7 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1477170214792</long>
+         <long>1478396714199</long>
         </object>
        </void>
       </object>
@@ -53,7 +48,7 @@
          <int>401</int>
          <object class="empresa.Material">
           <void property="cantidad">
-           <double>120.0</double>
+           <double>25.0</double>
           </void>
           <void property="codigoMaterial">
            <int>401</int>
@@ -67,7 +62,7 @@
          <int>402</int>
          <object class="empresa.Material">
           <void property="cantidad">
-           <double>75.0</double>
+           <double>35.0</double>
           </void>
           <void property="codigoMaterial">
            <int>402</int>
@@ -78,16 +73,16 @@
          </object>
         </void>
         <void method="put">
-         <int>404</int>
+         <int>403</int>
          <object class="empresa.Material">
           <void property="cantidad">
-           <double>50.0</double>
+           <double>5.0</double>
           </void>
           <void property="codigoMaterial">
-           <int>404</int>
+           <int>403</int>
           </void>
           <void property="descripcion">
-           <string>Metal</string>
+           <string>Vidrio</string>
           </void>
          </object>
         </void>
@@ -109,31 +104,13 @@
       <int>10</int>
      </void>
      <void property="estado">
-      <int>2</int>
-     </void>
-     <void property="fechaAceptacion">
-      <object class="java.util.GregorianCalendar">
-       <void property="time">
-        <object class="java.util.Date">
-         <long>1477170895284</long>
-        </object>
-       </void>
-      </object>
-     </void>
-     <void property="fechaDefinitiva">
-      <object class="java.util.GregorianCalendar">
-       <void property="time">
-        <object class="java.util.Date">
-         <long>1479783600000</long>
-        </object>
-       </void>
-      </object>
+      <int>1</int>
      </void>
      <void property="fechaEntrega">
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1479783600000</long>
+         <long>1485831600000</long>
         </object>
        </void>
       </object>
@@ -142,7 +119,7 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1477170780120</long>
+         <long>1478396736436</long>
         </object>
        </void>
       </object>
@@ -151,19 +128,95 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1477882800000</long>
+         <long>1484449200000</long>
         </object>
        </void>
       </object>
      </void>
      <void property="listaObservaciones">
-      <object class="java.util.TreeSet"/>
+      <object class="java.util.TreeSet">
+       <void method="add">
+        <object class="empresa.Observacion">
+         <void property="NLegCreador">
+          <int>1</int>
+         </void>
+         <void property="fecha">
+          <object class="java.util.GregorianCalendar">
+           <void property="time">
+            <object class="java.util.Date">
+             <long>1478396939285</long>
+            </object>
+           </void>
+          </object>
+         </void>
+         <void property="observacion">
+          <string>Fecha aceptable.</string>
+         </void>
+         <void property="tema">
+          <string>FECHAS</string>
+         </void>
+        </object>
+       </void>
+       <void method="add">
+        <object class="empresa.Observacion">
+         <void property="NLegCreador">
+          <int>9999</int>
+         </void>
+         <void property="fecha">
+          <object class="java.util.GregorianCalendar">
+           <void property="time">
+            <object class="java.util.Date">
+             <long>1478397092015</long>
+            </object>
+           </void>
+          </object>
+         </void>
+         <void property="observacion">
+          <string>Prueba agregado de observacion extra.</string>
+         </void>
+         <void property="tema">
+          <string>OTROS</string>
+         </void>
+        </object>
+       </void>
+      </object>
      </void>
      <void property="maquina">
-      <object idref="ConsolaIndividual0"/>
+      <object class="empresa.Flipper" id="Flipper0">
+       <void property="listadoMateriales">
+        <void method="put">
+         <int>401</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>15.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>401</int>
+          </void>
+          <void property="descripcion">
+           <string>Madera</string>
+          </void>
+         </object>
+        </void>
+        <void method="put">
+         <int>404</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>30.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>404</int>
+          </void>
+          <void property="descripcion">
+           <string>Metal</string>
+          </void>
+         </object>
+        </void>
+       </void>
+      </object>
      </void>
      <void property="nroLote">
-      <int>1</int>
+      <int>-1</int>
      </void>
      <void property="nroPedido">
       <int>2</int>
@@ -174,25 +227,13 @@
     <int>3</int>
     <object class="empresa.Pedido">
      <void property="cantidad">
-      <int>15</int>
-     </void>
-     <void property="estado">
-      <int>1</int>
-     </void>
-     <void property="fechaAceptacion">
-      <object class="java.util.GregorianCalendar">
-       <void property="time">
-        <object class="java.util.Date">
-         <long>1477171000879</long>
-        </object>
-       </void>
-      </object>
+      <int>20</int>
      </void>
      <void property="fechaEntrega">
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1484449200000</long>
+         <long>1487559600000</long>
         </object>
        </void>
       </object>
@@ -201,65 +242,16 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1477170974613</long>
-        </object>
-       </void>
-      </object>
-     </void>
-     <void property="fechaPropProduccion">
-      <object class="java.util.GregorianCalendar">
-       <void property="time">
-        <object class="java.util.Date">
-         <long>1484017200000</long>
+         <long>1478455007217</long>
         </object>
        </void>
       </object>
      </void>
      <void property="listaObservaciones">
-      <object class="java.util.TreeSet">
-       <void method="add">
-        <object class="empresa.Observacion">
-         <void property="NLegCreador">
-          <int>2</int>
-         </void>
-         <void property="fecha">
-          <object class="java.util.GregorianCalendar">
-           <void property="time">
-            <object class="java.util.Date">
-             <long>1477171180405</long>
-            </object>
-           </void>
-          </object>
-         </void>
-         <void property="observacion">
-          <string>Acopiar plastico.</string>
-         </void>
-         <void property="tema">
-          <string>INSUMOS</string>
-         </void>
-        </object>
-       </void>
-      </object>
+      <object class="java.util.TreeSet"/>
      </void>
      <void property="maquina">
-      <object class="empresa.ConsolaGrupal" id="ConsolaGrupal0">
-       <void property="listadoMateriales">
-        <void method="put">
-         <int>402</int>
-         <object class="empresa.Material">
-          <void property="cantidad">
-           <double>150.0</double>
-          </void>
-          <void property="codigoMaterial">
-           <int>402</int>
-          </void>
-          <void property="descripcion">
-           <string>Plastico</string>
-          </void>
-         </object>
-        </void>
-       </void>
-      </object>
+      <object idref="Flipper0"/>
      </void>
      <void property="nroLote">
       <int>-1</int>
@@ -273,7 +265,7 @@
     <int>4</int>
     <object class="empresa.Pedido">
      <void property="cantidad">
-      <int>1</int>
+      <int>5</int>
      </void>
      <void property="estado">
       <int>2</int>
@@ -282,7 +274,7 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1477171431532</long>
+         <long>1478455318729</long>
         </object>
        </void>
       </object>
@@ -291,7 +283,7 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1480906800000</long>
+         <long>1480302000000</long>
         </object>
        </void>
       </object>
@@ -300,7 +292,7 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1480734000000</long>
+         <long>1480474800000</long>
         </object>
        </void>
       </object>
@@ -309,7 +301,7 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1477171330127</long>
+         <long>1478455245205</long>
         </object>
        </void>
       </object>
@@ -318,7 +310,7 @@
       <object class="java.util.GregorianCalendar">
        <void property="time">
         <object class="java.util.Date">
-         <long>1481770800000</long>
+         <long>1480302000000</long>
         </object>
        </void>
       </object>
@@ -327,27 +319,13 @@
       <object class="java.util.TreeSet"/>
      </void>
      <void property="maquina">
-      <object class="empresa.Flipper" id="Flipper0">
+      <object class="empresa.Simulador" id="Simulador0">
        <void property="listadoMateriales">
-        <void method="put">
-         <int>401</int>
-         <object class="empresa.Material">
-          <void property="cantidad">
-           <double>200.0</double>
-          </void>
-          <void property="codigoMaterial">
-           <int>401</int>
-          </void>
-          <void property="descripcion">
-           <string>Madera</string>
-          </void>
-         </object>
-        </void>
         <void method="put">
          <int>402</int>
          <object class="empresa.Material">
           <void property="cantidad">
-           <double>150.0</double>
+           <double>25.0</double>
           </void>
           <void property="codigoMaterial">
            <int>402</int>
@@ -358,16 +336,16 @@
          </object>
         </void>
         <void method="put">
-         <int>403</int>
+         <int>408</int>
          <object class="empresa.Material">
           <void property="cantidad">
-           <double>100.0</double>
+           <double>10.0</double>
           </void>
           <void property="codigoMaterial">
-           <int>403</int>
+           <int>408</int>
           </void>
           <void property="descripcion">
-           <string>Vidrio</string>
+           <string>Alambre</string>
           </void>
          </object>
         </void>
@@ -375,7 +353,7 @@
       </object>
      </void>
      <void property="nroLote">
-      <int>2</int>
+      <int>1</int>
      </void>
      <void property="nroPedido">
       <int>4</int>
@@ -385,12 +363,12 @@
   </void>
   <void property="productos">
    <void method="put">
-    <int>10001</int>
+    <int>100001</int>
     <object idref="ConsolaIndividual0"/>
    </void>
    <void method="put">
-    <int>100002</int>
-    <object idref="ConsolaGrupal0"/>
+    <int>100003</int>
+    <object idref="Simulador0"/>
    </void>
    <void method="put">
     <int>100004</int>

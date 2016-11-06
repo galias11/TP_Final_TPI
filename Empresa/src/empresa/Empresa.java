@@ -17,6 +17,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * Clase Empresa.
+ * Es el modelo del sistema, representa a la empresa, todo
+ * lo que esta posee empleados, productos, pedidos, etc. y ofrece
+ * la interfaz para operar con el sistema.
+ * inv:
+ * listaEmpleados no nulo.
+ * pedidos no nulo.
+ * inventario no nulo.
+ * productos no nulo.
+ * sectores no nulo. 
+ */
 public class Empresa {
     /**
      * @aggregation composite
@@ -28,14 +40,14 @@ public class Empresa {
     private HashMap<Integer, Maquina> productos;
     private HashMap<String, Sector> sectores;
     
-    public static final int OP_INIPED = 1;
-    public static final int OP_ACEPTPED = 2;
-    public static final int OP_GENLOTE = 3;
+    public static final int OP_INIC_PED = 1;
+    public static final int OP_ACEPT_PED = 2;
+    public static final int OP_GEN_LOTE = 3;
     public static final int OP_OBSERVAR = 4;
-    public static final int OP_MODREC = 5;
+    public static final int OP_MOD_RECETA = 5;
     public static final int OP_CANCELAR = 6;
     public static final int OP_FALTANTES = 7;
-    public static final int OP_MATNEC = 8;
+    public static final int OP_MAT_NECEC = 8;
 
     /**
      * @associates <{empresa.Material}>
@@ -69,13 +81,13 @@ public class Empresa {
         Sector s4 = new Sector("Inspeccion");
         Sector s5 = new Sector("Calidad");
         Sector s6 = new Sector("System ADM");
-        Operacion op1 = new Operacion(OP_INIPED, "Iniciar pedido.");
-        Operacion op2 = new Operacion(OP_ACEPTPED, "Aceptar pedido.");
-        Operacion op3 = new Operacion(OP_GENLOTE, "Generar lote para pedido.");
+        Operacion op1 = new Operacion(OP_INIC_PED, "Iniciar pedido.");
+        Operacion op2 = new Operacion(OP_ACEPT_PED, "Aceptar pedido.");
+        Operacion op3 = new Operacion(OP_GEN_LOTE, "Generar lote para pedido.");
         Operacion op4 = new Operacion(OP_OBSERVAR, "Realizar observacion a pedido.");
-        Operacion op5 = new Operacion(OP_MODREC, "Modificar receta producto.");
+        Operacion op5 = new Operacion(OP_MOD_RECETA, "Modificar receta producto.");
         Operacion op6 = new Operacion(OP_FALTANTES, "Consultar faltantes para completar pedido.");
-        Operacion op7 = new Operacion(OP_MATNEC, "Consultar materiales necesarios para completar pedido.");
+        Operacion op7 = new Operacion(OP_MAT_NECEC, "Consultar materiales necesarios para completar pedido.");
         Operacion op8 = new Operacion(OP_CANCELAR, "Cancelar pedido.");
         try{
             s1.agregarPermiso(op1);
@@ -146,6 +158,7 @@ public class Empresa {
         inventario.put(mat7.getCodigoMaterial(), mat7);
         inventario.put(mat8.getCodigoMaterial(), mat8);
         inventario.put(mat9.getCodigoMaterial(), mat9);
+        verificarInvariante();
     }
     
     /*
@@ -230,6 +243,7 @@ public class Empresa {
         if(!listaEmpleados.containsKey(nroLegajo))
             throw new EmpresaException("Empleado no existente.");
         user = listaEmpleados.get(nroLegajo);
+        verificarInvariante();
     }
     
     /**
@@ -243,6 +257,7 @@ public class Empresa {
     public void deslog(){
         assert(user != null) : ("No hay ningun usuario logueado.");
         user = null;
+        verificarInvariante();
     }
     
     /**
@@ -332,7 +347,7 @@ public class Empresa {
     public void iniciarPedido(int codMaq, int cantidad, Calendar fechaEntrega)
         throws EmpresaException
     {
-        assert(user.autorizaOperacion(OP_INIPED)) : ("Usuario no autorizado para realizar operación");
+        assert(user.autorizaOperacion(OP_INIC_PED)) : ("Usuario no autorizado para realizar operación");
         assert(fechaEntrega != null) : ("Fecha de entrega nula");
         assert(GregorianCalendar.getInstance().before(fechaEntrega)) : ("Fecha de entrega en el pasado.");
         assert(cantidad > 0) : ("Cantidad no valida.");
@@ -340,10 +355,11 @@ public class Empresa {
             throw new EmpresaException("Producto a fabricar inexistente.");
         Pedido p = new Pedido(productos.get(codMaq), cantidad, fechaEntrega);
         pedidos.put(p.getNroPedido(), p);
+        verificarInvariante();
     }
     
     /**
-     * Metodo aceptarPedido
+     * Metodo iniciarEvaluacionPedido
      * Acepta un pedido solicitado por su codigo de pedido del listado de pedidos.
      * PreCondicion: 
      * El empleado debe poseer permisos para realizar la operación.
@@ -356,10 +372,10 @@ public class Empresa {
      * @throws EmpresaException
      * Si el pedido no existe o su estado no es iniciado se lanza esta excepcion.
      */
-    public void aceptarPedido(int nPed, Calendar fechaPropuesta)
+    public void inciarEvaluacionPedido(int nPed, Calendar fechaPropuesta)
         throws EmpresaException
     {
-        assert(user.autorizaOperacion(OP_ACEPTPED)) : ("Usuario no autorizado para realizar operación");
+        assert(user.autorizaOperacion(OP_ACEPT_PED)) : ("Usuario no autorizado para realizar operación");
         assert(fechaPropuesta != null) : ("Fecha nula.");
         assert(fechaPropuesta.after(GregorianCalendar.getInstance())) : ("Fecha propuesta en el pasado.");
         if(!pedidos.containsKey(nPed))
@@ -368,6 +384,7 @@ public class Empresa {
         if(!(p.getEstado() == Pedido.INICIADO))
             throw new EmpresaException("Pedido no esta en estado de iniciado.");
         p.estadoEvaluacion(fechaPropuesta);
+        verificarInvariante();
     }
     
     /**
@@ -392,11 +409,12 @@ public class Empresa {
             throw new EmpresaException("Pedido inexistente.");
         if(!(p.getEstado() == Pedido.INICIADO || p.getEstado() == Pedido.EN_EVALUACION))
             throw new EmpresaException("Pedido no esta en fase de evaluacion/inciado.");
-        Observacion obs = new Observacion(Observacion.OTROS, user.getLegajo(), motivo);
+        Observacion obs = new Observacion(Observacion.TEMA_OTROS, user.getLegajo(), motivo);
         if(p.getEstado() == Pedido.INICIADO)
             p.estadoEvaluacion(GregorianCalendar.getInstance());
         p.insertarObservacion(obs);
         p.estadoCancelado();
+        verificarInvariante();
     }
     
     /**
@@ -428,11 +446,12 @@ public class Empresa {
             Material matStock = inventario.get(matReceta.getCodigoMaterial());
             matStock.registrarRetiro(matReceta.getCantidad());
         }
+        verificarInvariante();
     }
     
     
     /**
-     * Metodo generarLote
+     * Metodo aceptarPedido
      * Genera un lote de produccion a partir de un pedido que se encuentra en estado de evaluacion.
      * Al hacerlo el estado del pedido pasa a ser ACEPTADO y se asigna 
      * una fecha definitiva.
@@ -447,10 +466,10 @@ public class Empresa {
      * @throws EmpresaException
      * Si el pedido no existe o su estado no es en evaluacion se lanza esta excepcion.
      */
-    public void generarLote(int nPed, Calendar fechaDefinitiva)
+    public void aceptarPedido(int nPed, Calendar fechaDefinitiva)
         throws EmpresaException
     {
-        assert(user.autorizaOperacion(OP_GENLOTE)) : ("Usuario no esta autorizado para realizar operación.");
+        assert(user.autorizaOperacion(OP_GEN_LOTE)) : ("Usuario no esta autorizado para realizar operación.");
         assert(fechaDefinitiva != null) : ("Fecha definitiva nula");
         assert(fechaDefinitiva.after(GregorianCalendar.getInstance())) : ("Fecha definitiva en el pasado.");
         if(!pedidos.containsKey(nPed))
@@ -460,6 +479,7 @@ public class Empresa {
             throw new EmpresaException("Pedido no esta en estado de evaluacion.");
         reservarMateriales(nPed);
         p.estadoAceptado(fechaDefinitiva);
+        verificarInvariante();
     }
     
     /**
@@ -483,8 +503,8 @@ public class Empresa {
     public void observarPedido(int nPed, String tema, String obs)
         throws EmpresaException
     {
-        assert(tema.equals(Observacion.FECHAS) || tema.equals(Observacion.INSUMOS) ||
-               tema.equals(Observacion.OTROS)) : ("Tema no valido.");
+        assert(tema.equals(Observacion.TEMA_FECHAS) || tema.equals(Observacion.TEMA_INSUMOS) ||
+               tema.equals(Observacion.TEMA_OTROS)) : ("Tema no valido.");
         assert(obs.length() <= 500) : ("Observacion tiene mas caracteres de los permitidos.");
         if(!pedidos.containsKey(nPed))
             throw new EmpresaException("Pedido inexistente.");
@@ -493,6 +513,7 @@ public class Empresa {
             throw new EmpresaException("Pedido no esta en estado de evaluacion.");
         Observacion o = new Observacion(tema, user.getLegajo(), obs);
         p.insertarObservacion(o);
+        verificarInvariante();
     }
     
     /**
@@ -544,6 +565,7 @@ public class Empresa {
             throw new EmpresaException("Maquina inexistente.");
         Maquina m = productos.get(codMaq);
         m.modificarCantidadMaterial(codMat, cant);
+        verificarInvariante();
     }
     
     /**
@@ -575,6 +597,7 @@ public class Empresa {
             throw new EmpresaException("Material no registrado.");
         Material mat = inventario.get(codMat);
         maq.agregarMaterial(new Material(mat.getCodigoMaterial(), mat.getDescripcion(), cant));
+        verificarInvariante();
     }
     
     /**
@@ -595,6 +618,7 @@ public class Empresa {
             throw new EmpresaException("Maquina inexistente.");
         Maquina m = productos.get(codMaq);
         m.eliminarMaterial(codMat);
+        verificarInvariante();
     }
     
     /**
@@ -627,28 +651,38 @@ public class Empresa {
     
     public static void serializacion(Empresa empresa)
         throws FileNotFoundException
-  {
-      XMLEncoder encoder = null;
-      encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("empresa.xml")));
-      encoder.writeObject(empresa);
-      encoder.close();
-  }
+    {
+        empresa.verificarInvariante();
+        XMLEncoder encoder = null;
+        encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("empresa.xml")));
+        encoder.writeObject(empresa);
+        encoder.close();
+    }
     
     public static Empresa deserializacion()
-    throws FileNotFoundException
-  {
-      Empresa empresa = null;
-      XMLDecoder decoder = null;
-      decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream("empresa.xml")));
-      empresa = (Empresa) decoder.readObject();
-      int ultPedido = empresa.getPedidos().size();
-      int ultLote = 0;
-      Iterator<Pedido> itPed = empresa.getPedidos().values().iterator();
-      while(itPed.hasNext())
-          if(itPed.next().getEstado() == Pedido.ACEPTADO)
-              ultLote++;
-      Pedido.actualizarVariablesClase(ultPedido, ultLote);
-      decoder.close();
-      return empresa;
+        throws FileNotFoundException
+    {
+        Empresa empresa = null;
+        XMLDecoder decoder = null;
+        decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream("empresa.xml")));
+        empresa = (Empresa) decoder.readObject();
+        int ultPedido = empresa.getPedidos().size();
+        int ultLote = 0;
+        Iterator<Pedido> itPed = empresa.getPedidos().values().iterator();
+        while(itPed.hasNext())
+            if(itPed.next().getEstado() == Pedido.ACEPTADO)
+                ultLote++;
+        Pedido.actualizarVariablesClase(ultPedido, ultLote);
+        decoder.close();
+        empresa.verificarInvariante();
+        return empresa;
+    }
+    
+    private void verificarInvariante(){
+        assert(listaEmpleados != null) : ("Listado empleados nulo.");
+        assert(pedidos != null) : ("Listado pedidos nulo.");
+        assert(inventario != null) : ("Inventario nulo.");
+        assert(productos != null) : ("Listado productos nulo.");
+        assert(sectores != null) : ("Listado sectores nulo.");
     }
 }

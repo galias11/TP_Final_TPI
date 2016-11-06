@@ -354,17 +354,11 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Volver"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="volverActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="agregar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Agregar observacion"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="agregarActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>

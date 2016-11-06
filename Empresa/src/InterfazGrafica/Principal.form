@@ -144,9 +144,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Cerrar Sesion"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deslogActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -242,65 +239,41 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Nuevo Pedido"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nuevoPedidoActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="aceptPedido">
           <Properties>
             <Property name="text" type="java.lang.String" value="Iniciar evaluacion pedido"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="aceptPedidoActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="genLote">
           <Properties>
             <Property name="text" type="java.lang.String" value="Aceptar pedido y Generar lote"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="genLoteActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="observaciones">
           <Properties>
             <Property name="text" type="java.lang.String" value="Adm. Observaciones pedido"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="observacionesActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="admProductos">
           <Properties>
             <Property name="text" type="java.lang.String" value="Administrar productos"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="admProductosActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="faltantes">
           <Properties>
             <Property name="text" type="java.lang.String" value="Consultar faltantes"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="faltantesActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="matNecesarios">
           <Properties>
             <Property name="text" type="java.lang.String" value="Consultar materiales pedido"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="matNecesariosActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="cancelar">
           <Properties>
             <Property name="text" type="java.lang.String" value="Cancelar pedido"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelarActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -456,7 +429,6 @@
               </Properties>
               <Events>
                 <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tablaPedidosMouseReleased"/>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tablaPedidosKeyPressed"/>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="tablaPedidosKeyReleased"/>
               </Events>
             </Component>
@@ -599,9 +571,6 @@
                   <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                 </Property>
               </Properties>
-              <Events>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tablaStockMouseReleased"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>

@@ -3,6 +3,15 @@ package empresa;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Clase Maquina.
+ * Clase que representa a cada uno de los productos que fabrica
+ * la empresa.
+ * invariante:
+ * codigo debe ser un valor entre 1 y 999999.
+ * descripcion debe ser distinto de null y no vacio.
+ * listado de materiales no puede ser nulo.
+ */
 public class Maquina {
     private int codigo;
     private String descripcion;
@@ -22,10 +31,24 @@ public class Maquina {
         
     }
     
+    /**
+     * Contructor con parametros.
+     * PreCondicion:
+     * codigo se debe encontrar en un rango entre 1 y 999999.
+     * descripcion debe ser distinto de null y no vacio.
+     * @param codigo
+     * int: codigo identificatorio de la maquina.
+     * @param descripcion
+     * String: texto descriptivo de la maquina.
+     */
     public Maquina(int codigo, String descripcion){
+        assert(descripcion != null) : ("Descripcion nula.");
+        assert(!descripcion.isEmpty()) : ("Descripcion vacia.");
+        assert(codigo > 0 && codigo < 1000000) : ("Codigo fuera de rango.");
         this.codigo = codigo;
         this.descripcion = descripcion;
         listadoMateriales = new HashMap<Integer, Material>();
+        verificarInvariante();
     }
     
     /*
@@ -51,7 +74,6 @@ public class Maquina {
      * ***********************************************
      */
 
-
     public String getDescripcion() {
         return descripcion;
     }
@@ -60,11 +82,9 @@ public class Maquina {
         return codigo;
     }
 
-
     public HashMap<Integer, Material> getListadoMateriales() {
         return listadoMateriales;
     }
-    
     
     /**
      * Metodo: agregarMaterial
@@ -86,13 +106,14 @@ public class Maquina {
             listadoMateriales.put(material.getCodigoMaterial(), material);
         else
             throw new EmpresaException("El material ya se encuentra en el listado.");
+        verificarInvariante();
     }
     
     /**
      * Metodo: modificarCantidadMaterial
      * Modifica la cantidad necesaria para un material pasado como parametro.
      * PreCondicion:
-     * La cantidad a modificcar es mayor que cero.
+     * La cantidad a modificar es mayor que cero.
      * PostCondicion:
      * La cantidad necesaria para el material ahora es el valor del parametro.
      * @param codigo
@@ -104,13 +125,15 @@ public class Maquina {
      */
     public void modificarCantidadMaterial(int codigo, double cantidad)
         throws EmpresaException
-    {
+    { 
+        assert(cantidad > 0.0) : ("Cantidad no valida.");
         if(listadoMateriales.containsKey(codigo)){
             Material mAux = listadoMateriales.get(codigo);
             Material mInsert = new Material(codigo, mAux.getDescripcion(), cantidad);
             listadoMateriales.put(codigo, mInsert);
         }else
             throw new EmpresaException("El material no se encuentra en el listado.");
+        verificarInvariante();
     }
     
     /**
@@ -132,6 +155,16 @@ public class Maquina {
             listadoMateriales.remove(codigo, mAux);
         } else
             throw new EmpresaException("El material no se encuentra en el listado.");
+        verificarInvariante();
     }
 
+    /**
+     * Invariante de clase (ver comentario de clase)
+     */
+    private void verificarInvariante(){
+        assert(codigo > 1 && codigo < 1000000) : ("Codigo fuera de rango");
+        assert(descripcion != null) : ("Descripcion nula.");
+        assert(!descripcion.isEmpty()) : ("Descripcion vacia.");
+        assert(listadoMateriales != null) : ("Listado de materiales nulo.");
+    }
 }

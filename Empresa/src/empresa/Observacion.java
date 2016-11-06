@@ -5,15 +5,23 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * Clase observacion.
+ * Representa a las observaciones que se realizan de los 
+ * diferentes pedidos.
+ * inv:
+ * tema no nulo y uno de TEMA_FECHAS, TEMA_INSUMOS, TEMA_OTROS
+ * observacion no nula, no vacia y longitud menor a 500 caracteres.
+ */
 public class Observacion implements Comparable{
     private String tema;
     private Calendar fecha;
     private int nLegCreador;
     private String observacion;
     
-    public static final String FECHAS = "FECHAS";
-    public static final String INSUMOS = "INSUMOS";
-    public static final String OTROS = "OTROS";
+    public static final String TEMA_FECHAS = "FECHAS";
+    public static final String TEMA_INSUMOS = "INSUMOS";
+    public static final String TEMA_OTROS = "OTROS";
     
     /**
      * Constructor vacio para serializacion.
@@ -23,12 +31,32 @@ public class Observacion implements Comparable{
         
     }
     
+    /**
+     * Constructor con parametros.
+     * Precondicion:
+     * el parametro observación debe ser una cadena no nula ni vacia.
+     * el parametro observacion puede tener como maximo 500 caracteres.
+     * el parametro tema debe ser no nulo y uno de: Fechas, insumos, otros.
+     * @param tema
+     * String: tema de la observacion
+     * @param nLegCreador
+     * int: nro. de legajo del emisor de la obs.
+     * @param observacion
+     * String: texto descriptivo de la observacion
+     */
     public Observacion(String tema, int nLegCreador, String observacion)
     {
+        assert(tema != null) : ("Tema nulo.");
+        assert(tema.equals(TEMA_FECHAS) || tema.equals(TEMA_INSUMOS)
+               || tema.equals(TEMA_OTROS)) : ("Tema no valido.");
+        assert(observacion != null) : ("Observacion nula");
+        assert(!observacion.isEmpty()) : ("Observacion vacia.");
+        assert(observacion.length() <= 500) : ("Observacion muy larga");
         this.tema = tema;
         this.fecha = GregorianCalendar.getInstance();
         this.nLegCreador = nLegCreador;
         this.observacion = observacion;
+        verificarInvariante();
     }
     
     /*
@@ -78,7 +106,7 @@ public class Observacion implements Comparable{
     @Override 
     public int compareTo(Object o){
         int cmp = 0;
-        if(!(o == this || !(o instanceof Observacion))){
+        if(o != this && o instanceof Observacion){
             cmp = tema.compareTo(((Observacion)o).tema);
             if(cmp == 0)
                 cmp = fecha.compareTo(((Observacion)o).fecha);
@@ -94,4 +122,12 @@ public class Observacion implements Comparable{
                              observacion);
     }
     
+    private void verificarInvariante(){
+        assert(tema != null) : ("Tema nulo.");
+        assert(tema.equals(TEMA_FECHAS) || tema.equals(TEMA_OTROS)
+               || tema.equals(TEMA_INSUMOS)) : ("Tema no valido.");
+        assert(observacion != null) : ("Observacion nula");
+        assert(!observacion.isEmpty()) : ("Observacion vacia");
+        assert(observacion.length() <= 500) : ("Observacion fuera de limite");
+    }
 }

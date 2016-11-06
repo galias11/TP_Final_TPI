@@ -13,28 +13,91 @@ import java.util.HashMap;
 
 import java.util.Iterator;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author bruno
+ * Clase VentanaMaquinas.
+ * Esta interfaz grafica se ocupa de la administración de las 
+ * recetas de los distintos productos disponibles en la
+ * empresa.
  */
-public class VentanaMateriales
+public class VentanaMaquinas
   extends javax.swing.JFrame implements InterfazMaquina
 {
-    HashMap<Integer, Maquina> maquinas;
-    HashMap<Integer, Material> inventario;
+    private HashMap<Integer, Maquina> maquinas;
+    private HashMap<Integer, Material> inventario;
 
-  /** Creates new form VentanaMateriales */
-  public VentanaMateriales(HashMap<Integer, Maquina> maquinas, HashMap<Integer, Material> inventario)
-  {
-    initComponents();
-    inicializarComponentes();
-    this.maquinas = maquinas;
-    this.inventario = inventario;
-  }
+    /**
+     * Contructor VentanaMaquinas.
+     * Precondicion:
+     * maquinas no nulo
+     * inventario no nulo
+     * @param maquinas
+     * HashMap: Listado de maquinas (posibles de producir) de la empresa.
+     * @param inventario
+     * HashMap: Inventario de materiales de la empresa.
+     */
+    public VentanaMaquinas(HashMap<Integer, Maquina> maquinas, HashMap<Integer, Material> inventario)
+    {
+        assert(maquinas != null) : ("Listado maquinas nulo.");
+        assert(inventario != null) : ("Inventario nulo.");
+        initComponents();
+        inicializarComponentes();
+        this.maquinas = maquinas;
+        this.inventario = inventario;
+    }
+    
+    /*
+     * Getters para posible test de GUI.
+     */
+
+
+    public JButton getAgregar() {
+        return agregar;
+    }
+
+    public JButton getEliminar() {
+        return eliminar;
+    }
+
+    public JComboBox<String> getJComboBox1() {
+        return jComboBox1;
+    }
+
+    public JTable getJTable1() {
+        return jTable1;
+    }
+
+    public JTable getJTable2() {
+        return jTable2;
+    }
+
+    public JTextArea getJTextArea1() {
+        return jTextArea1;
+    }
+
+    public JButton getMod() {
+        return mod;
+    }
+
+    public JButton getVolver() {
+        return volver;
+    }
+
+
+    /*
+     * ************************************
+     */
   
+    /**
+     * metodo InicializarComponentes
+     * Inicializa los componentes de la ventana.
+     */
     private void inicializarComponentes(){
         jComboBox1.removeAllItems();
         jTextArea1.setLineWrap(true);
@@ -63,6 +126,7 @@ public class VentanaMateriales
     
     @Override
     public void setControlador(Controladora c){
+        assert(c != null) : ("Controladora nula.");
         agregar.addActionListener(c);
         eliminar.addActionListener(c);
         mod.addActionListener(c);
@@ -235,22 +299,17 @@ public class VentanaMateriales
         agregar.setText("Agregar");
 
         eliminar.setText("Eliminar");
-        eliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eliminarActionPerformed(evt);
-            }
-        });
 
         mod.setText("Modificar cantidad");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                jComboBox1PopupMenuWillBecomeInvisible(evt);
+            }
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
-            }
-            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
-                jComboBox1PopupMenuWillBecomeInvisible(evt);
             }
         });
 
@@ -388,11 +447,11 @@ public class VentanaMateriales
 
         pack();
     }//GEN-END:initComponents
-
-    private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_eliminarActionPerformed
-
+    
+    /**
+     * Refresca los componentes de la ventana de acuerdo al 
+     * elemento seleccionado del comboBox.
+     */
     private void jComboBox1PopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_jComboBox1PopupMenuWillBecomeInvisible
         // TODO add your handling code here:
         jTextArea1.setText(maquinas.get(Integer.parseInt((String) jComboBox1.getSelectedItem())).getDescripcion());
@@ -423,22 +482,22 @@ public class VentanaMateriales
     }
     catch (ClassNotFoundException ex)
     {
-      java.util.logging.Logger.getLogger(VentanaMateriales.class.getName()).log(java.util.logging.Level.SEVERE, null,
+      java.util.logging.Logger.getLogger(VentanaMaquinas.class.getName()).log(java.util.logging.Level.SEVERE, null,
                                                                                 ex);
     }
     catch (InstantiationException ex)
     {
-      java.util.logging.Logger.getLogger(VentanaMateriales.class.getName()).log(java.util.logging.Level.SEVERE, null,
+      java.util.logging.Logger.getLogger(VentanaMaquinas.class.getName()).log(java.util.logging.Level.SEVERE, null,
                                                                                 ex);
     }
     catch (IllegalAccessException ex)
     {
-      java.util.logging.Logger.getLogger(VentanaMateriales.class.getName()).log(java.util.logging.Level.SEVERE, null,
+      java.util.logging.Logger.getLogger(VentanaMaquinas.class.getName()).log(java.util.logging.Level.SEVERE, null,
                                                                                 ex);
     }
     catch (javax.swing.UnsupportedLookAndFeelException ex)
     {
-      java.util.logging.Logger.getLogger(VentanaMateriales.class.getName()).log(java.util.logging.Level.SEVERE, null,
+      java.util.logging.Logger.getLogger(VentanaMaquinas.class.getName()).log(java.util.logging.Level.SEVERE, null,
                                                                                 ex);
     }
     //</editor-fold>

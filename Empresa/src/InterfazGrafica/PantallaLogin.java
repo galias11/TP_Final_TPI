@@ -8,51 +8,72 @@ import empresa.Empresa;
 
 import empresa.EmpresaException;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 /**
- *
- * @author bruno
+ * Clase PantallaLogin
+ * Pantalla inicial del sistema, solicita los datos del legajo
+ * para permitir acceso al sistema.
  */
 public class PantallaLogin 
   extends javax.swing.JFrame implements InterfazLogin
 {
     
-  /** Creates new form NuevaSecion */
-  public PantallaLogin()
-  {
-    initComponents();
-    setLocationRelativeTo(null);
-    ingresar.setActionCommand(InterfazLogin.LOGIN);
-  }
+    /** Creates new form NuevaSecion */
+    public PantallaLogin()
+    {
+        initComponents();
+        setLocationRelativeTo(null);
+        ingresar.setActionCommand(InterfazLogin.LOGIN);
+    }
+    
+    /*
+     * Getters para eventual test de GUI
+     */
+
+
+    public JButton getIngresar() {
+        return ingresar;
+    }
+
+    public JTextField getJTextField1() {
+        return jTextField1;
+    }
+
+    /*
+     * *************************************
+     */
   
-  @Override
-  public int getNroLegajo()
-    throws NumberFormatException
-  {
-      return Integer.parseInt(jTextField1.getText());
-  }
+    @Override
+    public int getNroLegajo()
+        throws NumberFormatException
+    {
+        return Integer.parseInt(jTextField1.getText());
+    }
   
-  @Override
-  public void mostrar(){
-      this.setVisible(true);
-  }
+    @Override
+    public void mostrar(){
+        this.setVisible(true);
+    }
   
-  @Override
-  public void ocultar(){
-      this.setVisible(false);
-  }
+    @Override
+    public void ocultar(){
+        this.setVisible(false);
+    }
   
-  @Override
-  public void setControlador(Controladora c){
-      ingresar.addActionListener(c);
-  }
+    @Override
+    public void setControlador(Controladora c){
+        assert(c != null) : ("Controladora nula.");
+        ingresar.addActionListener(c);
+    }
   
-  @Override
-  public void cerrar(){
-      this.dispose();
-  }
+    @Override
+    public void cerrar(){
+        this.dispose();
+    }
   
   
 
@@ -76,18 +97,7 @@ public class PantallaLogin
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Iniciar Sesion"));
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
-
         ingresar.setText("Ingresar");
-        ingresar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ingresarActionPerformed(evt);
-            }
-        });
 
         jLabel1.setText("Ingrese su numero de legajo");
 
@@ -138,15 +148,6 @@ public class PantallaLogin
 
         pack();
     }//GEN-END:initComponents
-
-  private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jTextField1ActionPerformed
-  {//GEN-HEADEREND:event_jTextField1ActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ingresarActionPerformed
 
   /**
    * @param args the command line arguments

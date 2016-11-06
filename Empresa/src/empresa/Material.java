@@ -1,5 +1,16 @@
 package empresa;
 
+/**
+ * Clase: Material
+ * Esta clase representa a un material, puede ser tanto un
+ * material del stock de la empresa como un material 
+ * en una receta de un producto o un material auxiliar que
+ * se instancia.
+ * invariante:
+ * codigoMaterial debe estar en un rango entre 1 y 99999
+ * descripcion no puede ser nulo ni vacio.
+ * cantidad tiene que ser mayor o igual que 0.0
+ */
 public class Material {
     private int codigoMaterial;
     private String descripcion;
@@ -13,10 +24,28 @@ public class Material {
         
     }
     
+    /**
+     * Constructor con parametros.
+     * Precondicion:
+     * codigo material en rango 1..99999
+     * descripcion no nula ni vacia
+     * cantidad mayor o igual que 0
+     * @param codigoMaterial
+     * int: codigo del material
+     * @param descripcion
+     * String: descripcion del material
+     * @param cantidad
+     * cantidad: cantidad a setear del material.
+     */
     public Material(int codigoMaterial, String descripcion, double cantidad) {
+        assert(codigoMaterial > 0 && codigoMaterial < 100000) : ("CodigoMaterial fuera de rango");
+        assert(descripcion != null) : ("Descripcion nula.");
+        assert(!descripcion.isEmpty()) : ("Descripcion vacia.");
+        assert(cantidad >= 0.0) : ("Cantidad menor o igual que cero");
         this.codigoMaterial = codigoMaterial;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
+        verificarInvariante();
     }
     
     /*
@@ -24,7 +53,6 @@ public class Material {
      * Getters y setters agregados para serializacion.
      * ***********************************************
      */
-
 
     public void setCodigoMaterial(int codigoMaterial) {
         this.codigoMaterial = codigoMaterial;
@@ -73,11 +101,12 @@ public class Material {
         assert(cantidad > 0.0) : ("Cantidad a retirar no valida.");
         if(cantidad > this.cantidad)
             throw new EmpresaException("Cantidad a retirar no valida.");
-        this.cantidad -= cantidad;    
+        this.cantidad -= cantidad; 
+        verificarInvariante();
     }
     
     /**
-     * Metodo: registrarIngresa
+     * Metodo: registrarIngreso
      * Registra el ingreso de una cantidad de existencias para el material.
      * PreCondicion:
      * La cantidad a ingresar debe ser mayor que cero.
@@ -92,6 +121,7 @@ public class Material {
     {
         assert(cantidad > 0.0) : ("Cantidad no valida.");
         this.cantidad += cantidad;
+        verificarInvariante();
     }
     
     /**
@@ -118,5 +148,13 @@ public class Material {
         if(!(o instanceof Material))
             return false;
         return ((Material)o).codigoMaterial == codigoMaterial;
+    }
+    
+    private void verificarInvariante(){
+        assert(codigoMaterial > 0 && codigoMaterial < 100000) 
+            : ("Codigo material fuera de rango");
+        assert(descripcion != null) : ("Descripcion nula");
+        assert(!descripcion.isEmpty()) : ("Descripcion vacia.");
+        assert(cantidad >= 0.0) : ("Cantidad por debajo de cero.");
     }
 }

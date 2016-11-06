@@ -4,48 +4,41 @@ package InterfazGrafica;
 import Controladora.Controladora;
 import Controladora.InterfazException;
 import Controladora.InterfazPrincipal;
-
 import empresa.Empleado;
 import empresa.Empresa;
-
-import empresa.EmpresaException;
 import empresa.Material;
-import empresa.Operacion;
 import empresa.Pedido;
-
-import java.awt.Dimension;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-
 import java.util.Vector;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 
 /**
- *
- * @author bruno
+ * clase Principal
+ * Interfaz principal del programa donde pueden acceder
+ * todos los empleados y visualizar los diferentes pedidos
+ * y su estado. Ademas ofrece todas las operaciones a realizar,
+ * restringiendo el acceso a las mismas de acuerdo con la
+ * autorizacion de cada usuario.
  */
 public class Principal 
   extends javax.swing.JFrame implements InterfazPrincipal
 {
-    Empresa empresa;
-    Empleado usuario;
+    private Empresa empresa;
+    private Empleado usuario;
        
 
     public Principal(Empleado usuario, Empresa empresa){
@@ -59,6 +52,91 @@ public class Principal
         refresh();
     }
     
+    /*
+     * Getters para eventual test de GUI
+     */
+
+
+    public JButton getAceptPedido() {
+        return aceptPedido;
+    }
+
+    public JButton getAdmProductos() {
+        return admProductos;
+    }
+
+    public JTextField getAyn() {
+        return ayn;
+    }
+
+    public JButton getCancelar() {
+        return cancelar;
+    }
+
+    public JTextArea getDescPedido() {
+        return descPedido;
+    }
+
+    public JButton getDeslog() {
+        return deslog;
+    }
+
+    public JButton getFaltantes() {
+        return faltantes;
+    }
+
+    public JCheckBox getFiltro_aceptado() {
+        return filtro_aceptado;
+    }
+
+    public JCheckBox getFiltro_cancelado() {
+        return filtro_cancelado;
+    }
+
+    public JCheckBox getFiltro_evaluacion() {
+        return filtro_evaluacion;
+    }
+
+    public JCheckBox getFiltro_iniciado() {
+        return filtro_iniciado;
+    }
+
+    public JButton getGenLote() {
+        return genLote;
+    }
+
+    public JButton getMatNecesarios() {
+        return matNecesarios;
+    }
+
+    public JTextField getNLeg() {
+        return nLeg;
+    }
+
+    public JButton getNuevoPedido() {
+        return nuevoPedido;
+    }
+
+    public JButton getObservaciones() {
+        return observaciones;
+    }
+
+    public JTextField getSector() {
+        return sector;
+    }
+
+    public JTable getTablaPedidos() {
+        return tablaPedidos;
+    }
+
+    public JTable getTablaStock() {
+        return tablaStock;
+    }
+
+    /*
+     * **************************
+     */
+    
     @Override
     public void mostrar(){
         this.setVisible(true);
@@ -71,6 +149,7 @@ public class Principal
 
     @Override
     public void setControlador(Controladora c){
+        assert(c != null) : ("Contoladora nula");
         deslog.addActionListener(c);
         nuevoPedido.addActionListener(c);
         aceptPedido.addActionListener(c);
@@ -108,16 +187,23 @@ public class Principal
         return (Pedido) tablaPedidos.getValueAt(row, 0);
     }
     
+    /**
+     * metodo inicializar
+     * Inicializa los diferentes componentes de la interfaz.
+     * De acuerdo a los servicios que tiene autorizado el usuario
+     * habilita o no los diferentes botones de la interfaz de
+     * usuario.
+     */
     private void inicializar(){
         inicializarTablas();
         deslog.setActionCommand(InterfazPrincipal.DESLOG);
-        nuevoPedido.setActionCommand(InterfazPrincipal.NPED);
-        aceptPedido.setActionCommand(InterfazPrincipal.APED);
-        genLote.setActionCommand(InterfazPrincipal.GLOT);
+        nuevoPedido.setActionCommand(InterfazPrincipal.INIC_PED);
+        aceptPedido.setActionCommand(InterfazPrincipal.EVAL_PED);
+        genLote.setActionCommand(InterfazPrincipal.ACEPT_PED);
         observaciones.setActionCommand(InterfazPrincipal.OBS);
-        admProductos.setActionCommand(InterfazPrincipal.APROD);
-        faltantes.setActionCommand(InterfazPrincipal.MATFALT);
-        matNecesarios.setActionCommand(InterfazPrincipal.MATNEC);
+        admProductos.setActionCommand(InterfazPrincipal.ADM_PROD);
+        faltantes.setActionCommand(InterfazPrincipal.MAT_FALT);
+        matNecesarios.setActionCommand(InterfazPrincipal.MAT_NEC);
         cancelar.setActionCommand(InterfazPrincipal.CANC);
         nuevoPedido.setEnabled(false);
         aceptPedido.setEnabled(false);
@@ -127,17 +213,17 @@ public class Principal
         matNecesarios.setEnabled(false);
         faltantes.setEnabled(false);
         cancelar.setEnabled(false);
-        if(usuario.autorizaOperacion(Empresa.OP_INIPED))
+        if(usuario.autorizaOperacion(Empresa.OP_INIC_PED))
             nuevoPedido.setEnabled(true);
-        if(usuario.autorizaOperacion(Empresa.OP_ACEPTPED))
+        if(usuario.autorizaOperacion(Empresa.OP_ACEPT_PED))
             aceptPedido.setEnabled(true);
-        if(usuario.autorizaOperacion(Empresa.OP_GENLOTE))
+        if(usuario.autorizaOperacion(Empresa.OP_GEN_LOTE))
             genLote.setEnabled(true);
         if(usuario.autorizaOperacion(Empresa.OP_OBSERVAR))
             observaciones.setEnabled(true);
-        if(usuario.autorizaOperacion(Empresa.OP_MODREC))
+        if(usuario.autorizaOperacion(Empresa.OP_MOD_RECETA))
             admProductos.setEnabled(true);
-        if(usuario.autorizaOperacion(Empresa.OP_MATNEC))
+        if(usuario.autorizaOperacion(Empresa.OP_MAT_NECEC))
             matNecesarios.setEnabled(true);
         if(usuario.autorizaOperacion(Empresa.OP_FALTANTES))
             faltantes.setEnabled(true);
@@ -150,6 +236,10 @@ public class Principal
         descPedido.setText("");
     }
     
+    /**
+     * metodo inicializarTablas
+     * Inicializa el formato de las tablas de la interfaz.
+     */
     private void inicializarTablas(){
         tablaPedidos.getColumnModel().getColumn(0).setMaxWidth(0);
         tablaPedidos.getColumnModel().getColumn(0).setMinWidth(0);
@@ -185,6 +275,7 @@ public class Principal
     
     @Override
     public void lanzarCartel(String str){
+        assert(str != null) : ("Cadena mensaje nula.");
         JTextArea comp = new JTextArea();
         comp.setText("Materiales necesarios: " + System.lineSeparator() + str);
         comp.setEditable(false);
@@ -194,6 +285,7 @@ public class Principal
     
     @Override
     public void lanzarCartelConLista(Iterator it){
+        assert(it != null) : ("Iterador lista nulo.");
         Vector columns = new Vector();
         JTable tabla = new JTable();
         DefaultTableModel model = (DefaultTableModel) tabla.getModel();
@@ -223,6 +315,8 @@ public class Principal
             throw new InterfazException("CANCEL");
         if(motivo.isEmpty())
             throw new InterfazException("Motivo no valido (vacio).");
+        if(motivo.length() > 500)
+            throw new InterfazException("Motivo excede limite.");
         return motivo;
     }
     
@@ -333,539 +427,428 @@ public class Principal
    * always regenerated by the Form Editor.
    */
   @SuppressWarnings("unchecked")
-  private void initComponents()//GEN-BEGIN:initComponents
-  {
+    private void initComponents() {//GEN-BEGIN:initComponents
 
-    jComboBox1 = new javax.swing.JComboBox();
-    jPanel1 = new javax.swing.JPanel();
-    deslog = new javax.swing.JButton();
-    jLabel1 = new javax.swing.JLabel();
-    jLabel2 = new javax.swing.JLabel();
-    jLabel3 = new javax.swing.JLabel();
-    jLabel4 = new javax.swing.JLabel();
-    nLeg = new javax.swing.JTextField();
-    ayn = new javax.swing.JTextField();
-    sector = new javax.swing.JTextField();
-    jPanel2 = new javax.swing.JPanel();
-    nuevoPedido = new javax.swing.JButton();
-    aceptPedido = new javax.swing.JButton();
-    genLote = new javax.swing.JButton();
-    observaciones = new javax.swing.JButton();
-    admProductos = new javax.swing.JButton();
-    faltantes = new javax.swing.JButton();
-    matNecesarios = new javax.swing.JButton();
-    cancelar = new javax.swing.JButton();
-    jPanel3 = new javax.swing.JPanel();
-    jScrollPane1 = new javax.swing.JScrollPane();
-    tablaPedidos = new javax.swing.JTable();
-    filtro_iniciado = new javax.swing.JCheckBox();
-    filtro_evaluacion = new javax.swing.JCheckBox();
-    filtro_aceptado = new javax.swing.JCheckBox();
-    filtro_cancelado = new javax.swing.JCheckBox();
-    jLabel5 = new javax.swing.JLabel();
-    jScrollPane3 = new javax.swing.JScrollPane();
-    descPedido = new javax.swing.JTextArea();
-    jPanel4 = new javax.swing.JPanel();
-    jScrollPane2 = new javax.swing.JScrollPane();
-    tablaStock = new javax.swing.JTable();
+        jComboBox1 = new javax.swing.JComboBox();
+        jPanel1 = new javax.swing.JPanel();
+        deslog = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        nLeg = new javax.swing.JTextField();
+        ayn = new javax.swing.JTextField();
+        sector = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        nuevoPedido = new javax.swing.JButton();
+        aceptPedido = new javax.swing.JButton();
+        genLote = new javax.swing.JButton();
+        observaciones = new javax.swing.JButton();
+        admProductos = new javax.swing.JButton();
+        faltantes = new javax.swing.JButton();
+        matNecesarios = new javax.swing.JButton();
+        cancelar = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaPedidos = new javax.swing.JTable();
+        filtro_iniciado = new javax.swing.JCheckBox();
+        filtro_evaluacion = new javax.swing.JCheckBox();
+        filtro_aceptado = new javax.swing.JCheckBox();
+        filtro_cancelado = new javax.swing.JCheckBox();
+        jLabel5 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        descPedido = new javax.swing.JTextArea();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaStock = new javax.swing.JTable();
 
-    jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-    setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-    setTitle("GuiLeoCrisAl S.A");
-    setResizable(false);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("GuiLeoCrisAl S.A");
+        setResizable(false);
 
-    jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Informacion de usuario"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Informacion de usuario"));
 
-    deslog.setText("Cerrar Sesion");
-    deslog.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        deslogActionPerformed(evt);
-      }
-    });
+        deslog.setText("Cerrar Sesion");
 
-    jLabel1.setText("Legajo:");
+        jLabel1.setText("Legajo:");
 
-    jLabel2.setText("Apellido y");
+        jLabel2.setText("Apellido y");
 
-    jLabel3.setText("Nombre:");
+        jLabel3.setText("Nombre:");
 
-    jLabel4.setText("Sector:");
+        jLabel4.setText("Sector:");
 
-    nLeg.setEditable(false);
+        nLeg.setEditable(false);
 
-    ayn.setEditable(false);
+        ayn.setEditable(false);
 
-    sector.setEditable(false);
+        sector.setEditable(false);
 
-    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-    jPanel1.setLayout(jPanel1Layout);
-    jPanel1Layout.setHorizontalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(deslog, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(jLabel2)
-              .addComponent(jLabel3)
-              .addComponent(jLabel4)
-              .addComponent(jLabel1))
-            .addGap(13, 13, 13)
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(sector, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-              .addComponent(ayn)
-              .addComponent(nLeg))))
-        .addContainerGap())
-    );
-    jPanel1Layout.setVerticalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel1)
-          .addComponent(nLeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jLabel2)
-          .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-            .addComponent(ayn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(jLabel3)))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(jLabel4)
-          .addComponent(sector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-        .addComponent(deslog)
-        .addContainerGap())
-    );
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(deslog, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel1))
+                        .addGap(13, 13, 13)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(sector, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                            .addComponent(ayn)
+                            .addComponent(nLeg))))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(nLeg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ayn, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(sector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(deslog)
+                .addContainerGap())
+        );
 
-    jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Opciones"));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Opciones"));
 
-    nuevoPedido.setText("Nuevo Pedido");
-    nuevoPedido.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        nuevoPedidoActionPerformed(evt);
-      }
-    });
+        nuevoPedido.setText("Nuevo Pedido");
 
-    aceptPedido.setText("Iniciar evaluacion pedido");
-    aceptPedido.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        aceptPedidoActionPerformed(evt);
-      }
-    });
+        aceptPedido.setText("Iniciar evaluacion pedido");
 
-    genLote.setText("Aceptar pedido y Generar lote");
-    genLote.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        genLoteActionPerformed(evt);
-      }
-    });
+        genLote.setText("Aceptar pedido y Generar lote");
 
-    observaciones.setText("Adm. Observaciones pedido");
-    observaciones.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        observacionesActionPerformed(evt);
-      }
-    });
+        observaciones.setText("Adm. Observaciones pedido");
 
-    admProductos.setText("Administrar productos");
-    admProductos.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        admProductosActionPerformed(evt);
-      }
-    });
+        admProductos.setText("Administrar productos");
 
-    faltantes.setText("Consultar faltantes");
-    faltantes.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        faltantesActionPerformed(evt);
-      }
-    });
+        faltantes.setText("Consultar faltantes");
 
-    matNecesarios.setText("Consultar materiales pedido");
-    matNecesarios.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        matNecesariosActionPerformed(evt);
-      }
-    });
+        matNecesarios.setText("Consultar materiales pedido");
 
-    cancelar.setText("Cancelar pedido");
-    cancelar.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        cancelarActionPerformed(evt);
-      }
-    });
+        cancelar.setText("Cancelar pedido");
 
-    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-    jPanel2.setLayout(jPanel2Layout);
-    jPanel2Layout.setHorizontalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel2Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(nuevoPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(aceptPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(genLote, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-          .addComponent(observaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-          .addComponent(admProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-          .addComponent(faltantes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-          .addComponent(matNecesarios, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-          .addComponent(cancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
-        .addContainerGap())
-    );
-    jPanel2Layout.setVerticalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel2Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(nuevoPedido)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(aceptPedido)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(genLote)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(cancelar)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(observaciones)
-        .addGap(76, 76, 76)
-        .addComponent(matNecesarios)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(faltantes)
-        .addGap(36, 36, 36)
-        .addComponent(admProductos)
-        .addContainerGap())
-    );
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(nuevoPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(aceptPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(genLote, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(observaciones, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(admProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(faltantes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(matNecesarios, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                    .addComponent(cancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(nuevoPedido)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(aceptPedido)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(genLote)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cancelar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(observaciones)
+                .addGap(76, 76, 76)
+                .addComponent(matNecesarios)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(faltantes)
+                .addGap(36, 36, 36)
+                .addComponent(admProductos)
+                .addContainerGap())
+        );
 
-    jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedidos"));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Pedidos"));
 
-    tablaPedidos.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][]
-      {
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null},
-        {null, null, null, null, null, null, null, null, null, null, null}
-      },
-      new String []
-      {
-        "Sel", "Numero", "F. Inic", "Tipo Maq.", "Cant.", "F. Ent. Ventas", "F. Ent. Prod.", "F. Definitiva", "F. Acept.", "Estado", "Nro. Lote"
-      }
-    )
-    {
-      boolean[] canEdit = new boolean []
-      {
-        false, false, false, false, false, false, false, false, false, false, false
-      };
+        tablaPedidos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Sel", "Numero", "F. Inic", "Tipo Maq.", "Cant.", "F. Ent. Ventas", "F. Ent. Prod.", "F. Definitiva", "F. Acept.", "Estado", "Nro. Lote"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false, false
+            };
 
-      public boolean isCellEditable(int rowIndex, int columnIndex)
-      {
-        return canEdit [columnIndex];
-      }
-    });
-    tablaPedidos.setGridColor(java.awt.SystemColor.activeCaption);
-    tablaPedidos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    tablaPedidos.setShowVerticalLines(false);
-    tablaPedidos.getTableHeader().setReorderingAllowed(false);
-    tablaPedidos.addMouseListener(new java.awt.event.MouseAdapter()
-    {
-      public void mouseReleased(java.awt.event.MouseEvent evt)
-      {
-        tablaPedidosMouseReleased(evt);
-      }
-    });
-    tablaPedidos.addKeyListener(new java.awt.event.KeyAdapter()
-    {
-      public void keyPressed(java.awt.event.KeyEvent evt)
-      {
-        tablaPedidosKeyPressed(evt);
-      }
-      public void keyReleased(java.awt.event.KeyEvent evt)
-      {
-        tablaPedidosKeyReleased(evt);
-      }
-    });
-    jScrollPane1.setViewportView(tablaPedidos);
-    if (tablaPedidos.getColumnModel().getColumnCount() > 0)
-    {
-      tablaPedidos.getColumnModel().getColumn(0).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(0).setPreferredWidth(0);
-      tablaPedidos.getColumnModel().getColumn(0).setHeaderValue("Sel");
-      tablaPedidos.getColumnModel().getColumn(1).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(1).setPreferredWidth(75);
-      tablaPedidos.getColumnModel().getColumn(1).setHeaderValue("Numero");
-      tablaPedidos.getColumnModel().getColumn(2).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(2).setPreferredWidth(80);
-      tablaPedidos.getColumnModel().getColumn(2).setHeaderValue("F. Inic");
-      tablaPedidos.getColumnModel().getColumn(3).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(3).setPreferredWidth(75);
-      tablaPedidos.getColumnModel().getColumn(3).setHeaderValue("Tipo Maq.");
-      tablaPedidos.getColumnModel().getColumn(4).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(4).setPreferredWidth(75);
-      tablaPedidos.getColumnModel().getColumn(4).setHeaderValue("Cant.");
-      tablaPedidos.getColumnModel().getColumn(5).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(5).setPreferredWidth(80);
-      tablaPedidos.getColumnModel().getColumn(5).setHeaderValue("F. Ent. Ventas");
-      tablaPedidos.getColumnModel().getColumn(6).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(6).setPreferredWidth(80);
-      tablaPedidos.getColumnModel().getColumn(6).setHeaderValue("F. Ent. Prod.");
-      tablaPedidos.getColumnModel().getColumn(7).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(7).setPreferredWidth(80);
-      tablaPedidos.getColumnModel().getColumn(7).setHeaderValue("F. Definitiva");
-      tablaPedidos.getColumnModel().getColumn(8).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(8).setPreferredWidth(80);
-      tablaPedidos.getColumnModel().getColumn(8).setHeaderValue("F. Acept.");
-      tablaPedidos.getColumnModel().getColumn(9).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(9).setPreferredWidth(100);
-      tablaPedidos.getColumnModel().getColumn(9).setHeaderValue("Estado");
-      tablaPedidos.getColumnModel().getColumn(10).setResizable(false);
-      tablaPedidos.getColumnModel().getColumn(10).setPreferredWidth(75);
-      tablaPedidos.getColumnModel().getColumn(10).setHeaderValue("Nro. Lote");
-    }
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaPedidos.setGridColor(java.awt.SystemColor.activeCaption);
+        tablaPedidos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPedidos.setShowVerticalLines(false);
+        tablaPedidos.getTableHeader().setReorderingAllowed(false);
+        tablaPedidos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tablaPedidosMouseReleased(evt);
+            }
+        });
+        tablaPedidos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tablaPedidosKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaPedidos);
+        if (tablaPedidos.getColumnModel().getColumnCount() > 0) {
+            tablaPedidos.getColumnModel().getColumn(0).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tablaPedidos.getColumnModel().getColumn(0).setHeaderValue("Sel");
+            tablaPedidos.getColumnModel().getColumn(1).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(1).setPreferredWidth(75);
+            tablaPedidos.getColumnModel().getColumn(1).setHeaderValue("Numero");
+            tablaPedidos.getColumnModel().getColumn(2).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(2).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(2).setHeaderValue("F. Inic");
+            tablaPedidos.getColumnModel().getColumn(3).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(3).setPreferredWidth(75);
+            tablaPedidos.getColumnModel().getColumn(3).setHeaderValue("Tipo Maq.");
+            tablaPedidos.getColumnModel().getColumn(4).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(4).setPreferredWidth(75);
+            tablaPedidos.getColumnModel().getColumn(4).setHeaderValue("Cant.");
+            tablaPedidos.getColumnModel().getColumn(5).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(5).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(5).setHeaderValue("F. Ent. Ventas");
+            tablaPedidos.getColumnModel().getColumn(6).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(6).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(6).setHeaderValue("F. Ent. Prod.");
+            tablaPedidos.getColumnModel().getColumn(7).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(7).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(7).setHeaderValue("F. Definitiva");
+            tablaPedidos.getColumnModel().getColumn(8).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(8).setPreferredWidth(80);
+            tablaPedidos.getColumnModel().getColumn(8).setHeaderValue("F. Acept.");
+            tablaPedidos.getColumnModel().getColumn(9).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(9).setPreferredWidth(100);
+            tablaPedidos.getColumnModel().getColumn(9).setHeaderValue("Estado");
+            tablaPedidos.getColumnModel().getColumn(10).setResizable(false);
+            tablaPedidos.getColumnModel().getColumn(10).setPreferredWidth(75);
+            tablaPedidos.getColumnModel().getColumn(10).setHeaderValue("Nro. Lote");
+        }
 
-    filtro_iniciado.setText("Iniciado");
-    filtro_iniciado.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        filtro_iniciadoActionPerformed(evt);
-      }
-    });
+        filtro_iniciado.setText("Iniciado");
+        filtro_iniciado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtro_iniciadoActionPerformed(evt);
+            }
+        });
 
-    filtro_evaluacion.setText("En evaluación");
-    filtro_evaluacion.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        filtro_evaluacionActionPerformed(evt);
-      }
-    });
+        filtro_evaluacion.setText("En evaluación");
+        filtro_evaluacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtro_evaluacionActionPerformed(evt);
+            }
+        });
 
-    filtro_aceptado.setText("Aceptado");
-    filtro_aceptado.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        filtro_aceptadoActionPerformed(evt);
-      }
-    });
+        filtro_aceptado.setText("Aceptado");
+        filtro_aceptado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtro_aceptadoActionPerformed(evt);
+            }
+        });
 
-    filtro_cancelado.setText("Cancelado");
-    filtro_cancelado.addActionListener(new java.awt.event.ActionListener()
-    {
-      public void actionPerformed(java.awt.event.ActionEvent evt)
-      {
-        filtro_canceladoActionPerformed(evt);
-      }
-    });
+        filtro_cancelado.setText("Cancelado");
+        filtro_cancelado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filtro_canceladoActionPerformed(evt);
+            }
+        });
 
-    jLabel5.setText("Filtro estado:");
+        jLabel5.setText("Filtro estado:");
 
-    descPedido.setEditable(false);
-    descPedido.setColumns(20);
-    descPedido.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
-    descPedido.setRows(5);
-    jScrollPane3.setViewportView(descPedido);
+        descPedido.setEditable(false);
+        descPedido.setColumns(20);
+        descPedido.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
+        descPedido.setRows(5);
+        jScrollPane3.setViewportView(descPedido);
 
-    javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-    jPanel3.setLayout(jPanel3Layout);
-    jPanel3Layout.setHorizontalGroup(
-      jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(filtro_iniciado)
-        .addGap(34, 34, 34)
-        .addComponent(filtro_evaluacion)
-        .addGap(29, 29, 29)
-        .addComponent(filtro_aceptado)
-        .addGap(35, 35, 35)
-        .addComponent(filtro_cancelado)
-        .addGap(156, 156, 156))
-      .addGroup(jPanel3Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 993, Short.MAX_VALUE)
-          .addComponent(jScrollPane3))
-        .addContainerGap())
-    );
-    jPanel3Layout.setVerticalGroup(
-      jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(filtro_iniciado)
-          .addComponent(filtro_evaluacion)
-          .addComponent(filtro_aceptado)
-          .addComponent(filtro_cancelado)
-          .addComponent(jLabel5))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap())
-    );
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(filtro_iniciado)
+                .addGap(34, 34, 34)
+                .addComponent(filtro_evaluacion)
+                .addGap(29, 29, 29)
+                .addComponent(filtro_aceptado)
+                .addGap(35, 35, 35)
+                .addComponent(filtro_cancelado)
+                .addGap(156, 156, 156))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 993, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filtro_iniciado)
+                    .addComponent(filtro_evaluacion)
+                    .addComponent(filtro_aceptado)
+                    .addComponent(filtro_cancelado)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
-    jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Stock de Materiales"));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Stock de Materiales"));
 
-    tablaStock.setModel(new javax.swing.table.DefaultTableModel(
-      new Object [][]
-      {
-        {null, null, null, null},
-        {null, null, null, null},
-        {null, null, null, null},
-        {null, null, null, null}
-      },
-      new String []
-      {
-        "Sel", "Codigo", "Descripcion", "Cantidad"
-      }
-    )
-    {
-      boolean[] canEdit = new boolean []
-      {
-        false, false, false, false
-      };
+        tablaStock.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Sel", "Codigo", "Descripcion", "Cantidad"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
-      public boolean isCellEditable(int rowIndex, int columnIndex)
-      {
-        return canEdit [columnIndex];
-      }
-    });
-    tablaStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-    tablaStock.setShowVerticalLines(false);
-    tablaStock.addMouseListener(new java.awt.event.MouseAdapter()
-    {
-      public void mouseReleased(java.awt.event.MouseEvent evt)
-      {
-        tablaStockMouseReleased(evt);
-      }
-    });
-    jScrollPane2.setViewportView(tablaStock);
-    if (tablaStock.getColumnModel().getColumnCount() > 0)
-    {
-      tablaStock.getColumnModel().getColumn(0).setResizable(false);
-      tablaStock.getColumnModel().getColumn(0).setPreferredWidth(0);
-      tablaStock.getColumnModel().getColumn(0).setHeaderValue("Sel");
-      tablaStock.getColumnModel().getColumn(1).setResizable(false);
-      tablaStock.getColumnModel().getColumn(1).setPreferredWidth(100);
-      tablaStock.getColumnModel().getColumn(1).setHeaderValue("Codigo");
-      tablaStock.getColumnModel().getColumn(2).setResizable(false);
-      tablaStock.getColumnModel().getColumn(2).setPreferredWidth(600);
-      tablaStock.getColumnModel().getColumn(2).setHeaderValue("Descripcion");
-      tablaStock.getColumnModel().getColumn(3).setResizable(false);
-      tablaStock.getColumnModel().getColumn(3).setPreferredWidth(100);
-      tablaStock.getColumnModel().getColumn(3).setHeaderValue("Cantidad");
-    }
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaStock.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaStock.setShowVerticalLines(false);
+        jScrollPane2.setViewportView(tablaStock);
+        if (tablaStock.getColumnModel().getColumnCount() > 0) {
+            tablaStock.getColumnModel().getColumn(0).setResizable(false);
+            tablaStock.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tablaStock.getColumnModel().getColumn(0).setHeaderValue("Sel");
+            tablaStock.getColumnModel().getColumn(1).setResizable(false);
+            tablaStock.getColumnModel().getColumn(1).setPreferredWidth(100);
+            tablaStock.getColumnModel().getColumn(1).setHeaderValue("Codigo");
+            tablaStock.getColumnModel().getColumn(2).setResizable(false);
+            tablaStock.getColumnModel().getColumn(2).setPreferredWidth(600);
+            tablaStock.getColumnModel().getColumn(2).setHeaderValue("Descripcion");
+            tablaStock.getColumnModel().getColumn(3).setResizable(false);
+            tablaStock.getColumnModel().getColumn(3).setPreferredWidth(100);
+            tablaStock.getColumnModel().getColumn(3).setHeaderValue("Cantidad");
+        }
 
-    javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-    jPanel4.setLayout(jPanel4Layout);
-    jPanel4Layout.setHorizontalGroup(
-      jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel4Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jScrollPane2)
-        .addContainerGap())
-    );
-    jPanel4Layout.setVerticalGroup(
-      jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(jPanel4Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-        .addContainerGap())
-    );
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-    getContentPane().setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-          .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-          .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        .addContainerGap())
-    );
-    layout.setVerticalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addContainerGap()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-          .addGroup(layout.createSequentialGroup()
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-        .addContainerGap())
-    );
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
 
-    pack();
-  }//GEN-END:initComponents
+        pack();
+    }//GEN-END:initComponents
 
-  private void deslogActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_deslogActionPerformed
-  {//GEN-HEADEREND:event_deslogActionPerformed
-    // TODO add your handling code here:
-  }//GEN-LAST:event_deslogActionPerformed
-
-    private void genLoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genLoteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_genLoteActionPerformed
-
-    private void observacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_observacionesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_observacionesActionPerformed
-
-    private void admProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_admProductosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_admProductosActionPerformed
-
+    /**
+     * metodo interno de la interfaz, al seleccionar un pedido
+     * en la tabla de pedidos permite visualizar el detalle del
+     * mismo en un area de texto.
+     */
     private void tablaPedidosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPedidosMouseReleased
         // TODO add your handling code here:
         int row = tablaPedidos.getSelectedRow();
@@ -873,56 +856,52 @@ public class Principal
             descPedido.setText(((Pedido)tablaPedidos.getValueAt(row, 0)).toString());
     }//GEN-LAST:event_tablaPedidosMouseReleased
 
-    private void tablaStockMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaStockMouseReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tablaStockMouseReleased
-
-    private void nuevoPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoPedidoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nuevoPedidoActionPerformed
-
-    private void aceptPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptPedidoActionPerformed
-        // TODO add your handling code here:
- 
-    }//GEN-LAST:event_aceptPedidoActionPerformed
-
-    private void faltantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_faltantesActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_faltantesActionPerformed
-
-    private void matNecesariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_matNecesariosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_matNecesariosActionPerformed
-
-    private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cancelarActionPerformed
-
+    /**
+     * metodo interno de la interfaz, ante la seleccion o 
+     * deseleccion del checkbox hace que se refresquen las
+     * tablas de la interfaz.
+     */
     private void filtro_iniciadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtro_iniciadoActionPerformed
         // TODO add your handling code here:
         refresh();
     }//GEN-LAST:event_filtro_iniciadoActionPerformed
 
+    /**
+     * metodo interno de la interfaz, ante la seleccion o 
+     * deseleccion del checkbox hace que se refresquen las
+     * tablas de la interfaz.
+     */
     private void filtro_evaluacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtro_evaluacionActionPerformed
         // TODO add your handling code here:
         refresh();
     }//GEN-LAST:event_filtro_evaluacionActionPerformed
 
+    /**
+     * metodo interno de la interfaz, ante la seleccion o 
+     * deseleccion del checkbox hace que se refresquen las
+     * tablas de la interfaz.
+     */
     private void filtro_aceptadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtro_aceptadoActionPerformed
         // TODO add your handling code here:
         refresh();
     }//GEN-LAST:event_filtro_aceptadoActionPerformed
 
+    /**
+     * metodo interno de la interfaz, ante la seleccion o 
+     * deseleccion del checkbox hace que se refresquen las
+     * tablas de la interfaz.
+     */
     private void filtro_canceladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtro_canceladoActionPerformed
         // TODO add your handling code here:
         refresh();
     }//GEN-LAST:event_filtro_canceladoActionPerformed
 
-  private void tablaPedidosKeyPressed(java.awt.event.KeyEvent evt)//GEN-FIRST:event_tablaPedidosKeyPressed
-  {//GEN-HEADEREND:event_tablaPedidosKeyPressed
-    
-  }//GEN-LAST:event_tablaPedidosKeyPressed
-
+    /**
+     * metodo interno de la interfaz, al seleccionar un pedido
+     * en la tabla de pedidos permite visualizar el detalle del
+     * mismo en un area de texto. En este caso se programa el 
+     * evento cuando se cambia la seleccion con el teclado.
+     */
   private void tablaPedidosKeyReleased(java.awt.event.KeyEvent evt)//GEN-FIRST:event_tablaPedidosKeyReleased
   {//GEN-HEADEREND:event_tablaPedidosKeyReleased
     // TODO add your handling code here:
@@ -976,39 +955,39 @@ public class Principal
 
   }
 
-  // Variables declaration - do not modify//GEN-BEGIN:variables
-  private javax.swing.JButton aceptPedido;
-  private javax.swing.JButton admProductos;
-  private javax.swing.JTextField ayn;
-  private javax.swing.JButton cancelar;
-  private javax.swing.JTextArea descPedido;
-  private javax.swing.JButton deslog;
-  private javax.swing.JButton faltantes;
-  private javax.swing.JCheckBox filtro_aceptado;
-  private javax.swing.JCheckBox filtro_cancelado;
-  private javax.swing.JCheckBox filtro_evaluacion;
-  private javax.swing.JCheckBox filtro_iniciado;
-  private javax.swing.JButton genLote;
-  private javax.swing.JComboBox jComboBox1;
-  private javax.swing.JLabel jLabel1;
-  private javax.swing.JLabel jLabel2;
-  private javax.swing.JLabel jLabel3;
-  private javax.swing.JLabel jLabel4;
-  private javax.swing.JLabel jLabel5;
-  private javax.swing.JPanel jPanel1;
-  private javax.swing.JPanel jPanel2;
-  private javax.swing.JPanel jPanel3;
-  private javax.swing.JPanel jPanel4;
-  private javax.swing.JScrollPane jScrollPane1;
-  private javax.swing.JScrollPane jScrollPane2;
-  private javax.swing.JScrollPane jScrollPane3;
-  private javax.swing.JButton matNecesarios;
-  private javax.swing.JTextField nLeg;
-  private javax.swing.JButton nuevoPedido;
-  private javax.swing.JButton observaciones;
-  private javax.swing.JTextField sector;
-  private javax.swing.JTable tablaPedidos;
-  private javax.swing.JTable tablaStock;
-  // End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton aceptPedido;
+    private javax.swing.JButton admProductos;
+    private javax.swing.JTextField ayn;
+    private javax.swing.JButton cancelar;
+    private javax.swing.JTextArea descPedido;
+    private javax.swing.JButton deslog;
+    private javax.swing.JButton faltantes;
+    private javax.swing.JCheckBox filtro_aceptado;
+    private javax.swing.JCheckBox filtro_cancelado;
+    private javax.swing.JCheckBox filtro_evaluacion;
+    private javax.swing.JCheckBox filtro_iniciado;
+    private javax.swing.JButton genLote;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton matNecesarios;
+    private javax.swing.JTextField nLeg;
+    private javax.swing.JButton nuevoPedido;
+    private javax.swing.JButton observaciones;
+    private javax.swing.JTextField sector;
+    private javax.swing.JTable tablaPedidos;
+    private javax.swing.JTable tablaStock;
+    // End of variables declaration//GEN-END:variables
 
 }

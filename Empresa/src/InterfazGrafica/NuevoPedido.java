@@ -23,66 +23,124 @@ import java.util.HashMap;
 
 import java.util.Iterator;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
- *
- * @author bruno
+ * Clase NuevoPedido.
+ * Ventana de ingreso de datos para cargar nuevo pedido.
  */
 public class NuevoPedido 
   extends javax.swing.JFrame implements InterfazNuevoPed
 {
+  private HashMap<Integer, Maquina> maquinas;
+  
+    /**
+     * Constructor ventana NuevoPedido.
+     * Precondicion:
+     * maquinas no puede ser nulo.
+     * PostCondicion:
+     * 
+     * @param maquinas
+     * HashMap: Listado de las maquinas disponibles en la
+     * empresa.
+     */
+    public NuevoPedido(HashMap<Integer, Maquina> maquinas)
+    {
+        assert(maquinas != null) : ("Listado maquinas nulo.");
+        initComponents();
+        setLocationRelativeTo(null);
+        this.maquinas = maquinas;
+        inicializarComponentes();
+    }
+    
+    /*
+     * Getters para eventual Test de GUI
+     */
 
-  HashMap<Integer, Maquina> maquinas;
+
+    public JButton getAgregar() {
+        return agregar;
+    }
+
+    public JComboBox<String> getComboMaq() {
+        return comboMaq;
+    }
+
+    public JTextField getFechaSol() {
+        return fechaSol;
+    }
+
+    public JTextArea getJTextArea1() {
+        return jTextArea1;
+    }
+
+    public JTextField getTextCantMaq() {
+        return textCantMaq;
+    }
+
+    public JButton getVolver() {
+        return volver;
+    }
+
+    /*
+     * **********************************************
+     */
   
-  /** Creates new form NuevoPedido */
-  public NuevoPedido(HashMap<Integer, Maquina> maquinas)
-  {
-    initComponents();
-    setLocationRelativeTo(null);
-    this.maquinas = maquinas;
-    inicializarComponentes();
-  }
+    /**
+     * metodo inicializarComponentes
+     * Inicializa los componentes de la ventana.
+     */
+    private void inicializarComponentes(){
+        agregar.setActionCommand(InterfazNuevoPed.AGREGAR);
+        volver.setActionCommand(InterfazNuevoPed.VOLVER);
+        jTextArea1.setEditable(false);
+        cargarCombo();
+        jTextArea1.setText(maquinas.get(Integer.parseInt((String) comboMaq.getSelectedItem())).getDescripcion());
+    }
   
-  private void inicializarComponentes(){
-      agregar.setActionCommand(InterfazNuevoPed.AGREGAR);
-      volver.setActionCommand(InterfazNuevoPed.VOLVER);
-      jTextArea1.setEditable(false);
-      cargarCombo();
-      jTextArea1.setText(maquinas.get(Integer.parseInt((String) comboMaq.getSelectedItem())).getDescripcion());
-  }
+    /**
+     * metodo cargarCombo
+     * carga el comboBox con todas las opciones posibles de maquinas.
+     */
+    private void cargarCombo(){
+        comboMaq.removeAllItems();
+        Iterator<Maquina> itMaq = maquinas.values().iterator();
+        while(itMaq.hasNext())
+            comboMaq.addItem("" + itMaq.next().getCodigo());
+    }
   
-  private void cargarCombo(){
-      comboMaq.removeAllItems();
-      Iterator<Maquina> itMaq = maquinas.values().iterator();
-      while(itMaq.hasNext())
-          comboMaq.addItem("" + itMaq.next().getCodigo());
-  }
+    @Override
+    public void mostrar(){
+        this.setVisible(true);
+    }
   
-  @Override
-  public void mostrar(){
-      this.setVisible(true);
-  }
+    @Override
+    public void ocultar(){
+        this.setVisible(false);
+    }
   
-  @Override
-  public void ocultar(){
-      this.setVisible(false);
-  }
-  
-  @Override
-  public void cerrar(){
-      this.dispose();
-  }
+    @Override
+    public void cerrar(){
+        this.dispose();
+    }
   
     @Override
     public int getCodigoMaquina()
-        throws NumberFormatException
+        throws NumberFormatException, InterfazException
     {
-        return Integer.parseInt((String) comboMaq.getSelectedItem());
+        int codigo = Integer.parseInt((String) comboMaq.getSelectedItem());
+        if(codigo < 1 || codigo > 999999)
+            throw new InterfazException("Codigo fuera de rango.");
+        return codigo;
     }
   
     @Override
     public void setControlador(Controladora c){
+        assert(c != null) : ("Contoladora nula");
         volver.addActionListener(c);
         agregar.addActionListener(c);
     }
@@ -92,7 +150,7 @@ public class NuevoPedido
         throws NumberFormatException, InterfazException
     {
         int cantidad = Integer.parseInt(textCantMaq.getText());
-        if(!(cantidad > 0))
+        if(cantidad < 1)
             throw new InterfazException("Cantidad debe ser mayor que cero.");
         return cantidad;
     }
@@ -143,33 +201,17 @@ public class NuevoPedido
 
         jLabel5.setText("Fecha solicitada por Ventas:");
 
-        fechaSol.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fechaSolActionPerformed(evt);
-            }
-        });
-
         agregar.setText("Agregar Pedido");
-        agregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agregarActionPerformed(evt);
-            }
-        });
 
         volver.setText("Volver");
-        volver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                volverActionPerformed(evt);
-            }
-        });
 
         comboMaq.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
-            }
             public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
                 comboMaqPopupMenuWillBecomeInvisible(evt);
             }
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
+            }
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
         });
 
@@ -261,18 +303,10 @@ public class NuevoPedido
         pack();
     }//GEN-END:initComponents
 
-    private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_volverActionPerformed
-
-    private void agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_agregarActionPerformed
-
-    private void fechaSolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaSolActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fechaSolActionPerformed
-
+    /**
+     * Refresca la ventana en funcion del item que se selecciono
+     * en el comboBox.
+     */
     private void comboMaqPopupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {//GEN-FIRST:event_comboMaqPopupMenuWillBecomeInvisible
         // TODO add your handling code here:
         jTextArea1.setText(maquinas.get(Integer.parseInt((String) comboMaq.getSelectedItem())).getDescripcion());

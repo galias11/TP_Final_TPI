@@ -9,6 +9,34 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+/**
+ * Clase Pedido.
+ * Representa a cada pedido de la empresa.
+ * inv: 
+ * (Por estado):
+ * **INICIADO**
+ *  nroPedido mayor que 0 y menor que 1000000.
+ *  fechaPedido no nulo.
+ *  maquina no nula.
+ *  cantidad mayor que 0 y menor que 999.
+ *  fechaEntrega no nulo.
+ *  fechaPropPodroduccion nulo.
+ *  fechaDefinitiva nula.
+ *  fechaAceptacion nula.
+ *  estado = INICIADO.
+ *  listaObservaciones no nula.
+ *  nroLote -1;
+ * **EVALUACION** (se enumeran solo los cambios)
+ *  fechaPropProduccion no nula.
+ *  estado = EN_EVALUACION.
+ * **ACEPTADO** (se enumeran solo los cambios)
+ *  fechaDefinitiva no nula.
+ *  fechaAceptacion no nula.
+ *  estado = ACEPTADO.
+ *  nroLote > 0
+ * **CANCELADO** 
+ *  Estado de evaluacion + estado = Cancelado.
+ */
 public class Pedido {
     private static int ultPedido = 0;
     private static int ultLote = 0;
@@ -37,7 +65,25 @@ public class Pedido {
         
     }
     
+    /**
+     * Constructor con parametros.
+     * PreCondicion:
+     * maquina no nulo
+     * fechaEntrega no nulo
+     * cantidad > 0
+     * PostCondicion:
+     * 
+     * @param maquina
+     * Maquina: maquina a producir para el pedido.
+     * @param cantidad
+     * int: cantidad de maquinas a fabricar.
+     * @param fechaEntrega
+     * Calendar: fecha de entrega solicitada.
+     */
     public Pedido(Maquina maquina, int cantidad, Calendar fechaEntrega) {
+        assert(maquina != null) : ("Maquina nula");
+        assert(cantidad > 0 && cantidad < 999) : ("Cantidad fuera de rango.");
+        assert(fechaEntrega != null) : ("Fecha nula");
         this.nroPedido = ++ultPedido;
         this.fechaPedido = GregorianCalendar.getInstance();
         this.maquina = maquina;
@@ -49,6 +95,7 @@ public class Pedido {
         this.estado = this.INICIADO;
         this.listaObservaciones = new TreeSet<Observacion>();
         this.nroLote = -1;
+        verificarInvariante();
     }
     
     /*
@@ -187,11 +234,13 @@ public class Pedido {
         }
         return necesidad;
     }
+    
     /**
      * Metodo: estadoEvaluacion.
      * Cambia el estado del pedido iniciado a en evaluacion.
      * PreCondicion: 
      * El pedido debe encontrarse en estado de inciado.
+     * fechaPropuesta no nula.
      * PostCondicion:
      * El pedido cambia su estado a en evaluacion.
      * @param fechaPropuesta
@@ -200,10 +249,11 @@ public class Pedido {
      */
     public void estadoEvaluacion(Calendar fechaPropuesta)
     {
+        assert(fechaPropuesta != null) : ("Fecha propuesta nula");
         assert(estado == INICIADO) : ("Pedido no esta en estado de iniciado.");
         estado = EN_EVALUACION;
         this.fechaPropProduccion = fechaPropuesta;
-        this.fechaAceptacion = GregorianCalendar.getInstance();
+        verificarInvariante();
     }
     
     /**
@@ -212,16 +262,20 @@ public class Pedido {
      * Genera automaticamente el numero de lote.
      * PreCondicion:
      * El pedido debe encontrarse en estado de en evaluacion.
+     * fechaDefinitiva no nula.
      * PostCondicion:
      * El pedido cambia su estado a aceptado.
      * @param fechaDefinitiva
      * Calendar: fecha definitiva de produccion.
      */
     public void estadoAceptado(Calendar fechaDefinitiva){
+        assert(fechaDefinitiva != null) : ("Fecha definitiva nula.");
         assert(estado == EN_EVALUACION) : ("Pedido no se encuentra en estado de evaluacion.");
         estado = ACEPTADO;
         this.fechaDefinitiva = fechaDefinitiva;
+        this.fechaAceptacion = GregorianCalendar.getInstance();
         nroLote = ++ultLote;
+        verificarInvariante();
     }
     
     /**
@@ -236,6 +290,7 @@ public class Pedido {
         assert (estado == EN_EVALUACION || estado == INICIADO) :
             ("Pedido no esta en estado de evaluacion / iniciado.");
         estado = CANCELADO;
+        verificarInvariante();
     }
     
     /**
@@ -243,7 +298,6 @@ public class Pedido {
      * Agrega una observacion al pedido.
      * PreCondicion:
      * La observacion no es nula.
-     * La longitud de la observacion debe ser menor o igual a 500 caracteres.
      * PostCondicion:
      * El listado de observaciones contiene un elemento mas que antes de ejecutar el metodo.
      * @throws EmpresaException
@@ -254,12 +308,12 @@ public class Pedido {
         throws EmpresaException
     {
         assert(obs != null) : ("Observacion nula.");
-        assert(obs.getObservacion().length() <= 500) : ("Excede limite de caracteres");
         if(!(estado == EN_EVALUACION))
             throw new EmpresaException("El pedido no se encuentra en estado de evaluación");
         if(listaObservaciones.contains(obs))
             throw new EmpresaException("La observacion ya existe (?).");
         listaObservaciones.add(obs);
+        verificarInvariante();
     }
     
     
@@ -327,9 +381,86 @@ public class Pedido {
             "Fecha propuesta por Producción: %-10.10s" + System.lineSeparator() +
             "Fecha aceptado: %-10.10s          Fecha definitiva: %-10.10s" + System.lineSeparator() +
             "Estado: %-15.15s" + System.lineSeparator() +
-            "Número de lote: LOT%06d", nroPedido, fechaPed, strMaquina,
+            "Número de lote: LOT%6.6s", nroPedido, fechaPed, strMaquina,
             cantidad, fechaEnt, fechaPro, fechaAce, fechaDef, 
-            strEstado, nroLote);
+            strEstado, (nroLote == -1 ? "" : String.format("%06d", nroLote)));
         return str; 
+    }
+    
+    private void verificarInvariante(){
+        switch(estado){
+            case INICIADO:
+                assert(nroPedido > 0 && nroPedido < 1000000) : 
+                    ("Nro. pedido fuera de rango.");
+                assert(fechaPedido != null) : ("fechaPedido nula");
+                assert(maquina != null) : ("Maquina nula");
+                assert(cantidad > 0 && cantidad < 999) :
+                    ("Cantidad fuera de rango");
+                assert(fechaEntrega != null) : ("fechaEntrega nula");
+                assert(fechaPropProduccion == null) :
+                    ("fechaPropProduccion deberia ser nula");
+                assert(fechaDefinitiva == null) : 
+                    ("fechaDefinitiva deberia ser nula");
+                assert(fechaAceptacion == null) :
+                    ("fechaAceptacion deberia ser nula");
+                assert(nroLote == -1) : ("No deberia haber un nro lote asignado.");
+                assert(listaObservaciones != null) : ("Lista de observaciones nula.");
+                break;
+            case EN_EVALUACION:
+                assert(nroPedido > 0 && nroPedido < 1000000) : 
+                    ("Nro. pedido fuera de rango.");
+                assert(fechaPedido != null) : ("fechaPedido nula");
+                assert(maquina != null) : ("Maquina nula");
+                assert(cantidad > 0 && cantidad < 999) :
+                    ("Cantidad fuera de rango");
+                assert(fechaEntrega != null) : ("fechaEntrega nula");
+                assert(fechaPropProduccion != null) :
+                    ("fechaPropProduccion nula");
+                assert(fechaDefinitiva == null) : 
+                    ("fechaDefinitiva deberia ser nula");
+                assert(fechaAceptacion == null) :
+                    ("fechaAceptacion deberia ser nula");
+                assert(nroLote == -1) : ("No deberia haber un nro lote asignado.");
+                assert(listaObservaciones != null) : ("Lista de observaciones nula.");
+                break;
+            case ACEPTADO:
+                assert(nroPedido > 0 && nroPedido < 1000000) : 
+                    ("Nro. pedido fuera de rango.");
+                assert(fechaPedido != null) : ("fechaPedido nula");
+                assert(maquina != null) : ("Maquina nula");
+                assert(cantidad > 0 && cantidad < 999) :
+                    ("Cantidad fuera de rango");
+                assert(fechaEntrega != null) : ("fechaEntrega nula");
+                assert(fechaPropProduccion != null) :
+                    ("fechaPropProduccion nula");
+                assert(fechaDefinitiva != null) : 
+                    ("fechaDefinitiva nula");
+                assert(fechaAceptacion != null) :
+                    ("fechaAceptacion nula");
+                assert(nroLote > 0) : ("No hay nro de lote asignado.");
+                assert(listaObservaciones != null) : ("Lista de observaciones nula.");            
+                break;
+            case CANCELADO:
+                assert(nroPedido > 0 && nroPedido < 1000000) : 
+                    ("Nro. pedido fuera de rango.");
+                assert(fechaPedido != null) : ("fechaPedido nula");
+                assert(maquina != null) : ("Maquina nula");
+                assert(cantidad > 0 && cantidad < 999) :
+                    ("Cantidad fuera de rango");
+                assert(fechaEntrega != null) : ("fechaEntrega nula");
+                assert(fechaPropProduccion != null) :
+                    ("fechaPropProduccion nula");
+                assert(fechaDefinitiva == null) : 
+                    ("fechaDefinitiva deberia ser nula");
+                assert(fechaAceptacion == null) :
+                    ("fechaAceptacion deberia ser nula");
+                assert(nroLote == -1) : ("No deberia haber un nro lote asignado.");
+                assert(listaObservaciones != null) : ("Lista de observaciones nula.");
+                assert(listaObservaciones.size() > 0) :
+                    ("Lista observaciones deberia contener por lo menos una observacion.");
+                break;
+            default:
+                break;
+        }
     }
 }

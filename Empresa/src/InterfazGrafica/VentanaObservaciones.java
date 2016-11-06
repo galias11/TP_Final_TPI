@@ -14,32 +14,106 @@ import java.text.SimpleDateFormat;
 
 import java.util.Iterator;
 
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
- * @author bruno
+ * clase VentanaObservaciones.
+ * Ventana donde se pueden ver y administrar las observaciones
+ * para un determinado pedido.
  */
 public class VentanaObservaciones
   extends javax.swing.JFrame implements InterfazObservaciones
 {
-    Pedido pedido;
+    private Pedido pedido;
     
-  /** Creates new form VentanaObservaciones */
-  public VentanaObservaciones(Pedido pedido)
-  {
-    initComponents();
-    setLocationRelativeTo(null);
-    this.pedido = pedido;
-    inicializarComponentes();
-  }
+    /**
+     * Constructor de la ventana observaciones.
+     * PreCondicion:
+     * pedido no nulo.
+     * PostCondicion:
+     *
+     * @param pedido
+     * Pedido: pedido activo de la ventana.
+    */
+    public VentanaObservaciones(Pedido pedido)
+    {
+        assert(pedido != null) : ("Pedido nulo.");
+        initComponents();
+        setLocationRelativeTo(null);
+        this.pedido = pedido;
+        inicializarComponentes();
+    }
   
-  private void inicializarComponentes(){
-      agregar.setActionCommand(InterfazObservaciones.AGREGAR);
-      volver.setActionCommand(InterfazObservaciones.VOLVER);
-  }
-  
+    private void inicializarComponentes(){
+        agregar.setActionCommand(InterfazObservaciones.AGREGAR);
+        volver.setActionCommand(InterfazObservaciones.VOLVER);
+    }
+    
+    /*
+     * Getters para test de GUI
+     */
+
+
+    public JButton getAgregar() {
+        return agregar;
+    }
+
+    public JTextField getJTextField1() {
+        return jTextField1;
+    }
+
+    public JTextField getJTextField10() {
+        return jTextField10;
+    }
+
+    public JTextField getJTextField2() {
+        return jTextField2;
+    }
+
+    public JTextField getJTextField3() {
+        return jTextField3;
+    }
+
+    public JTextField getJTextField4() {
+        return jTextField4;
+    }
+
+    public JTextField getJTextField5() {
+        return jTextField5;
+    }
+
+    public JTextField getJTextField6() {
+        return jTextField6;
+    }
+
+    public JTextField getJTextField7() {
+        return jTextField7;
+    }
+
+    public JTextField getJTextField8() {
+        return jTextField8;
+    }
+
+    public JTextField getJTextField9() {
+        return jTextField9;
+    }
+
+    public JTable getTablaObservaciones() {
+        return tablaObservaciones;
+    }
+
+    public JButton getVolver() {
+        return volver;
+    }
+    
+    /*
+     * **********************************
+     */
+
     @Override
     public void refresh(){
         cargarPedido();
@@ -63,6 +137,7 @@ public class VentanaObservaciones
     
     @Override
     public void setControlador(Controladora c){
+        assert(c != null) : ("Controladora nula.");
         agregar.addActionListener(c);
         volver.addActionListener(c);
     }
@@ -81,6 +156,11 @@ public class VentanaObservaciones
         return pedido;
     }
   
+    /**
+     * metodo cargarPedido.
+     * Coloca a los diferentes campos de la interfaz los valores
+     * correspondientes al pedido activo.
+     */
     private void cargarPedido(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         jTextField1.setText(String.format("PED%06d", pedido.getNroPedido()));
@@ -341,18 +421,8 @@ public class VentanaObservaciones
         }
 
         volver.setText("Volver");
-        volver.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                volverActionPerformed(evt);
-            }
-        });
 
         agregar.setText("Agregar observacion");
-        agregar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                agregarActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -405,10 +475,6 @@ public class VentanaObservaciones
         pack();
     }//GEN-END:initComponents
 
-    private void volverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_volverActionPerformed
-
     private void tablaObservacionesMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaObservacionesMouseReleased
         // TODO add your handling code here:
         int row = tablaObservaciones.getSelectedRow();
@@ -421,10 +487,6 @@ public class VentanaObservaciones
             JOptionPane.showMessageDialog(null, msg, "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_tablaObservacionesMouseReleased
-
-    private void agregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_agregarActionPerformed
 
   /**
    * @param args the command line arguments
