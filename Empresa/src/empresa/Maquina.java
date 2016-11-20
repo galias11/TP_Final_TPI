@@ -93,6 +93,7 @@ public class Maquina {
      * El material a insertar no es nulo.
      * PostCondicion:
      * La lista de materiales incrementa la cantidad de materiales en 1.
+     * Ahora contiine al material pasado como parametro.
      * @param material
      * Material: material a insertar con su respectiva cantidad.
      * @throws EmpresaException

@@ -328,7 +328,8 @@ public class Empresa {
     /**
      * Metodo: iniciarPedido
      * Inserta un pedido al listado de pedidos.
-     * PreCondicion: 
+     * PreCondicion:
+     * Usuario debe tener autorizacion para realizar la operacion.
      * Se asume que la fecha de entrega no sera nula y será una fecha
      * en el futuro.
      * Se asume una cantidad a producir mayor que cero.
@@ -341,8 +342,7 @@ public class Empresa {
      * @param fechaEntrega
      * Calendar: fecha de entrega solicitada.
      * @throws EmpresaException
-     * Si codigo de maquina no existe o la fecha de entrega esta en
-     * el pasado lanza esta excepcion.
+     * Si codigo de maquina no existe.
      */
     public void iniciarPedido(int codMaq, int cantidad, Calendar fechaEntrega)
         throws EmpresaException
@@ -392,6 +392,7 @@ public class Empresa {
      * Metodo que cancela un pedido, es decir, cambia su estado.
      * PreCondicion:
      * El usuario debe tener permisos para realizar la operacion.
+     * La longitud del motivo debe ser de entre 1 y 500 caracteres.
      * PostCondicion:
      * El pedido cambia su estado a CANCELADO
      * @param nPed
@@ -421,7 +422,7 @@ public class Empresa {
      * Metodo: reservarMateriales
      * A partir de un pedido, reserva(retira del stock) todos los materiales
      * necesarios para cumplimentarlo.
-     * Precondicon:
+     * Precondicion:
      * Este es un metodo privado, se supone que los materiales en la
      * receta se encuentran en el inventario (hecho que corroboran otros
      * metodos de la clase).
@@ -461,10 +462,13 @@ public class Empresa {
      * La fecha definitiva debe estar en el futuro.
      * PostCondicion:
      * El listado de pedidos tiene un pedido mas en estado de aceptado.
+     * Se actualiza el inventario (se descuentan materiales necesarios para pedido)
+     * Se genera numero de lote correlativo para el pedido.
      * @param nPed
      * int: Numero de pedido a aceptar.
      * @throws EmpresaException
      * Si el pedido no existe o su estado no es en evaluacion se lanza esta excepcion.
+     * Si el inventario no es suficiente para cubrir el pedido tambien lanza excepcion.
      */
     public void aceptarPedido(int nPed, Calendar fechaDefinitiva)
         throws EmpresaException
@@ -486,8 +490,8 @@ public class Empresa {
      * Metodo observarPedido.
      * Agrega una observacion al pedido.
      * PreCondicion: 
-     * La observacion no supera los 500 caracteres.
-     * El tema es un tema valido.
+     * La observacion no supera los 500 caracteres, ni es vacio.
+     * El tema es un tema valido (FECHAS, INSUMOS, OTROS)   .
      * PostCondicion:
      * El listado de observaciones tiene una observación más.
      * @param nPed
@@ -546,6 +550,7 @@ public class Empresa {
      * Mofica las cantidades para un determinado material de la receta de un producto.
      * PreCondicion:
      * La cantidad a modificar es mayor que cero.
+     * Usuario tiene permiso para realizar operacion.
      * PostCondicion: 
      * La cantidad necesaria para el material indicado es igual a la ingresada como parametro.
      * @param codMaq
@@ -572,6 +577,7 @@ public class Empresa {
      * Metodo: agregarMaterialReceta
      * 
      * PreCondicion:
+     * Usuario tiene autorizacion para realizar la operacion.
      * La cantidad es mayor que cero.
      * PostCondicion:
      * La cantidad necesaria del material, para la maquina indicados por parametro
@@ -584,7 +590,7 @@ public class Empresa {
      * double: nueva cantidad a asignar
      * @throws EmpresaException
      * Si la maquina no existe o el material no se registra el sistema de inventarios
-     * se lanza esta excepcion.
+     * o ya esta contenido en la receta se lanza esta excepcion.
      */
     public void agregarMaterialReceta(int codMaq, int codMat, double cant)
         throws EmpresaException
@@ -603,6 +609,10 @@ public class Empresa {
     /**
      * Metodo: eliminarMaterialReceta
      * Elimina un material de la receta de la maquina indicada.
+     * Precondicion: 
+     * El usuario tiene permisos para realizar la operacion.
+     * PostCondicion:
+     * El material se elimina de la receta de la maquina.
      * @param codMaq
      * int: codigo de la maquina.
      * @param codMat
