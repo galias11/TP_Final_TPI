@@ -436,7 +436,7 @@ public class Empresa {
      * Si el inventario no fuese suficiente para cumplir algun pedido
      * se lanza esta excepcion
      */
-    private void reservarMateriales(int nPed)
+    public void reservarMateriales(int nPed)
         throws EmpresaException
     {
         if(!consultaFaltantes(nPed).isEmpty())
@@ -525,7 +525,7 @@ public class Empresa {
      * Devuelve un listado de los materiales necesarios
      * para cumplir un pedido.
      * PreCondicion:
-     * 
+     * El empleado debe tener autorizacion para realizar la operacion
      * PostCondicion:
      * Se devuelve una cadena con el listado de materiales necesarios.
      * @param nPed

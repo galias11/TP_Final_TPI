@@ -10,9 +10,14 @@ public class FixtureMaquina {
     
     public FixtureMaquina() {
     }
-    
+
+
+    public Maquina getMaquinaTest() {
+        return maquinaTest;
+    }
+
     public void setUp(){
-        maquinaTest.setCodigo(1);
+        maquinaTest.setCodigo(15);
         maquinaTest.setDescripcion("Maq1");
         maquinaTest.setListadoMateriales(new HashMap<Integer, Material>());
     }
@@ -58,16 +63,16 @@ public class FixtureMaquina {
     }
     //*********************************************************************************************
     
-    // setUps para metodo modificarCantidadMaterial
+    // setUps para metodo modificarCantidadMaterial ***********************************************
     public void setUpM04_A(){
-        Material mat2 = new Material(1, "Mat2", 22.0);
+        Material mat2 = new Material(2, "Mat2", 22.0);
         Material mat3 = new Material(3, "Mat3", 60.0);
         maquinaTest.getListadoMateriales().put(mat2.getCodigoMaterial(), mat2);
         maquinaTest.getListadoMateriales().put(mat3.getCodigoMaterial(), mat3);
     }
     
     public void setUpM04_B(){
-        Material mat2 = new Material(1, "Mat2", 22.0);
+        Material mat2 = new Material(2, "Mat2", 22.0);
         Material mat3 = new Material(3, "Mat3", 20.0);
         maquinaTest.getListadoMateriales().put(mat2.getCodigoMaterial(), mat2);
         maquinaTest.getListadoMateriales().put(mat3.getCodigoMaterial(), mat3);        
@@ -81,5 +86,6 @@ public class FixtureMaquina {
     public void setUpM04_D(){
     
     }
+    //*********************************************************************************************
     
 }

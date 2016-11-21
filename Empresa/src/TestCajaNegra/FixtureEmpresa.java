@@ -15,13 +15,20 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 public class FixtureEmpresa {
     private Empresa empresaTest = new Empresa();
     private Calendar fechaAux;
     
     public FixtureEmpresa() {
     }
-    
+
+
+    public Empresa getEmpresaTest() {
+        return empresaTest;
+    }
+
     public void setUp(){
         empresaTest.setUser(empresaTest.getListaEmpleados().get(9999));   
         fechaAux = GregorianCalendar.getInstance();
@@ -30,6 +37,8 @@ public class FixtureEmpresa {
     
     public void tearDown(){
         empresaTest = new Empresa();
+        Pedido.setUltLote(0);
+        Pedido.setUltPedido(0);
     }
     
     // SetUps para metodo aceptarPedido ***********************************************************
@@ -40,17 +49,19 @@ public class FixtureEmpresa {
         empresaTest.getPedidos().put(ped_01.getNroPedido(), ped_01);
         Maquina maq = empresaTest.getProductos().get(100002);
         Material mat1 = empresaTest.getInventario().get(401);
+        Material mat2 = empresaTest.getInventario().get(402);
         Material mat3 = empresaTest.getInventario().get(403);
         maq.getListadoMateriales().put(401, new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(403, new Material(mat3.getCodigoMaterial(), mat3.getDescripcion(), 15.0));
         ped_01.setEstado(Pedido.EN_EVALUACION);
         ped_01.setFechaPropProduccion(fechaAux);    
-        Material matAux = empresaTest.getInventario().get(401);
-        matAux.setCantidad(300.0);
-        matAux = empresaTest.getInventario().get(402);
-        matAux.setCantidad(150.0);
-        matAux = empresaTest.getInventario().get(403);
-        matAux.setCantidad(400.0);
+        mat1.setCantidad(300.0);
+        mat2.setCantidad(150.0);
+        mat3.setCantidad(400.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);       
     }
     
     public void setUpM01_B(){
@@ -58,21 +69,23 @@ public class FixtureEmpresa {
         empresaTest.setUser(empresaTest.getListaEmpleados().get(5));
     }
     
-    public void setM01_C(){
+    public void setUpM01_C(){
         empresaTest.setUser(empresaTest.getListaEmpleados().get(9999));
         Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100002), 5, fechaAux);
         empresaTest.getPedidos().put(ped_01.getNroPedido(), ped_01);
         Maquina maq = empresaTest.getProductos().get(100002);
         Material mat1 = empresaTest.getInventario().get(401);
+        Material mat2 = empresaTest.getInventario().get(402);
         Material mat3 = empresaTest.getInventario().get(403);
         maq.getListadoMateriales().put(401, new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(403, new Material(mat3.getCodigoMaterial(), mat3.getDescripcion(), 15.0));    
-        Material matAux = empresaTest.getInventario().get(401);
-        matAux.setCantidad(300.0);
-        matAux = empresaTest.getInventario().get(402);
-        matAux.setCantidad(150.0);
-        matAux = empresaTest.getInventario().get(403);
-        matAux.setCantidad(400.0);
+        mat1.setCantidad(300.0);
+        mat2.setCantidad(150.0);
+        mat3.setCantidad(400.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);
     }
     
     public void setUpM01_D(){
@@ -81,17 +94,23 @@ public class FixtureEmpresa {
         empresaTest.getPedidos().put(ped_01.getNroPedido(), ped_01);
         Maquina maq = empresaTest.getProductos().get(100002);
         Material mat1 = empresaTest.getInventario().get(401);
+        Material mat2 = empresaTest.getInventario().get(402);
         Material mat3 = empresaTest.getInventario().get(403);
         maq.getListadoMateriales().put(401, new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(403, new Material(mat3.getCodigoMaterial(), mat3.getDescripcion(), 15.0));
-        ped_01.setEstado(Pedido.EN_EVALUACION);
+        ped_01.setEstado(Pedido.ACEPTADO);
         ped_01.setFechaPropProduccion(fechaAux);
-        Material matAux = empresaTest.getInventario().get(401);
-        matAux.setCantidad(300.0);
-        matAux = empresaTest.getInventario().get(402);
-        matAux.setCantidad(150.0);
-        matAux = empresaTest.getInventario().get(403);
-        matAux.setCantidad(400.0);
+        ped_01.setFechaAceptacion(GregorianCalendar.getInstance());
+        ped_01.setFechaDefinitiva(fechaAux);
+        ped_01.setUltLote(1 + ped_01.getUltLote());
+        ped_01.setNroLote(ped_01.getNroLote());
+        mat1.setCantidad(300.0);
+        mat2.setCantidad(150.0);
+        mat3.setCantidad(400.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);
     }
     
     public void setUpM01_E(){
@@ -115,35 +134,33 @@ public class FixtureEmpresa {
         mat4.setCantidad(500.0);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 35.0));
         maq.getListadoMateriales().put(mat3.getCodigoMaterial(), new Material(mat3.getCodigoMaterial(), mat3.getDescripcion(), 25.0));
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);
+        empresaTest.getInventario().put(mat4.getCodigoMaterial(), mat4);
     }
     
     public void setUpM02_B(){
         setUpM02_A();
         Maquina maq = empresaTest.getProductos().get(100002);
-        Material mat1 = empresaTest.getInventario().get(401);
-        Material mat2 = empresaTest.getInventario().get(402);
-        Material mat3 = empresaTest.getInventario().get(403);
-        Material mat4 = empresaTest.getInventario().get(404);
-        mat1.setCantidad(1000.0);
-        mat2.setCantidad(300.0);
-        mat3.setCantidad(200.0);
-        mat4.setCantidad(500.0);
+        maq.getListadoMateriales().clear();
     }
     
     public void setUpM02_C(){
-        setUpM01_A();
+        setUpM02_A();
         empresaTest.setUser(empresaTest.getListaEmpleados().get(5));
     }
     //*********************************************************************************************
     
     // setUps metodo cancelarPedido ***************************************************************
     public void setUpM03_A(){
-        Pedido ped_01 = new Pedido(empresaTest.getProductos().get(401), 5, fechaAux);
+        Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100001), 5, fechaAux);
         empresaTest.getPedidos().put(ped_01.getNroPedido(), ped_01);
     }
     
     public void setUpM03_B(){
-        Pedido ped_01 = new Pedido(empresaTest.getProductos().get(401), 5, fechaAux);
+        Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100001), 5, fechaAux);
         ped_01.setEstado(Pedido.EN_EVALUACION);
         ped_01.setFechaPropProduccion(fechaAux);
         empresaTest.getPedidos().put(ped_01.getNroPedido(), ped_01);
@@ -155,7 +172,7 @@ public class FixtureEmpresa {
     }
     
     public void setUpM03_D(){
-        Pedido ped_01 = new Pedido(empresaTest.getProductos().get(401), 5, fechaAux);
+        Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100001), 5, fechaAux);
         ped_01.setEstado(Pedido.EN_EVALUACION);
         ped_01.setFechaPropProduccion(fechaAux);
         ped_01.setEstado(Pedido.ACEPTADO);
@@ -167,7 +184,7 @@ public class FixtureEmpresa {
     }
     
     public void setUpM03_E(){
-        Pedido ped_01 = new Pedido(empresaTest.getProductos().get(401), 5, fechaAux);
+        Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100001), 5, fechaAux);
         ped_01.setEstado(Pedido.EN_EVALUACION);
         ped_01.setFechaPropProduccion(fechaAux);
         ped_01.setEstado(Pedido.CANCELADO);
@@ -183,6 +200,9 @@ public class FixtureEmpresa {
         mat1.setCantidad(900.0);
         Material mat2 = empresaTest.getInventario().get(402);
         mat2.setCantidad(1000.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 35.0));
         Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100003), 10 , fechaAux);
@@ -199,6 +219,9 @@ public class FixtureEmpresa {
         mat1.setCantidad(100.0);
         Material mat2 = empresaTest.getInventario().get(402);
         mat2.setCantidad(175.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 35.0));
         Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100003), 10 , fechaAux);
@@ -215,6 +238,9 @@ public class FixtureEmpresa {
         mat1.setCantidad(50.0);
         Material mat2 = empresaTest.getInventario().get(402);
         mat2.setCantidad(100.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 35.0));
         Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100003), 10 , fechaAux);
@@ -231,6 +257,9 @@ public class FixtureEmpresa {
         mat1.setCantidad(99.999);
         Material mat2 = empresaTest.getInventario().get(402);
         mat2.setCantidad(200.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 35.0));
         Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100003), 10 , fechaAux);
@@ -247,6 +276,9 @@ public class FixtureEmpresa {
         mat1.setCantidad(99.999);
         Material mat2 = empresaTest.getInventario().get(402);
         mat2.setCantidad(200.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 35.0));
         Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100003), 10 , fechaAux);
@@ -261,6 +293,9 @@ public class FixtureEmpresa {
         mat1.setCantidad(99.999);
         Material mat2 = empresaTest.getInventario().get(402);
         mat2.setCantidad(200.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 20.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 35.0));
         Pedido ped_01 = new Pedido(empresaTest.getProductos().get(100003), 10 , fechaAux);
@@ -281,20 +316,25 @@ public class FixtureEmpresa {
     // setUps para metodo consultaStock ***********************************************************
     public void setUpM06_A(){
         Material mat3 = empresaTest.getInventario().get(403);
+        Material mat4 = empresaTest.getInventario().get(404);
         Material mat7 = empresaTest.getInventario().get(407);
-        Material mat10 = empresaTest.getInventario().get(410);
-        Material mat15 = empresaTest.getInventario().get(415);
+        Material mat9 = empresaTest.getInventario().get(409);
         mat3.setCantidad(50.0);
-        mat7.setCantidad(100.0);
-        mat10.setCantidad(200.0);
-        mat15.setCantidad(75.0);
+        mat4.setCantidad(100.0);
+        mat7.setCantidad(200.0);
+        mat9.setCantidad(75.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);
+        empresaTest.getInventario().put(mat4.getCodigoMaterial(), mat4);
+        empresaTest.getInventario().put(mat7.getCodigoMaterial(), mat7);
+        empresaTest.getInventario().put(mat9.getCodigoMaterial(), mat9);
     }
     
     public void setUpM06_B(){
-        Material mat10 = empresaTest.getInventario().get(410);
-        mat10.setCantidad(200.0);
+        Material mat9 = empresaTest.getInventario().get(409);
+        mat9.setCantidad(200.0);
         empresaTest.getInventario().clear();
-        empresaTest.getInventario().put(mat10.getCodigoMaterial(), mat10);
+        empresaTest.getInventario().put(mat9.getCodigoMaterial(), mat9);
     }
     
     public void setUpM06_C(){
@@ -304,7 +344,7 @@ public class FixtureEmpresa {
     
     // setUps para metodo deslog ******************************************************************
     public void setUpM07_A(){
-        empresaTest.setUser(empresaTest.getListaEmpleados().get(1));
+        empresaTest.setUser(null);
     }
     //*********************************************************************************************
     
@@ -524,6 +564,11 @@ public class FixtureEmpresa {
         mat2.setCantidad(400.0);
         mat3.setCantidad(500.0);
         mat4.setCantidad(250.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);
+        empresaTest.getInventario().put(mat4.getCodigoMaterial(), mat4);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 25.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 40.0));
     }
@@ -544,6 +589,11 @@ public class FixtureEmpresa {
         mat2.setCantidad(200.0);
         mat3.setCantidad(500.0);
         mat4.setCantidad(250.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);
+        empresaTest.getInventario().put(mat4.getCodigoMaterial(), mat4);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 25.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 40.0));
     }
@@ -564,6 +614,11 @@ public class FixtureEmpresa {
         mat2.setCantidad(150.0);
         mat3.setCantidad(500.0);
         mat4.setCantidad(250.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);
+        empresaTest.getInventario().put(mat4.getCodigoMaterial(), mat4);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 25.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 40.0));
     }
@@ -584,6 +639,11 @@ public class FixtureEmpresa {
         mat2.setCantidad(199.999);
         mat3.setCantidad(500.0);    
         mat4.setCantidad(250.0);
+        empresaTest.getInventario().clear();
+        empresaTest.getInventario().put(mat1.getCodigoMaterial(), mat1);
+        empresaTest.getInventario().put(mat2.getCodigoMaterial(), mat2);
+        empresaTest.getInventario().put(mat3.getCodigoMaterial(), mat3);
+        empresaTest.getInventario().put(mat4.getCodigoMaterial(), mat4);
         maq.getListadoMateriales().put(mat1.getCodigoMaterial(), new Material(mat1.getCodigoMaterial(), mat1.getDescripcion(), 25.0));
         maq.getListadoMateriales().put(mat2.getCodigoMaterial(), new Material(mat2.getCodigoMaterial(), mat2.getDescripcion(), 40.0));
     }
