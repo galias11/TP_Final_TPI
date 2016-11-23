@@ -2,6 +2,8 @@ package TestCajaNegra;
 
 import empresa.EmpresaException;
 
+//No se usa la clase, esta para seguir con el mismo formato
+
 public class FixtureEmpresaException
 {
   private EmpresaException empresaExcepcionTest;

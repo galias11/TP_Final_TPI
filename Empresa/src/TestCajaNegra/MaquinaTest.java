@@ -199,56 +199,66 @@ public class MaquinaTest {
     @Test
     public void testMAQ02F(){
         fixture.setUpM02_A();
+        boolean assertError = false;
         try{
             Maquina maq = new Maquina(-11, "Prueba");
-            fail("MAQ02F: Se esperaba un error de assercion");
         } catch(AssertionError e){
-            
+            assertError = true;
         }
+        if(!assertError)
+            fail("MAQ02F: Se esperaba un error de assercion");
     }
     
     @Test
     public void testMAQ02G(){
         fixture.setUpM02_A();
+        boolean assertError = false;
         try{
             Maquina maq = new Maquina(0, "Prueba");
-            fail("MAQ02G: Se esperaba un error de assercion");
         } catch(AssertionError e){
-            
+            assertError = true;
         }
+        if(!assertError)
+            fail("MAQ02G: Se esperaba un error de assercion");
     }
     
     @Test
     public void testMAQ02H(){
         fixture.setUpM02_A();
+        boolean assertError = false;
         try{
             Maquina maq = new Maquina(2000010, "Prueba");
-            fail("MAQ02H: Se esperaba un error de assercion");
         } catch(AssertionError e){
-            
+            assertError = true;
         }
+        if(!assertError)
+            fail("MAQ02H: Se esperaba un error de assercion");
     }
     
     @Test
     public void testMAQ02I(){
         fixture.setUpM02_A();
+        boolean assertError = false;
         try{
             Maquina maq = new Maquina(1000000, "Prueba");
-            fail("MAQ02I: Se esperaba un error de assercion");
         } catch(AssertionError e){
-            
+            assertError = true;
         }
+        if(!assertError)
+            fail("MAQ02I: Se esperaba un error de assercion");
     }
     
     @Test
     public void testMAQ02J(){
         fixture.setUpM02_A();
+        boolean assertError = false;
         try{
             Maquina maq = new Maquina(200001, "");
-            fail("MAQ02J: Se esperaba un error de assercion");
         } catch(AssertionError e){
-            
+            assertError = true;
         }
+        if(!assertError)
+            fail("MAQ02J: Se esperaba un error de assercion");
     }
     
     @Test
@@ -257,12 +267,14 @@ public class MaquinaTest {
         String obs = "";
         for(int i = 0; i < 120; i++)
             obs += "P";
+        boolean assertError = false;
         try{
             Maquina maq = new Maquina(200001, obs);
-            fail("MAQ02K: Se esperaba un error de assercion");
         } catch(AssertionError e){
-            
+            assertError = true;
         }
+        if(!assertError)
+            fail("MAQ02K: Se esperaba un error de assercion");
     }
     
     @Test
@@ -271,23 +283,27 @@ public class MaquinaTest {
         String obs = "";
         for(int i = 0; i < 101; i++)
             obs += "P";
+        boolean assertError = false;
         try{
             Maquina maq = new Maquina(200001, obs);
-            fail("MAQ02L: Se esperaba un error de assercion");
         } catch(AssertionError e){
-            
+            assertError = true;
         }
+        if(!assertError)
+            fail("MAQ02L: Se esperaba un error de assercion");
     }
     
     @Test
     public void testMAQ02M(){
         fixture.setUpM02_A();
+        boolean assertError = false;
         try{
             Maquina maq = new Maquina(200001, null);
-            fail("MAQ02M: Se esperaba un error de assercion");
         } catch(AssertionError e){
-            
+            assertError = true;
         }
+        if(!assertError)
+            fail("MAQ02M: Se esperaba un error de assercion");
     }
     
     @Test
