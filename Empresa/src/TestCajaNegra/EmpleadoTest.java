@@ -29,7 +29,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp01A(){
+    public void testEMPL01A(){
         Sector ventas= new Sector("Ventas");
         Empleado aux= new Empleado(1, "Empleado ventas", ventas);
         assertTrue("El legajo no se almaceno correctamente", aux.getLegajo()==1);
@@ -38,7 +38,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp02A(){
+    public void testEMPL02A(){
         boolean assertError=false;
         Sector ventas= new Sector("Ventas");
         try{
@@ -52,7 +52,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp02B(){
+    public void testEMPL02B(){
         boolean assertError=false;
         Sector ventas= new Sector("Ventas");
         try{
@@ -66,7 +66,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp03A(){
+    public void testEMPL03A(){
         boolean assertError=false;
         Sector ventas= new Sector("Ventas");
         try{
@@ -80,7 +80,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp03B(){
+    public void testEMPL03B(){
         boolean assertError=false;
         Sector ventas= new Sector("Ventas");
         try{
@@ -95,7 +95,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp04A(){
+    public void testEMPL04A(){
         boolean assertError=false;
         Sector ventas= new Sector("Ventas");
         try{
@@ -109,7 +109,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp05A(){
+    public void testEMPL05A(){
         boolean assertError=false;
         Sector ventas= new Sector("Ventas");
         try{
@@ -123,7 +123,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp06A(){
+    public void testEMPL06A(){
         boolean assertError=false;
         try{
         Empleado aux= new Empleado(1, "Empleado ventas", null);
@@ -136,7 +136,7 @@ public class EmpleadoTest {
     }
     
     @Test
-    public void testEmp07A(){
+    public void testEMPL07A(){
         boolean assertError=false;
         Sector ventas= new Sector("Ventas");
         try{
@@ -151,7 +151,7 @@ public class EmpleadoTest {
     
     
     @Test
-    public void testEmp07B(){
+    public void testEMPL07B(){
         boolean assertError=false;
         Sector ventas= new Sector("Ventas");
         try{
