@@ -1,0 +1,14 @@
+ChangeLog (v1.2)
+
+- Se crea paquete test.
+- Se agregan fixture para casos de prueba.
+- Se agregan clases de test.
+- Se creo la TestSuite.
+- Se crea planilla de tracking para los diferentes test.
+
+Clase Empresa:
+- Se hizo publico al metodo reservarMateriales para poder testearlo.
+
+
+- Se corrigieron errores menores en los comentarios de los metodos que se detectaron
+durante el relevamiento de las cajas negras.
