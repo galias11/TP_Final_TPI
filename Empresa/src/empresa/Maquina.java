@@ -9,7 +9,7 @@ import java.util.Map;
  * la empresa.
  * invariante:
  * codigo debe ser un valor entre 1 y 999999.
- * descripcion debe ser distinto de null y no vacio.
+ * descripcion debe ser distinto de null, no vacio y no debe exceder los 100 caract.
  * listado de materiales no puede ser nulo.
  */
 public class Maquina {
@@ -35,7 +35,7 @@ public class Maquina {
      * Contructor con parametros.
      * PreCondicion:
      * codigo se debe encontrar en un rango entre 1 y 999999.
-     * descripcion debe ser distinto de null y no vacio.
+     * descripcion debe ser distinto de null, no vacio y no debe exceder los 100 caract.
      * @param codigo
      * int: codigo identificatorio de la maquina.
      * @param descripcion
@@ -44,6 +44,7 @@ public class Maquina {
     public Maquina(int codigo, String descripcion){
         assert(descripcion != null) : ("Descripcion nula.");
         assert(!descripcion.isEmpty()) : ("Descripcion vacia.");
+        assert(descripcion.length() <= 100) : ("Descripcion excede tam. maximo");
         assert(codigo > 0 && codigo < 1000000) : ("Codigo fuera de rango.");
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -163,9 +164,10 @@ public class Maquina {
      * Invariante de clase (ver comentario de clase)
      */
     private void verificarInvariante(){
-        assert(codigo > 1 && codigo < 1000000) : ("Codigo fuera de rango");
+        assert(codigo > 0 && codigo < 1000000) : ("Codigo fuera de rango");
         assert(descripcion != null) : ("Descripcion nula.");
         assert(!descripcion.isEmpty()) : ("Descripcion vacia.");
+        assert(descripcion.length() <= 100) : ("Descripcion excede tam. maximo.");
         assert(listadoMateriales != null) : ("Listado de materiales nulo.");
     }
 }

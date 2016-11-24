@@ -9,9 +9,9 @@ public class EmpresaException extends Exception{
     /**
      * Constructor de la excepcion.
      * Precondicion:
-     * descripcion no nula ni vacia (se verifican a post).
-     * No se puede comprobar por parametro, se deja estipulada
-     * por este medio en el contrato de la clase.
+     * descripcion no nula ni vacia.
+     * Como no se pueden comprobar con assertos a priori se comprueban
+     * luego de instanciar al constructor de la superclase.
      * PostCondicion:
      * 
      * @param descripcion
@@ -19,6 +19,8 @@ public class EmpresaException extends Exception{
      */
     public EmpresaException(String descripcion) {
         super(descripcion);
+        assert(descripcion != null): ("Descripcion excepcion nula.");
+        assert(!descripcion.isEmpty()) : ("Descripcion vacia.");
     }
     
     @Override

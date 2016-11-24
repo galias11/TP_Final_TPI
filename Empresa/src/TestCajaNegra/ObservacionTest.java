@@ -29,7 +29,7 @@ public class ObservacionTest {
     
     
     @Test
-    public void testObs01A(){
+    public void testOBS01A(){
         Observacion aux= new Observacion(Observacion.TEMA_INSUMOS, 1, "Falta material 1");
         assertTrue("No se registro tema correctamente", aux.getTema()==Observacion.TEMA_INSUMOS);
         assertTrue("No se registro legajo correctamente", aux.getNLegCreador()==1);
@@ -37,7 +37,7 @@ public class ObservacionTest {
     }
     
     @Test
-    public void testObs02A(){
+    public void testOBS01B(){
         boolean assertError=false;
         try{
         Observacion aux= new Observacion(Observacion.TEMA_INSUMOS, -1, "Falta material 1");
@@ -50,7 +50,7 @@ public class ObservacionTest {
     }
     
     @Test
-    public void testObs02B(){
+    public void testOBS01C(){
         boolean assertError=false;
         try{
         Observacion aux= new Observacion(Observacion.TEMA_INSUMOS, 0, "Falta material 1");
@@ -63,7 +63,7 @@ public class ObservacionTest {
     }
     
     @Test
-    public void testObs03A(){
+    public void testOBS01D(){
         boolean assertError=false;
         try{
         Observacion aux= new Observacion(Observacion.TEMA_INSUMOS, 1, null);
@@ -76,7 +76,7 @@ public class ObservacionTest {
     }
     
     @Test
-    public void testObs04A(){
+    public void testOBS01E(){
         boolean assertError=false;
         try{
         Observacion aux= new Observacion(Observacion.TEMA_INSUMOS, 1,"");
@@ -89,7 +89,7 @@ public class ObservacionTest {
     }
     
     @Test
-    public void testObs05A(){
+    public void testOBS01F(){
         boolean assertError=false;
         try{
         Observacion aux= new Observacion(null, 1,"Falta material 1");
@@ -102,7 +102,7 @@ public class ObservacionTest {
     }
     
     @Test
-    public void testObs06A(){
+    public void testOBS01G(){
         boolean assertError=false;
         try{
         Observacion aux= new Observacion("", 1,"Falta material 1");
@@ -115,7 +115,7 @@ public class ObservacionTest {
     }
     
     @Test
-    public void testObs07A(){
+    public void testOBS01H(){
         boolean assertError=false;
         try{
         Observacion aux= new Observacion("COMPRAS", 1,"Falta material 1");
@@ -128,14 +128,14 @@ public class ObservacionTest {
     }
     
     @Test
-    public void testObs08A(){
+    public void testOBS02A(){
         Observacion o= new Observacion(Observacion.TEMA_INSUMOS, 1,"Falta material 1");
         int iguales= fixture.getObservacionTest().compareTo(o);
         assertTrue("Ambas observaciones deberian ser iguales", iguales==0);
     }
     
     @Test
-    public void testObs09A(){
+    public void testOBS02B(){
         boolean assertError=false;
         try{
         int iguales= fixture.getObservacionTest().compareTo(null);

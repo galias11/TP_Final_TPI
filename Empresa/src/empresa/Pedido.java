@@ -9,16 +9,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import javax.swing.JOptionPane;
+
 /**
  * Clase Pedido.
  * Representa a cada pedido de la empresa.
- * inv: 
+ * inv:
  * (Por estado):
  * **INICIADO**
  *  nroPedido mayor que 0 y menor que 1000000.
  *  fechaPedido no nulo.
  *  maquina no nula.
- *  cantidad mayor que 0 y menor que 999.
+ *  cantidad mayor que 0 y menor que o igual 999.
  *  fechaEntrega no nulo.
  *  fechaPropPodroduccion nulo.
  *  fechaDefinitiva nula.
@@ -34,8 +36,8 @@ import java.util.TreeSet;
  *  fechaAceptacion no nula.
  *  estado = ACEPTADO.
  *  nroLote > 0
- * **CANCELADO** 
- *  Estado de evaluacion + estado = Cancelado.
+ * **CANCELADO**
+ *  Estado de evaluacion o iniciado (fechaPropProduccion puede ser null) + estado = Cancelado.
  */
 public class Pedido {
     private static int ultPedido = 0;
@@ -70,7 +72,7 @@ public class Pedido {
      * PreCondicion:
      * maquina no nulo
      * fechaEntrega no nulo
-     * cantidad > 0
+     * cantidad > 0 y cantidad <= 999
      * PostCondicion:
      * 
      * @param maquina
@@ -82,12 +84,13 @@ public class Pedido {
      */
     public Pedido(Maquina maquina, int cantidad, Calendar fechaEntrega) {
         assert(maquina != null) : ("Maquina nula");
-        assert(cantidad > 0 && cantidad < 999) : ("Cantidad fuera de rango.");
+        assert(cantidad > 0 && cantidad <= 999) : ("Cantidad fuera de rango.");
         assert(fechaEntrega != null) : ("Fecha nula");
         this.nroPedido = ++ultPedido;
-        this.fechaPedido = GregorianCalendar.getInstance();
+        this.fechaPedido = fechaActual();
         this.maquina = maquina;
         this.cantidad = cantidad;
+        resetHoraFecha(fechaEntrega);
         this.fechaEntrega = fechaEntrega;
         this.fechaPropProduccion = null;
         this.fechaDefinitiva = null;
@@ -229,7 +232,7 @@ public class Pedido {
         Iterator<Material> it = maquina.getListadoMateriales().values().iterator();
         while(it.hasNext()){
             Material itMat = it.next();
-            Material auxM = new Material(itMat.getCodigoMaterial(), itMat.getDescripcion(), itMat.getCantidad() * cantidad);
+            Material auxM = new Material(itMat.getCodigoMaterial(), itMat.getDescripcion(), (Math.rint(itMat.getCantidad() * 1000) * cantidad) / 1000);
             necesidad.put(auxM.getCodigoMaterial(), auxM);
         }
         return necesidad;
@@ -252,6 +255,7 @@ public class Pedido {
         assert(fechaPropuesta != null) : ("Fecha propuesta nula");
         assert(estado == INICIADO) : ("Pedido no esta en estado de iniciado.");
         estado = EN_EVALUACION;
+        resetHoraFecha(fechaPropuesta);
         this.fechaPropProduccion = fechaPropuesta;
         verificarInvariante();
     }
@@ -272,8 +276,9 @@ public class Pedido {
         assert(fechaDefinitiva != null) : ("Fecha definitiva nula.");
         assert(estado == EN_EVALUACION) : ("Pedido no se encuentra en estado de evaluacion.");
         estado = ACEPTADO;
+        resetHoraFecha(fechaDefinitiva);
         this.fechaDefinitiva = fechaDefinitiva;
-        this.fechaAceptacion = GregorianCalendar.getInstance();
+        this.fechaAceptacion = fechaActual();
         nroLote = ++ultLote;
         verificarInvariante();
     }
@@ -282,13 +287,19 @@ public class Pedido {
      * Metodo: estadoCancelado.
      * Cancela un pedido, cambiando su estado.
      * PreCondicion:
+     * La observacion no es nula.
      * El pedido se encuentra en estado de iniciado o en evaluacion.
      * PostCondicion:
+     * Se agrega una observacion al pedido indicando el motivo de cancelacion.
      * El estado del pedido pasa a ser cancelado.
+     * @param observacion
+     * Observacion: observacion que indica cual fue el motivo de la cancelacion.
      */
-    public void estadoCancelado(){
+    public void estadoCancelado(Observacion observacion){
+        assert (observacion != null) : ("Observacion nula.");
         assert (estado == EN_EVALUACION || estado == INICIADO) :
             ("Pedido no esta en estado de evaluacion / iniciado.");
+        listaObservaciones.add(observacion);
         estado = CANCELADO;
         verificarInvariante();
     }
@@ -387,6 +398,19 @@ public class Pedido {
         return str; 
     }
     
+    private void resetHoraFecha(Calendar fecha){
+        fecha.set(Calendar.HOUR_OF_DAY, 0);
+        fecha.set(Calendar.MINUTE, 0);
+        fecha.set(Calendar.SECOND, 0);
+        fecha.set(Calendar.MILLISECOND, 0);
+    }
+    
+    private Calendar fechaActual(){
+        Calendar fechaAct = GregorianCalendar.getInstance();
+        resetHoraFecha(fechaAct);
+        return fechaAct;
+    }
+    
     private void verificarInvariante(){
         switch(estado){
             case INICIADO:
@@ -394,7 +418,7 @@ public class Pedido {
                     ("Nro. pedido fuera de rango.");
                 assert(fechaPedido != null) : ("fechaPedido nula");
                 assert(maquina != null) : ("Maquina nula");
-                assert(cantidad > 0 && cantidad < 999) :
+                assert(cantidad > 0 && cantidad <= 999) :
                     ("Cantidad fuera de rango");
                 assert(fechaEntrega != null) : ("fechaEntrega nula");
                 assert(fechaPropProduccion == null) :
@@ -411,7 +435,7 @@ public class Pedido {
                     ("Nro. pedido fuera de rango.");
                 assert(fechaPedido != null) : ("fechaPedido nula");
                 assert(maquina != null) : ("Maquina nula");
-                assert(cantidad > 0 && cantidad < 999) :
+                assert(cantidad > 0 && cantidad <= 999) :
                     ("Cantidad fuera de rango");
                 assert(fechaEntrega != null) : ("fechaEntrega nula");
                 assert(fechaPropProduccion != null) :
@@ -428,7 +452,7 @@ public class Pedido {
                     ("Nro. pedido fuera de rango.");
                 assert(fechaPedido != null) : ("fechaPedido nula");
                 assert(maquina != null) : ("Maquina nula");
-                assert(cantidad > 0 && cantidad < 999) :
+                assert(cantidad > 0 && cantidad <= 999) :
                     ("Cantidad fuera de rango");
                 assert(fechaEntrega != null) : ("fechaEntrega nula");
                 assert(fechaPropProduccion != null) :
@@ -445,11 +469,9 @@ public class Pedido {
                     ("Nro. pedido fuera de rango.");
                 assert(fechaPedido != null) : ("fechaPedido nula");
                 assert(maquina != null) : ("Maquina nula");
-                assert(cantidad > 0 && cantidad < 999) :
+                assert(cantidad > 0 && cantidad <= 999) :
                     ("Cantidad fuera de rango");
                 assert(fechaEntrega != null) : ("fechaEntrega nula");
-                assert(fechaPropProduccion != null) :
-                    ("fechaPropProduccion nula");
                 assert(fechaDefinitiva == null) : 
                     ("fechaDefinitiva deberia ser nula");
                 assert(fechaAceptacion == null) :

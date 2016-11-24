@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
  * inv:
  * tema no nulo y uno de TEMA_FECHAS, TEMA_INSUMOS, TEMA_OTROS
  * observacion no nula, no vacia y longitud menor a 500 caracteres.
+ * el numero de legajo debe ser mayor que 0.
  */
 public class Observacion implements Comparable{
     private String tema;
@@ -37,6 +38,7 @@ public class Observacion implements Comparable{
      * el parametro observación debe ser una cadena no nula ni vacia.
      * el parametro observacion puede tener como maximo 500 caracteres.
      * el parametro tema debe ser no nulo y uno de: Fechas, insumos, otros.
+     * el parametro nLeg debe ser un entero mayor que 0.
      * @param tema
      * String: tema de la observacion
      * @param nLegCreador
@@ -52,6 +54,7 @@ public class Observacion implements Comparable{
         assert(observacion != null) : ("Observacion nula");
         assert(!observacion.isEmpty()) : ("Observacion vacia.");
         assert(observacion.length() <= 500) : ("Observacion muy larga");
+        assert(nLegCreador > 0) : ("Legajo no valido.");
         this.tema = tema;
         this.fecha = GregorianCalendar.getInstance();
         this.nLegCreador = nLegCreador;
@@ -116,9 +119,10 @@ public class Observacion implements Comparable{
     
     @Override
     public String toString(){
-        SimpleDateFormat format = new SimpleDateFormat("AAAA/MM/DD");
-        return String.format("TEMA: %-10.10s\tFECHA: %-10.10s\tEMITIO: LEG%6.6d\n%s",
-                             tema, format.format(fecha.getTime()), nLegCreador,
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        return String.format("TEMA: %-10.10s    FECHA: %-10.10s    EMITIO: LEG%06d" +
+                             System.lineSeparator() + "%s",
+                             tema, sdf.format(fecha.getTime()), nLegCreador,
                              observacion);
     }
     
@@ -129,5 +133,6 @@ public class Observacion implements Comparable{
         assert(observacion != null) : ("Observacion nula");
         assert(!observacion.isEmpty()) : ("Observacion vacia");
         assert(observacion.length() <= 500) : ("Observacion fuera de limite");
+        assert(nLegCreador > 0) : ("Legajo no valido");
     }
 }

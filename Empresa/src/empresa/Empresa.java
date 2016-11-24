@@ -10,12 +10,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import java.text.DecimalFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import javax.swing.JOptionPane;
 
 /**
  * Clase Empresa.
@@ -27,7 +31,7 @@ import java.util.Map;
  * pedidos no nulo.
  * inventario no nulo.
  * productos no nulo.
- * sectores no nulo. 
+ * sectores no nulo.
  */
 public class Empresa {
     /**
@@ -266,7 +270,7 @@ public class Empresa {
      * un listado con los materiales que no puedan satisfacer 
      * el pedido en el inventario y las respectivas cantidades.
      * PreCondicion:
-     * 
+     * El usuario tiene autorizacion para realizar la operacion.
      * PostCondicion:
      * Listado con la cantidad de cada material que no pueda satisfacer
      * el inventario. Si puede satisfacer completamente, listado vacio.
@@ -282,6 +286,8 @@ public class Empresa {
     public HashMap<Integer, Material> consultaFaltantes(int nPed)
         throws EmpresaException
     {
+        assert(user.autorizaOperacion(OP_MAT_NECEC)) :
+            ("Usuario no tiene autorizacion para realizar op.");
         if(!pedidos.containsKey(nPed))
             throw new EmpresaException("Pedido inexistente.");
         Pedido p = pedidos.get(nPed);
@@ -294,7 +300,7 @@ public class Empresa {
             if(inventario.containsKey(auxM.getCodigoMaterial())){
                 Material existencia = inventario.get(auxM.getCodigoMaterial());
                 if(!existencia.satisfacePedido(auxM.getCantidad()))
-                    faltante.put(auxM.getCodigoMaterial(), new Material(auxM.getCodigoMaterial(), auxM.getDescripcion(), -(existencia.getCantidad() - auxM.getCantidad())));
+                    faltante.put(auxM.getCodigoMaterial(), new Material(auxM.getCodigoMaterial(), auxM.getDescripcion(), (Math.rint(auxM.getCantidad()*1000) - Math.rint(existencia.getCantidad() * 1000)) / 1000 ));
             }
         }
         return faltante;
@@ -350,7 +356,7 @@ public class Empresa {
         assert(user.autorizaOperacion(OP_INIC_PED)) : ("Usuario no autorizado para realizar operación");
         assert(fechaEntrega != null) : ("Fecha de entrega nula");
         assert(GregorianCalendar.getInstance().before(fechaEntrega)) : ("Fecha de entrega en el pasado.");
-        assert(cantidad > 0) : ("Cantidad no valida.");
+        assert(cantidad > 0 && cantidad <= 999) : ("Cantidad fuera de rango.");
         if(!productos.containsKey(codMaq))
             throw new EmpresaException("Producto a fabricar inexistente.");
         Pedido p = new Pedido(productos.get(codMaq), cantidad, fechaEntrega);
@@ -411,10 +417,7 @@ public class Empresa {
         if(!(p.getEstado() == Pedido.INICIADO || p.getEstado() == Pedido.EN_EVALUACION))
             throw new EmpresaException("Pedido no esta en fase de evaluacion/inciado.");
         Observacion obs = new Observacion(Observacion.TEMA_OTROS, user.getLegajo(), motivo);
-        if(p.getEstado() == Pedido.INICIADO)
-            p.estadoEvaluacion(GregorianCalendar.getInstance());
-        p.insertarObservacion(obs);
-        p.estadoCancelado();
+        p.estadoCancelado(obs);
         verificarInvariante();
     }
     
@@ -510,10 +513,11 @@ public class Empresa {
         assert(tema.equals(Observacion.TEMA_FECHAS) || tema.equals(Observacion.TEMA_INSUMOS) ||
                tema.equals(Observacion.TEMA_OTROS)) : ("Tema no valido.");
         assert(obs.length() <= 500) : ("Observacion tiene mas caracteres de los permitidos.");
+        assert(!obs.isEmpty()) : ("Observacion no puede ser vacia.");
         if(!pedidos.containsKey(nPed))
             throw new EmpresaException("Pedido inexistente.");
         Pedido p = pedidos.get(nPed);
-        if(!(p.getEstado() != Pedido.EN_EVALUACION))
+        if(p.getEstado() != Pedido.EN_EVALUACION)
             throw new EmpresaException("Pedido no esta en estado de evaluacion.");
         Observacion o = new Observacion(tema, user.getLegajo(), obs);
         p.insertarObservacion(o);
@@ -538,6 +542,8 @@ public class Empresa {
     public String materialesNecesaarios(int nPed)
         throws EmpresaException
     {
+        assert(user.autorizaOperacion(OP_MAT_NECEC)) :
+            ("Empleado no tiene autorizacion para realizar la operacion");
         if(!pedidos.containsKey(nPed))
             throw new EmpresaException("Pedido inexistente.");
         Pedido p = pedidos.get(nPed);
@@ -565,6 +571,8 @@ public class Empresa {
     public void modificarCantidadReceta(int codMaq, int codMat, double cant)
         throws EmpresaException
     {
+        assert(user.autorizaOperacion(OP_MOD_RECETA)) :
+            ("Usuario no tiene autorizacion para realizar operacion");
         assert(cant > 0.0) : ("Cantidad no valida.");
         if(!productos.containsKey(codMaq))
             throw new EmpresaException("Maquina inexistente.");
@@ -595,6 +603,7 @@ public class Empresa {
     public void agregarMaterialReceta(int codMaq, int codMat, double cant)
         throws EmpresaException
     {
+        assert(user.autorizaOperacion(OP_MOD_RECETA));
         assert(cant > 0.0) : ("Cantidad no valida.");
         if(!productos.containsKey(codMaq))
             throw new EmpresaException("Maquina inexistente.");
@@ -624,6 +633,8 @@ public class Empresa {
     public void eliminarMaterialReceta(int codMaq, int codMat)
         throws EmpresaException
     {
+        assert(user.autorizaOperacion(OP_MOD_RECETA)) : 
+            ("Usuario no tiene autorizacion para realizar la operacion.");
         if(!productos.containsKey(codMaq))
             throw new EmpresaException("Maquina inexistente.");
         Maquina m = productos.get(codMaq);

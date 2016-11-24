@@ -487,9 +487,6 @@ public class EmpresaTest {
                        p.getEstado() == Pedido.CANCELADO);
             assertTrue("EMP03A: Observacion cancelacion no registrada",
                        p.getListaObservaciones().size() == cantObs + 1);
-            assertTrue("EMP03A: No se registro fechaPropProduccion",
-                       p.getFechaPropProduccion().get(Calendar.DAY_OF_YEAR) + 1 == 
-                       fechaAux.get(Calendar.DAY_OF_YEAR));
         } catch(EmpresaException ex){
             fail("EMP03A: Excepcion no esperada: " + ex.toString());
         }
@@ -508,9 +505,6 @@ public class EmpresaTest {
                        p.getEstado() == Pedido.CANCELADO);
             assertTrue("EMP03B: Observacion cancelacion no registrada",
                        p.getListaObservaciones().size() == cantObs + 1);
-            assertTrue("EMP03B: No se registro fechaPropProduccion",
-                       p.getFechaPropProduccion().get(Calendar.DAY_OF_YEAR) + 1 == 
-                       fechaAux.get(Calendar.DAY_OF_YEAR));
         } catch(EmpresaException ex){
             fail("EMP03B: Excepcion no esperada: " + ex.toString());
         }
@@ -624,9 +618,6 @@ public class EmpresaTest {
                        p.getEstado() == Pedido.CANCELADO);
             assertTrue("EMP03K: Observacion cancelacion no registrada",
                        p.getListaObservaciones().size() == cantObs + 1);
-            assertTrue("EMP03K: No se registro fechaPropProduccion",
-                       p.getFechaPropProduccion().get(Calendar.DAY_OF_YEAR) + 1 == 
-                       fechaAux.get(Calendar.DAY_OF_YEAR));
         } catch(EmpresaException ex){
             fail("EMP03K: Excepcion no esperada: " + ex.toString());
         }
@@ -838,10 +829,13 @@ public class EmpresaTest {
         boolean assertError = false;
         try{
             fixture.getEmpresaTest().consultaFaltantes(2);
-            fail("EMP05H: Debio lanzarce un error de assercion");
         } catch(EmpresaException ex){
             fail("EMP05H: Excepcion no esperada: " + ex.toString());
+        } catch(AssertionError e){
+            assertError = true;            
         }
+        if(!assertError)
+            fail("EMP05H: Debio lanzarce un error de assercion");
    }
    
    @Test
@@ -1417,14 +1411,17 @@ public class EmpresaTest {
         String listadoObs = "";
         String listadoEsperado = "";
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-        listadoEsperado += String.format("TEMA: %-10.10s\tFECHA: %-10.10s\tEMITIO: LEG%6.6d\n%s",
-                             "OTROS", format.format(GregorianCalendar.getInstance().getTime()), 1,
+        listadoEsperado += String.format("TEMA: %-10.10s    FECHA: %-10.10s    EMITIO: LEG%06d" +
+                             System.lineSeparator() + "%s" + System.lineSeparator(),
+                             "FECHAS", format.format(GregorianCalendar.getInstance().getTime()), 1,
                              "Prueba");
-        listadoEsperado += String.format("TEMA: %-10.10s\tFECHA: %-10.10s\tEMITIO: LEG%6.6d\n%s",
+        listadoEsperado += String.format("TEMA: %-10.10s    FECHA: %-10.10s    EMITIO: LEG%06d" +
+                             System.lineSeparator() + "%s" + System.lineSeparator(),
                              "INSUMOS", format.format(GregorianCalendar.getInstance().getTime()), 2,
                              "Prueba");
-        listadoEsperado += String.format("TEMA: %-10.10s\tFECHA: %-10.10s\tEMITIO: LEG%6.6d\n%s",
-                             "FECHAS", format.format(GregorianCalendar.getInstance().getTime()), 1,
+        listadoEsperado += String.format("TEMA: %-10.10s    FECHA: %-10.10s    EMITIO: LEG%06d" +
+                             System.lineSeparator() + "%s" + System.lineSeparator(),
+                             "OTROS", format.format(GregorianCalendar.getInstance().getTime()), 1,
                              "Prueba");
         try{
             listadoObs = fixture.getEmpresaTest().listarObservaciones(2);
@@ -1441,7 +1438,8 @@ public class EmpresaTest {
         String listadoObs = "";
         String listadoEsperado = "";
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-        listadoEsperado += String.format("TEMA: %-10.10s\tFECHA: %-10.10s\tEMITIO: LEG%6.6d\n%s",
+        listadoEsperado += String.format("TEMA: %-10.10s    FECHA: %-10.10s    EMITIO: LEG%06d" +
+                             System.lineSeparator() + "%s" + System.lineSeparator(),
                              "OTROS", format.format(GregorianCalendar.getInstance().getTime()), 1,
                              "Prueba");
         try{

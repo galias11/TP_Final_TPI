@@ -1,9 +1,12 @@
 package empresa;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * Clase: Material
  * Esta clase representa a un material, puede ser tanto un
- * material del stock de la empresa como un material 
+ * material del stock de la empresa como un material
  * en una receta de un producto o un material auxiliar que
  * se instancia.
  * invariante:
@@ -28,7 +31,7 @@ public class Material {
      * Constructor con parametros.
      * Precondicion:
      * codigo material en rango 1..99999
-     * descripcion no nula ni vacia
+     * descripcion no nula, vacia y menor o igual a 100 caracteres.
      * cantidad mayor o igual que 0
      * @param codigoMaterial
      * int: codigo del material
@@ -41,6 +44,7 @@ public class Material {
         assert(codigoMaterial > 0 && codigoMaterial < 100000) : ("CodigoMaterial fuera de rango");
         assert(descripcion != null) : ("Descripcion nula.");
         assert(!descripcion.isEmpty()) : ("Descripcion vacia.");
+        assert(descripcion.length() <= 100) : ("Descripcion supera los 100 caracteres"); 
         assert(cantidad >= 0.0) : ("Cantidad menor o igual que cero");
         this.codigoMaterial = codigoMaterial;
         this.descripcion = descripcion;
@@ -101,7 +105,7 @@ public class Material {
         assert(cantidad > 0.0) : ("Cantidad a retirar no valida.");
         if(cantidad > this.cantidad)
             throw new EmpresaException("Cantidad a retirar no valida.");
-        this.cantidad -= cantidad; 
+        this.cantidad = (Math.rint(this.cantidad * 1000) - Math.rint(cantidad * 1000)) / 1000; 
         verificarInvariante();
     }
     
@@ -120,7 +124,7 @@ public class Material {
         throws EmpresaException
     {
         assert(cantidad > 0.0) : ("Cantidad no valida.");
-        this.cantidad += cantidad;
+        this.cantidad = (Math.rint(this.cantidad * 1000) + Math.rint(cantidad * 1000)) / 1000;
         verificarInvariante();
     }
     

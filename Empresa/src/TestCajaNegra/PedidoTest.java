@@ -12,6 +12,8 @@ import java.util.GregorianCalendar;
 
 import java.util.HashMap;
 
+import java.util.Iterator;
+
 import javax.swing.JOptionPane;
 
 import org.junit.Before;
@@ -39,6 +41,19 @@ public class PedidoTest
   {
     fixture.tearDown();
   }
+  
+    private void resetHoraFecha(Calendar fecha){
+        fecha.set(Calendar.HOUR_OF_DAY, 0);
+        fecha.set(Calendar.MINUTE, 0);
+        fecha.set(Calendar.SECOND, 0);
+        fecha.set(Calendar.MILLISECOND, 0);
+    }
+    
+    private Calendar fechaActual(){
+        Calendar fechaAct = GregorianCalendar.getInstance();
+        resetHoraFecha(fechaAct);
+        return fechaAct;
+    }
 
   @Test
   public void testPED01A()
@@ -49,9 +64,12 @@ public class PedidoTest
       Maquina maq = new Maquina(100004,"Flipper");
       maq.agregarMaterial(new Material(401,"Madera",500));
       maq.agregarMaterial(new Material(402,"Metal",500));
-      Pedido ped = new Pedido(maq,500,new GregorianCalendar(2016,11,19));
+      Pedido ped = new Pedido(maq,500,new GregorianCalendar(2017,11,19));
       assertTrue("PED01A: No se registro el nro de Pedido correctamente",ped.getNroPedido()==105);
-      assertEquals("PED01A: No se registro la maquina correctamente",ped.getFechaPedido().getInstance(),GregorianCalendar.getInstance());
+      assertEquals("PED01A: No se registro la fecha de pedido correctamente",
+                   ped.getFechaPedido(), fechaActual());
+      assertEquals("PED01A: No se registro la fecha de entrega correctamente",
+                   ped.getFechaEntrega(), new GregorianCalendar(2017,11,19));
       assertEquals("PED01A: No se registro la maquina correctamente",ped.getMaquina(),maq);
       assertTrue("PED01A: No se registro la cantidad correctamente",ped.getCantidad()==500);
       assertTrue("PED01A: No se registro el estado correctamente",ped.getEstado()==Pedido.INICIADO);
@@ -72,9 +90,12 @@ public class PedidoTest
       Maquina maq = new Maquina(100004,"Flipper");
       maq.agregarMaterial(new Material(401,"Madera",500));
       maq.agregarMaterial(new Material(402,"Metal",500));
-      Pedido ped = new Pedido(maq,1,new GregorianCalendar(2016,11,19));
+      Pedido ped = new Pedido(maq,1,new GregorianCalendar(2017,11,19));
       assertTrue("PED01B: No se registro el nro de Pedido correctamente",ped.getNroPedido()==105);
-      assertEquals("PED01B: No se registro la maquina correctamente",ped.getFechaPedido().getInstance(),GregorianCalendar.getInstance());
+      assertEquals("PED01B: No se registro la fecha de pedido correctamente",
+                   ped.getFechaPedido(), fechaActual());
+      assertEquals("PED01B: No se registro la fecha de entrega correctamente",
+                   ped.getFechaEntrega(), new GregorianCalendar(2017,11,19));
       assertEquals("PED01B: No se registro la maquina correctamente",ped.getMaquina(),maq);
       assertTrue("PED01B: No se registro la cantidad correctamente",ped.getCantidad()==1);
       assertTrue("PED01B: No se registro el estado correctamente",ped.getEstado()==Pedido.INICIADO);
@@ -95,10 +116,12 @@ public class PedidoTest
       Maquina maq = new Maquina(100004,"Flipper");
       maq.agregarMaterial(new Material(401,"Madera",500));
       maq.agregarMaterial(new Material(402,"Metal",500));
-      Pedido ped = new Pedido(maq,998,new GregorianCalendar(2016,11,19));
+      Pedido ped = new Pedido(maq,998,new GregorianCalendar(2017,11,19));
       assertTrue("PED01C: No se registro el nro de Pedido correctamente",ped.getNroPedido()==105);
-      assertEquals("PED01C: No se registro la maquina correctamente",ped.getFechaPedido().getInstance(),GregorianCalendar.getInstance());
-      assertEquals("PED01C: No se registro la maquina correctamente",ped.getMaquina(),maq);
+      assertEquals("PED01C: No se registro la fecha de pedido correctamente",
+                   ped.getFechaPedido(), fechaActual());
+      assertEquals("PED01C: No se registro la fecha de entrega correctamente",
+                   ped.getFechaEntrega(), new GregorianCalendar(2017,11,19));
       assertTrue("PED01C: No se registro la cantidad correctamente",ped.getCantidad()==998);
       assertTrue("PED01C: No se registro el estado correctamente",ped.getEstado()==Pedido.INICIADO);
       assertTrue("PED01C: No se registro el nro de Lote correctamente",ped.getNroLote()==-1);
@@ -116,7 +139,7 @@ public class PedidoTest
     try
     {
       fixture.setUpM01();
-      Pedido ped = new Pedido(null,500,new GregorianCalendar(2016,11,19));
+      Pedido ped = new Pedido(null,500,new GregorianCalendar(2017,11,19));
     }
     catch (AssertionError e)
     {
@@ -136,7 +159,7 @@ public class PedidoTest
       Maquina maq = new Maquina(100004,"Flipper");
       maq.agregarMaterial(new Material(401,"Madera",500));
       maq.agregarMaterial(new Material(402,"Metal",500));
-      Pedido ped = new Pedido(maq,-200,new GregorianCalendar(2016,11,19));
+      Pedido ped = new Pedido(maq,-200,new GregorianCalendar(2017,11,19));
     }
     catch (EmpresaException e)
     {
@@ -160,7 +183,7 @@ public class PedidoTest
       Maquina maq = new Maquina(100004,"Flipper");
       maq.agregarMaterial(new Material(401,"Madera",500));
       maq.agregarMaterial(new Material(402,"Metal",500));
-      Pedido ped = new Pedido(maq,0,new GregorianCalendar(2016,11,19));
+      Pedido ped = new Pedido(maq,0,new GregorianCalendar(2017,11,19));
     }
     catch (EmpresaException e)
     {
@@ -184,7 +207,7 @@ public class PedidoTest
       Maquina maq = new Maquina(100004,"Flipper");
       maq.agregarMaterial(new Material(401,"Madera",500));
       maq.agregarMaterial(new Material(402,"Metal",500));
-      Pedido ped = new Pedido(maq,1500,new GregorianCalendar(2016,11,19));
+      Pedido ped = new Pedido(maq,1500,new GregorianCalendar(2017,11,19));
     }
     catch (EmpresaException e)
     {
@@ -208,7 +231,7 @@ public class PedidoTest
       Maquina maq = new Maquina(100004,"Flipper");
       maq.agregarMaterial(new Material(401,"Madera",500));
       maq.agregarMaterial(new Material(402,"Metal",500));
-      Pedido ped = new Pedido(maq,999,new GregorianCalendar(2016,11,19));
+      Pedido ped = new Pedido(maq,1000,new GregorianCalendar(2017,11,19));
     }
     catch (EmpresaException e)
     {
@@ -281,7 +304,7 @@ public class PedidoTest
   public void testPED03A()
   {
     fixture.setUpM03();
-    fixture.getPedidoTest().estadoEvaluacion(new GregorianCalendar(2016,11,25));
+    fixture.getPedidoTest().estadoEvaluacion(new GregorianCalendar(2017,11,25));
     assertNotNull("PED03A: La fecha propuesta por produccion es nula.",fixture.getPedidoTest().getFechaPropProduccion());
     assertTrue("PED03A: El estado no se registro correctamente.",fixture.getPedidoTest().getEstado()==Pedido.EN_EVALUACION);
   }
@@ -311,7 +334,7 @@ public class PedidoTest
     try
     {
     fixture.setUpM03C();
-    fixture.getPedidoTest().estadoEvaluacion(new GregorianCalendar(2016,11,25));
+    fixture.getPedidoTest().estadoEvaluacion(new GregorianCalendar(2017,11,25));
     }
     catch (AssertionError e)
     {
@@ -356,7 +379,7 @@ public class PedidoTest
     try
     {
     fixture.setUpM04C();
-    fixture.getPedidoTest().estadoAceptado(new GregorianCalendar(2016,11,25));
+    fixture.getPedidoTest().estadoAceptado(new GregorianCalendar(2017,11,25));
     }
     catch (AssertionError e)
     {
@@ -370,33 +393,92 @@ public class PedidoTest
   public void testPED05A()
   {
     fixture.setUpM05A();
-    fixture.getPedidoTest().estadoCancelado();
-    assertTrue("PED05A: El estado no se registro correctamente.",fixture.getPedidoTest().getEstado()==Pedido.CANCELADO);
+    int cantObs = fixture.getPedidoTest().getListaObservaciones().size();
+    Observacion obs = new Observacion("OTROS", 2, "Prueba");
+    fixture.getPedidoTest().estadoCancelado(obs);
+    assertTrue("PED05A: El estado no se registro correctamente.",
+               fixture.getPedidoTest().getEstado() == Pedido.CANCELADO);
+    assertTrue("PED05A: La observacion de cancelacion no se agrego.", 
+               fixture.getPedidoTest().getListaObservaciones().size() == cantObs + 1);
   }
   
   @Test
   public void testPED05B()
   {
     fixture.setUpM05B();
-    fixture.getPedidoTest().estadoCancelado();
-    assertTrue("PED05B: El estado no se registro correctamente.",fixture.getPedidoTest().getEstado()==Pedido.CANCELADO);
+    int cantObs = fixture.getPedidoTest().getListaObservaciones().size();
+    Observacion obs = new Observacion("OTROS", 2, "Prueba");
+    fixture.getPedidoTest().estadoCancelado(obs);
+    assertTrue("PED05B: El estado no se registro correctamente.",
+               fixture.getPedidoTest().getEstado() == Pedido.CANCELADO);
+    assertTrue("PED05B: La observacion de cancelacion no se agrego.",
+               fixture.getPedidoTest().getListaObservaciones().size() == cantObs + 1);
   }
   
   @Test
   public void testPED05C()
   {
+    fixture.setUpM05B();
+    int cantObs = fixture.getPedidoTest().getListaObservaciones().size();
     boolean assertError = false;
     try
     {
-    fixture.setUpM05C();
-    fixture.getPedidoTest().estadoCancelado();
+        fixture.getPedidoTest().estadoCancelado(null);
     }
     catch (AssertionError e)
     {
       assertError = true;
+      assertTrue("PED05C: No se debia agregar la observacion",
+                 cantObs == fixture.getPedidoTest().getListaObservaciones().size());
+      assertTrue("PED05C: Se modifico el estado",
+                 fixture.getPedidoTest().getEstado() == Pedido.EN_EVALUACION);
     }
     if(!assertError)
         fail("PED05C: Se esperaba un error de assercion");
+  }
+  
+  @Test
+  public void testPED05D(){
+      fixture.setUpM05C();
+      int cantObs = fixture.getPedidoTest().getListaObservaciones().size();
+      Observacion obs = new Observacion("OTROS", 2, "Prueba");
+      boolean assertError = false;
+      try
+      {
+          fixture.getPedidoTest().estadoCancelado(obs);
+      }
+      catch (AssertionError e)
+      {
+        assertError = true;
+        assertTrue("PED05D: No se debia agregar la observacion",
+                   cantObs == fixture.getPedidoTest().getListaObservaciones().size());
+        assertTrue("PED05D: Se modifico el estado",
+                   fixture.getPedidoTest().getEstado() == Pedido.ACEPTADO);
+      }
+      if(!assertError)
+          fail("PED05D: Se esperaba un error de assercion");
+  }
+  
+  @Test
+  public void testPED05E(){
+      fixture.setUpM05D();
+      int cantObs = fixture.getPedidoTest().getListaObservaciones().size();
+      Observacion obs = new Observacion("OTROS", 2, "Prueba");
+      boolean assertError = false;
+      try
+      {
+          fixture.getPedidoTest().estadoCancelado(obs);
+      }
+      catch (AssertionError e)
+      {
+        assertError = true;
+        assertTrue("PED05E: No se debia agregar la observacion",
+                   cantObs == fixture.getPedidoTest().getListaObservaciones().size());
+        assertTrue("PED05E: Se modifico el estado",
+                   fixture.getPedidoTest().getEstado() == Pedido.CANCELADO);
+      }
+      if(!assertError)
+          fail("PED05E: Se esperaba un error de assercion");
   }
   
   @Test
@@ -473,4 +555,47 @@ public class PedidoTest
       assertTrue("La observacion se agrego a la lista.", fixture.getPedidoTest().getListaObservaciones().size()==3);
     }
   }
+  
+    @Test
+    public void testPED07A()
+    {
+      fixture.setUpM07A();
+      HashMap<Integer, Material> materiales = new HashMap<Integer, Material>();
+      materiales = fixture.getPedidoTest().getMaquina().getListadoMateriales();
+      assertEquals("PED07A: La lista de materiales no es nula.",fixture.getPedidoTest().listadoMateriales(),"");
+    }
+    
+    @Test
+    public void testPED07B()
+    {
+      fixture.setUpM07B();
+      HashMap<Integer, Material> materiales = new HashMap<Integer, Material>();
+      materiales = fixture.getPedidoTest().getMaquina().getListadoMateriales();
+      Iterator<Material> it = materiales.values().iterator();
+      String info = "";
+      info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
+                                401 , "Madera", 1000.0);
+      assertEquals("PED07B: La lista de materiales no es la esperada",
+                   fixture.getPedidoTest().listadoMateriales(),info);
+    }
+    
+    @Test
+    public void testPED07C()
+    {
+      fixture.setUpM07C();
+      HashMap<Integer, Material> materiales = new HashMap<Integer, Material>();
+      materiales = fixture.getPedidoTest().getMaquina().getListadoMateriales();
+      Iterator<Material> it = materiales.values().iterator();
+      String info = "";
+      info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
+                                  401 , "Madera", 1000.0);
+      info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
+                                  402 , "Metal", 1500.0);
+      info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
+                                  403 , "Clavos", 25000.0);
+      assertEquals("PED07C: La lista de materiales no es la esperada.",
+                   fixture.getPedidoTest().listadoMateriales(),info);
+    }
+    
+    
 }

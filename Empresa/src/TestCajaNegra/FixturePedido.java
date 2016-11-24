@@ -24,7 +24,7 @@ public class FixturePedido
 
   public void setUp()
   {
-    pedidoTest = new Pedido(new Maquina(100004, "Flipper"), 500, new GregorianCalendar(2016, 11, 15));
+    pedidoTest = new Pedido(new Maquina(100004, "Flipper"), 500, new GregorianCalendar(2017, 11, 15));
   }
 
   public void tearDown()
@@ -73,13 +73,13 @@ public class FixturePedido
 
   public void setUpM03C()
   {
-    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2016, 11, 25));
+    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2017, 11, 25));
     pedidoTest.setEstado(Pedido.EN_EVALUACION);
   }
 
   public void setUpM04()
   {
-    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2016, 11, 25));
+    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2017, 11, 25));
     pedidoTest.setEstado(Pedido.EN_EVALUACION);
     pedidoTest.setUltLote(5);
   }
@@ -91,27 +91,33 @@ public class FixturePedido
 
   public void setUpM05A()
   {
-    
+     
   }
 
   public void setUpM05B()
   {
-    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2016, 11, 25));
+    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2017, 11, 25));
     pedidoTest.setEstado(Pedido.EN_EVALUACION);
   }
 
   public void setUpM05C()
   {
-    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2016, 11, 25));
-    pedidoTest.setFechaDefinitiva(new GregorianCalendar(2016, 11, 25));
-    pedidoTest.setFechaAceptacion(new GregorianCalendar(2016, 11, 25));
+    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2017, 11, 25));
+    pedidoTest.setFechaDefinitiva(new GregorianCalendar(2017, 11, 25));
+    pedidoTest.setFechaAceptacion(new GregorianCalendar(2017, 11, 25));
     pedidoTest.setUltLote(5);
     pedidoTest.setEstado(Pedido.ACEPTADO);
+  }
+  
+  public void setUpM05D(){
+    Observacion obs = new Observacion("OTROS", 2, "Prueba");
+    pedidoTest.setEstado(Pedido.CANCELADO);
+    pedidoTest.getListaObservaciones().add(obs);
   }
 
   public void setUpM06A()
   {
-    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2016, 11, 25));
+    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2017, 11, 25));
     pedidoTest.setEstado(Pedido.EN_EVALUACION);
     pedidoTest.getListaObservaciones().add(new Observacion("INSUMOS", 1, "Observacion insumos"));
     pedidoTest.getListaObservaciones().add(new Observacion("OTROS", 1, "Otra observacion"));
@@ -119,16 +125,16 @@ public class FixturePedido
 
   public void setUpM06B()
   {
-    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2016, 11, 25));
-    pedidoTest.setFechaDefinitiva(new GregorianCalendar(2016, 11, 25));
-    pedidoTest.setFechaAceptacion(new GregorianCalendar(2016, 11, 25));
+    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2017, 11, 25));
+    pedidoTest.setFechaDefinitiva(new GregorianCalendar(2017, 11, 25));
+    pedidoTest.setFechaAceptacion(new GregorianCalendar(2017, 11, 25));
     pedidoTest.setUltLote(5);
     pedidoTest.setEstado(Pedido.ACEPTADO);
   }
 
   public void setUpM06C()
   {
-    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2016, 11, 25));
+    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2017, 11, 25));
     pedidoTest.setEstado(Pedido.EN_EVALUACION);
     pedidoTest.getListaObservaciones().add(new Observacion("INSUMOS", 1, "Observacion insumos"));
     pedidoTest.getListaObservaciones().add(new Observacion("OTROS", 1, "Otra observacion"));
@@ -136,10 +142,28 @@ public class FixturePedido
 
   public void setUpM06D()
   {
-    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2016, 11, 25));
+    pedidoTest.setFechaPropProduccion(new GregorianCalendar(2017, 11, 25));
     pedidoTest.setEstado(Pedido.EN_EVALUACION);
     pedidoTest.getListaObservaciones().add(new Observacion("INSUMOS", 1, "Observacion insumos"));
     pedidoTest.getListaObservaciones().add(new Observacion("OTROS", 1, "Otra observacion"));
     pedidoTest.getListaObservaciones().add(new Observacion("FECHAS", 1, "Modificar fecha"));
   }
+  
+
+    public void setUpM07A()
+    {
+
+    }
+
+    public void setUpM07B()
+    {
+        pedidoTest.getMaquina().getListadoMateriales().put(401, new Material(401, "Madera", 2));
+    }
+
+    public void setUpM07C()
+    {
+        pedidoTest.getMaquina().getListadoMateriales().put(401, new Material(401, "Madera", 2));
+        pedidoTest.getMaquina().getListadoMateriales().put(402, new Material(402, "Metal", 3));
+        pedidoTest.getMaquina().getListadoMateriales().put(403, new Material(403, "Clavos", 50));
+    }
 }

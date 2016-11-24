@@ -309,15 +309,15 @@ public class Principal
     public String motivoCancelacion()
         throws InterfazException
     {
-        String motivo = JOptionPane.showInputDialog(null, "Ingrese el motivo de la cancelación",
+        String motivo = JOptionPane.showInputDialog(null, "Ingrese el motivo de la cancelación (hasta 475 caracters)",
                                                     "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
         if(motivo == null)
             throw new InterfazException("CANCEL");
         if(motivo.isEmpty())
             throw new InterfazException("Motivo no valido (vacio).");
-        if(motivo.length() > 500)
+        if(motivo.length() > 475)
             throw new InterfazException("Motivo excede limite.");
-        return motivo;
+        return "[MOTIVO CANCELACION]: " + motivo;
     }
     
     /**
