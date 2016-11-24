@@ -142,4 +142,21 @@ public class FixturePedido
     pedidoTest.getListaObservaciones().add(new Observacion("OTROS", 1, "Otra observacion"));
     pedidoTest.getListaObservaciones().add(new Observacion("FECHAS", 1, "Modificar fecha"));
   }
+  
+    public void setUpM07A()
+    {
+
+    }
+
+    public void setUpM07B()
+    {
+        pedidoTest.getMaquina().getListadoMateriales().put(401, new Material(401, "Madera", 2));
+    }
+
+    public void setUpM07C()
+    {
+        pedidoTest.getMaquina().getListadoMateriales().put(401, new Material(401, "Madera", 2));
+        pedidoTest.getMaquina().getListadoMateriales().put(402, new Material(402, "Metal", 3));
+        pedidoTest.getMaquina().getListadoMateriales().put(403, new Material(403, "Clavos", 50));
+    }
 }

@@ -12,6 +12,8 @@ import java.util.GregorianCalendar;
 
 import java.util.HashMap;
 
+import java.util.Iterator;
+
 import javax.swing.JOptionPane;
 
 import org.junit.Before;
@@ -473,4 +475,45 @@ public class PedidoTest
       assertTrue("La observacion se agrego a la lista.", fixture.getPedidoTest().getListaObservaciones().size()==3);
     }
   }
+  
+
+    @Test
+    public void testPED07A()
+    {
+        fixture.setUpM07A();
+        HashMap<Integer, Material> materiales = new HashMap<Integer, Material>();
+        materiales = fixture.getPedidoTest().getMaquina().getListadoMateriales();
+        assertEquals("PED07A: La lista de materiales no es nula.",fixture.getPedidoTest().listadoMateriales(),"");
+    }
+        
+    @Test
+    public void testPED07B()
+    {
+        fixture.setUpM07B();
+        HashMap<Integer, Material> materiales = new HashMap<Integer, Material>();
+        materiales = fixture.getPedidoTest().getMaquina().getListadoMateriales();
+        String info = "";
+        info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
+                                  401 , "Madera", 1000.0);
+        assertEquals("PED07B: La lista de materiales no es la esperada",
+                     fixture.getPedidoTest().listadoMateriales(),info);
+    }
+        
+    @Test
+    public void testPED07C()
+    {
+        fixture.setUpM07C();
+        HashMap<Integer, Material> materiales = new HashMap<Integer, Material>();
+        materiales = fixture.getPedidoTest().getMaquina().getListadoMateriales();
+        String info = "";
+        info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
+                                    401 , "Madera", 1000.0);
+        info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
+                                    402 , "Metal", 1500.0);
+        info += String.format("Cod: MAT%05d\t\t%-100.100s\t%4.3f" + System.lineSeparator(), 
+                                    403 , "Clavos", 25000.0);
+        assertEquals("PED07C: La lista de materiales no es la esperada.",
+                     fixture.getPedidoTest().listadoMateriales(),info);
+    }
+  
 }
