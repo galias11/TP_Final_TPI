@@ -1,0 +1,180 @@
+EMPRESA V 0.1.0
+Rama: Version 1.
+
+CHANGELOG:
+
+-- Clase Maquina:
+- Se agregaron assertos para descripcion y codigo en constructor.
+- Agregado comentario de clase.
+- Agregado asserto a modificarCantidadMaterial, parametro cantidad.
+- Se creo el metodo verificar invariante y se utilizo al final de los metodos relevantes.
+
+-- Clase Flipper:
+- Se agrego comentario de clase.
+- Se crearon constantes para identificar y utilizarlas al llamar al constructor de la superclase.
+
+-- Clase Consola individual:
+- Se agrego comentario de clase.
+- Se crearon constantes para identificar y utilizarlas al llamar al constructor de la superclase.
+
+-- Clase Consola grupal:
+- Se agrego comentario de clase.
+- Se crearon constantes para identificar y utilizarlas al llamar al constructor de la superclase.
+
+-- Clase Simulador:
+- Se agrego comentario de clase.
+- Se crearon constantes para identificar y utilizarlas al llamar al constructor de la superclase.
+
+-- Clase Material:
+- Se agrego comentario de clase.
+- Se agregaron asertos para codigoMaterial, descripcion y cantidad en constructor.
+- Se creo el metodo para verificar invariante y se agrego al final de los metodos relevantes.
+
+-- Clase Observacion:
+- Se modificó el nombre de las constantes FECHAS, INSUMOS y OTROS para hacerlos más descriptivos.
+- Se agrego precondicion a parametros del constructor.
+- Se simplifico expresion por leyes de morgan en metodo equals.
+- Se agrego comentario de clase.
+- Se agrego comentario para invariante.
+- Se creo el metodo para verificar el invariante y se agrego al final de aquellos metodos que 
+resulta relevante colocarlo.
+
+-- Clase Sector:
+- Se comentaron metodos agregarPermiso y permiteOperar.
+- Se agrego verificacion de precondicion a agregarPermiso y constructor.
+- Se comento clase e invariante.
+- Se agrego metodo para verificar el invariante y se agrego al final de los metodos que resulto 
+relevante colocarlo.
+
+-- Clase Operacion:
+- Se comento clase e invariante.
+- Se verifica precondicion de los parametros en el constructor de la clase.
+- Se agrego metodo para verificar el invariante y se agrego al final de los metodos que resulto
+relevante invocarlo.
+
+-- Clase EmpresaException:
+- Se elimina atributo descripcion y se modifico el metodo to String, para adaptalo a la falta del
+atributo.
+- Se agrego precondicion al constructor (unicamente por contrato).
+- Se agrego comentario de clase (no tiene invariante).
+
+-- Clase Empleado:
+- Se modifico nombre del atributo ayn (ahora es apeYNomb).
+- Se comento el metodo autorizaOperacion.
+- Se comento constructor, se agrego precondicion y verificacion mediante asertos.
+- Se comento clase e invariante.
+- Se agrego metodo para verificar invariante de clase, y se coloco verificacion al final de los metodos
+que resulto relevante.
+
+-- Clase Pedido:
+- Se corrigio el error de diseño, se paso el seteo del atributo fechaAceptacion del metodo estadoEvaluacion
+al metodo estadoAceptado.
+- Agregado comentario a constructor, precondicion y checkeo de precondicion mediante asertos.
+- Agregado checkeo de precondicion (fechaPropuesta no nula) a metodo estadoEvaluacion.
+- Agregado checkeo de precondicion (fechaDefinitiva no nula) a metodo estadoAceptado.
+- Eliminado checkeo de precondicion a metodo insertarObservacion (length <= 500) por redundante.
+- Se comento la clase, se agrego comentario de invariante.
+- Se creo el metodo verificar invariante, que comprueba de acuerdo al estado del pedido, ademas se invoca
+a dicho metodo al final de cada metodo que resulte relevante invocarlo.
+
+-- Clase Empresa:
+- Se modificaron los nombre de las constantes de clase para hacerlos mas significativos.
+- Se cambio nombre a metodo aceptarPedido por iniciarEvaluacionPedido, para hacerlo mas descriptivo.
+- Se cambio nombre a metodo generarLote por aceptarPedido, para hacerlo más descriptivo.
+- Se agrego comentario de clase e invariante.
+- Se agrego metodo para verificar invariante y se coloco verificacion en los metodos que resulto relevante.
+
+-- NuevaObservacion:
+- No se comentan los metodos ya comentados en la interface.
+- Se agrego checkeo de precondicion a metodo setControladora.
+- Se agregaron getters de componentes necesarios para un eventual test de GUI.
+- Se agrego comentario de clase.
+
+-- Interface NuevaObservacion:
+- Se hicieron contantes los atributos: CANCELAR, AGREGAR.
+- Se comentaron los metodos.
+- Se agrego comentario de clase.
+
+-- Interface Interfaz:
+- Se comentaron los metodos. Se comento la precondicion en los casos que fue necesario.
+- Se agrego comentario de clase.
+
+-- VentanaObservaciones:
+- Se agrego precondicion a constructor y chequeo con aserto. Se comento constructor.
+- Se agrego modificador de acceso (private) a atributo pedido.
+- Se comento metodo cargarPedido.
+- Se elimino eventos capturados (boton agregar y volver) pero sin codigo.
+- Agregados getters de componentes para eventual test de GUI.
+- Se agrego comentario de clase.
+- Se agrego checkeo de precondicion con aserto en metodo set controladora.
+
+-- InterfazObservaciones:
+- Se convirtieron en constantes los atributos VOLVER, AGREGAR.
+- Se comentaron metodos de la interfaz (todos).
+- Se agrego comentario de interfaz.
+
+-- Clase VentanaMateriales:
+- Agregados modificadores de acceso a maquina e inventario.
+- Comentados metodos inicializarComponenetes y evento comboBox.
+- Se renombra clase (por nombre ambiguo) a VentanaMaquinas.
+- Se agrego checkeo de precondicion con aserto a metodo setControladora.
+- Se agrego comentario y precondicion a constructor.
+- Se agrego checkeo de precondicion con aserto a constructor.
+- Se agrego comentario de clase.
+- Eliminado evento no utilizado de boton eliminar.
+- Se agregaron getters de componentes para eventual test de GUI.
+ 
+-- InterfazMaquina:
+- Se comentaron todos los metodos de la interfaz.
+- Se comento la interfaz.
+
+
+-- PantallaLogin:
+- Se agrego checkeo de precondicion a metodo setControladora.
+- Se agregaron getters para un eventual Test de GUI.
+- Se eliminaron eventos de componentes no utilizados.
+- Se comento clase.
+
+-- InterfazLogin:
+- Atributo LOGIN se convirtio en constante.
+- Se comentaron metodos.
+- Se comento interface.
+
+-- Clase NuevoPedido:
+- Se agrego modificador de acceso (private) a atributo maquinas.
+- Se comentaron metodos.
+- Se agrego checkeo de precondicion con aserto a constructor y a metodo serControlador.
+- Se agregaron getters de componentes para eventual Test de GUI.
+- Se simplifico expresion relacional en metodo getCantidad.
+- Se comento clase.
+- Eliminados eventos capturados pero no utilizados.
+- Se adapto getCodigoMaquina a requerimiento de interfaz.
+
+-- Interface InterfazNuevoPed:
+- Se comentaron metodos interface.
+- Se conviertieron los atributos VOLVER y AGREGAR en constantes.
+- Se comento interface.
+
+-- Clase Principal:
+- Se agrega modificador de acceso (private) a atributos usuario y empresa.
+- Se comentaron metodos.
+- Se agrego checkeo de precondicion con aserto a metodos setControlador, lanzarCartel y
+lanzarCartelConLista.
+- Agregados getters para eventual test de GUI.
+- Se comento clase.
+- Se eliminaron eventos capturados pero sin acciones.
+
+-- InterfazPrincipal:
+- Se cambio nombre a constantes de la interfaz por ser poco significativos: GLOT (ACEPT_PED),
+NPED (INIC_PED), APED(EVAL_PED) y APROD (ADM_PROD).
+- Se comentaron los metodos.
+- Se regularizo nombre de MATNEC y MATFALT para que cumplan con convencion de nomenclatura.
+- Se comento precondicion a metodos lanzarCartel y lanzarCartelConLista.
+
+-- Clase Controladora:
+- Se modularizo el metodo actionPerformed (actionListener).
+- Se reemplazo estructura de if por un switch en el metodo actionPerformed.
+- Agregado comentario de clase.
+- Se asigno null a las variables de interfaz que se cierran.
+
+- Se comento interface.
