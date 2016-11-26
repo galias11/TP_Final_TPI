@@ -1,6 +1,5 @@
 package TestCajaBlanca;
 
-import empresa.Maquina;
 import empresa.Material;
 
 public class FixtureMaterial

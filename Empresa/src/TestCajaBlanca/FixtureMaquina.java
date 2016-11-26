@@ -1,7 +1,9 @@
 package TestCajaBlanca;
 
-import empresa.Empresa;
 import empresa.Maquina;
+import empresa.Material;
+
+import java.util.HashMap;
 
 public class FixtureMaquina
 {
@@ -19,11 +21,15 @@ public class FixtureMaquina
 
   public void setUp()
   {
-
+    maquinaTest.setCodigo(15);
+    maquinaTest.setDescripcion("Maq1");
+    maquinaTest.setListadoMateriales(new HashMap<Integer, Material>());
+    maquinaTest.getListadoMateriales().put(401, new Material(401,"Madera",500));
   }
 
   public void tearDown()
   {
     maquinaTest = new Maquina();
   }
+  
 }
