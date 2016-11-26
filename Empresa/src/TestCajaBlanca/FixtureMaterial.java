@@ -19,7 +19,9 @@ public class FixtureMaterial
 
   public void setUp()
   {
-
+    materialTest.setCodigoMaterial(401);
+    materialTest.setDescripcion("Madera");
+    materialTest.setCantidad(500.0);
   }
 
   public void tearDown()
