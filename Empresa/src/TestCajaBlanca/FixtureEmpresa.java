@@ -3,6 +3,7 @@ package TestCajaBlanca;
 import empresa.Empresa;
 
 
+import empresa.EmpresaException;
 import empresa.Maquina;
 import empresa.Material;
 
@@ -29,10 +30,25 @@ public class FixtureEmpresa
   }
   
   public void setUp(){
-    
+      empresaTest = new Empresa();
   }
   
   public void tearDown(){
     empresaTest = new Empresa();
   }
+  
+  
+  public void setUp03A(){
+      Material mat= new Material(1, "Acero", 50.0);
+      Maquina maq= new Maquina(1,"Flipper");
+        try {
+            maq.agregarMaterial(mat);
+        } catch (EmpresaException e) {
+        }
+        Pedido ped= new Pedido(maq, 5, new GregorianCalendar(2016,12,12));
+        ped.setEstado(Pedido.EN_EVALUACION);
+        empresaTest.getPedidos().put(10, ped);
+  }
+  
+  
 }

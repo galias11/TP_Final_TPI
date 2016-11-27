@@ -2,6 +2,10 @@ package TestCajaBlanca;
 
 import empresa.EmpresaException;
 
+import empresa.Material;
+
+import empresa.Operacion;
+
 import org.junit.After;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -29,9 +33,45 @@ public class MaquinaTest
     fixture.tearDown();
   }
   
+  
+  @Test
+  public void testMAQ01A(){
+      Material material= new Material(1, "Acero", 50.0);
+      try {
+          fixture.getMaquinaTest().agregarMaterial(material);
+      } catch (EmpresaException e) {
+          fail("Tendria que agregar el material correctamente");
+      }
+      assertTrue("No se agrego el nuevo material",
+             fixture.getMaquinaTest().getListadoMateriales().containsKey(1));
+  }
+  
+  @Test
+  public void testMAQ01B(){
+      fixture.setUp01B();
+      boolean assertError=false;
+      Material material= new Material(1, "Acero", 50.0);
+      try {
+          fixture.getMaquinaTest().agregarMaterial(material);
+      }
+      catch(AssertionError e){
+          assertError=true;
+      } catch (EmpresaException e) {
+          assertError=true;
+      }
+      if (!assertError)
+              fail("Se esperaba un error de asercion");
+  }
+  
+  
+  
+  
+  
+  
   @Test
   public void testMAQ02A()
   {
+      fixture.setUp02();
     try
     {
       fixture.getMaquinaTest().modificarCantidadMaterial(401, 300);
@@ -46,6 +86,7 @@ public class MaquinaTest
   @Test
   public void testMAQ02B()
   {
+      fixture.setUp02();
     try
     {
       fixture.getMaquinaTest().modificarCantidadMaterial(402, 300);
@@ -56,4 +97,37 @@ public class MaquinaTest
       assertTrue("MAQ02B: La cantidad del material ha sido modificada.",fixture.getMaquinaTest().getListadoMateriales().get(401).getCantidad()==500);
     }
   }
+  
+  
+  @Test
+  public void testMAQ03A(){
+      fixture.setUp01B();
+      Material material= new Material(1, "Acero", 50.0);
+      try {
+          fixture.getMaquinaTest().eliminarMaterial(material.getCodigoMaterial());
+      } catch (EmpresaException e) {
+          fail("Tendria que eliminar el material correctamente");
+      }
+      assertTrue("No se elimino material",
+             !fixture.getMaquinaTest().getListadoMateriales().containsKey(1));
+  }
+  
+  @Test
+  public void testMAQ03B(){
+      boolean assertError=false;
+      Material material= new Material(1, "Acero", 50.0);
+      try {
+          fixture.getMaquinaTest().eliminarMaterial(material.getCodigoMaterial());
+      }
+      catch(AssertionError e){
+          assertError=true;
+      } catch (EmpresaException e) {
+          assertError=true;
+      }
+      if (!assertError)
+              fail("Se esperaba un error de asercion");
+  }
+  
+  
+  
 }

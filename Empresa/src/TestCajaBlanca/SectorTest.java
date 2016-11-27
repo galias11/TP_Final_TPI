@@ -1,7 +1,13 @@
 package TestCajaBlanca;
 
+import empresa.EmpresaException;
+import empresa.Operacion;
+
 import org.junit.After;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Before;
+import org.junit.Test;
 
 public class SectorTest
 {
@@ -23,4 +29,40 @@ public class SectorTest
   {
     fixture.tearDown();
   }
+  
+  
+  
+  @Test
+  public void testSEC01A(){
+      Operacion op = new Operacion(1, "Iniciar pedido.");
+          try {
+              fixture.getSectorTest().agregarPermiso(op);
+          } catch (EmpresaException e) {
+              fail("Tendria que agregar la operacion correctamente");
+          }
+          assertTrue("No se agrego la nueva operacion",
+                 fixture.getSectorTest().getPermisos().containsKey(1));
+  }
+  
+  
+  
+  @Test
+  public void testSEC01B(){
+      fixture.setUp01B();
+      boolean assertError=false;
+      Operacion op = new Operacion(1, "Iniciar pedido.");
+      try {
+          fixture.getSectorTest().agregarPermiso(op);
+      }
+      catch(AssertionError e){
+          assertError=true;
+      } catch (EmpresaException e) {
+          assertError=true;
+      }
+      if (!assertError)
+              fail("Se esperaba un error de asercion");
+  }
+  
+  
+  
 }
