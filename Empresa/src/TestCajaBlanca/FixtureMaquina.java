@@ -19,35 +19,33 @@ public class FixtureMaquina
   {
     return maquinaTest;
   }
-  
-  public void setUp(){
-      maquinaTest = new Maquina(15, "Maquina1");
-  }
-  
-  
-  public void setUp01B(){
-      Material material= new Material(1, "Acero", 50.0);
-        try {
-            maquinaTest.agregarMaterial(material);
-        } catch (EmpresaException e) {
-        }
-    }
-  
-  
 
-  public void setUp02()
+  public void setUp()
   {
-    maquinaTest.setListadoMateriales(new HashMap<Integer, Material>());
-    maquinaTest.getListadoMateriales().put(401, new Material(401,"Madera",500));
+    maquinaTest = new Maquina(15, "Maquina1");
   }
 
   public void tearDown()
   {
     maquinaTest = new Maquina();
   }
-  
-  
-  
-  
-  
+
+  public void setUpM01B()
+  {
+    Material material = new Material(1, "Acero", 50.0);
+    try
+    {
+      maquinaTest.agregarMaterial(material);
+    }
+    catch (EmpresaException e)
+    {
+    }
+  }
+
+  public void setUpM02()
+  {
+    maquinaTest.setListadoMateriales(new HashMap<Integer, Material>());
+    maquinaTest.getListadoMateriales().put(401, new Material(401, "Madera", 500));
+  }
+
 }
