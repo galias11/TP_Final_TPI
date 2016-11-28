@@ -48,7 +48,7 @@ public class ObservacionTest
       Observacion o=new Observacion(Observacion.TEMA_OTROS,1,"Faltan insumos");
       comparacion=fixture.getObservacionTest().compareTo(o);
       assertTrue("No se comparo correctamente",
-           comparacion==-1);
+           comparacion<0);
   }
   
     @Test
