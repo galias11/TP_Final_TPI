@@ -136,7 +136,7 @@ public class FixtureEmpresa
     }
     Pedido ped = new Pedido(maq, 5, new GregorianCalendar(2016, 12, 12));
     ped.setEstado(Pedido.EN_EVALUACION);
-    empresaTest.getPedidos().put(10, ped);
+    empresaTest.getPedidos().put(ped.getNroPedido(), ped);
   }
   
     public void setUpM03B()
@@ -152,7 +152,7 @@ public class FixtureEmpresa
       }
       Pedido ped = new Pedido(maq, 5, new GregorianCalendar(2016, 12, 12));
       ped.setEstado(Pedido.EN_EVALUACION);
-      empresaTest.getPedidos().put(10, ped);
+      empresaTest.getPedidos().put(1, ped);
       Material mat1= new Material(1, "Acero", 500.0);
       empresaTest.getInventario().put(1, mat1);
     }

@@ -185,7 +185,7 @@ public class EmpresaTest
     boolean assertError = false;
     try
     {
-      fixture.getEmpresaTest().reservarMateriales(10);
+      fixture.getEmpresaTest().reservarMateriales(1);
     }
     catch (AssertionError e)
     {
@@ -204,7 +204,7 @@ public class EmpresaTest
   {
       fixture.setUpM03B();
         try {
-            fixture.getEmpresaTest().reservarMateriales(10);
+            fixture.getEmpresaTest().reservarMateriales(1);
             Material aux= new Material(1,"Material1",0);
             assertTrue("No se redujo el inventario correctamente", fixture.getEmpresaTest().getInventario().get(aux).getCantidad()==250.0);
         } catch (EmpresaException e) {
