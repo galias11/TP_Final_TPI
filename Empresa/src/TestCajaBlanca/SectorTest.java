@@ -49,18 +49,17 @@ public class SectorTest
   @Test
   public void testSEC01B(){
       fixture.setUp01B();
-      boolean assertError=false;
+      boolean exceptionError=false;
       Operacion op = new Operacion(1, "Iniciar pedido.");
       try {
           fixture.getSectorTest().agregarPermiso(op);
-      }
-      catch(AssertionError e){
-          assertError=true;
-      } catch (EmpresaException e) {
-          assertError=true;
-      }
-      if (!assertError)
-              fail("Se esperaba un error de asercion");
+          fail("Se esperaba un error de excepcion");
+      } 
+      catch (EmpresaException e) {
+            exceptionError=true;
+        }
+      if (!exceptionError)
+              fail("Se esperaba un error de excepcion");
   }
   
   

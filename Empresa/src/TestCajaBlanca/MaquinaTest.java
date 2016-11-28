@@ -53,22 +53,20 @@ public class MaquinaTest
   public void testMAQ01B()
   {
     fixture.setUpM01B();
-    boolean assertError = false;
+    boolean exceptionError = false;
     Material material = new Material(1, "Acero", 50.0);
     try
     {
       fixture.getMaquinaTest().agregarMaterial(material);
+        fail("MAQ01B: Se esperaba un error de excepcion");
     }
-    catch (AssertionError e)
-    {
-      assertError = true;
-    }
+    
     catch (EmpresaException e)
     {
-      assertError = true;
+      exceptionError = true;
     }
-    if (!assertError)
-      fail("MAQ01B: Se esperaba un error de asercion");
+    if (!exceptionError)
+      fail("MAQ01B: Se esperaba un error de excepcion");
   }
 
 
@@ -124,21 +122,18 @@ public class MaquinaTest
   @Test
   public void testMAQ03B()
   {
-    boolean assertError = false;
+    boolean exceptionError = false;
     Material material = new Material(1, "Acero", 50.0);
     try
     {
       fixture.getMaquinaTest().eliminarMaterial(material.getCodigoMaterial());
-    }
-    catch (AssertionError e)
-    {
-      assertError = true;
+        fail("MAQ03B: Se esperaba un error de excepcion");
     }
     catch (EmpresaException e)
     {
-      assertError = true;
+      exceptionError = true;
     }
-    if (!assertError)
-      fail("MAQ03B: Se esperaba un error de asercion");
+    if (!exceptionError)
+      fail("MAQ03B: Se esperaba un error de excepcion");
   }
 }

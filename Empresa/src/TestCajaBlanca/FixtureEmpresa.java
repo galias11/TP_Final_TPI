@@ -137,12 +137,14 @@ public class FixtureEmpresa
     Pedido ped = new Pedido(maq, 5, new GregorianCalendar(2016, 12, 12));
     ped.setEstado(Pedido.EN_EVALUACION);
     empresaTest.getPedidos().put(10, ped);
+    empresaTest.setInventario(new HashMap <Integer, Material>());
+    empresaTest.getInventario().put(1,new Material(1,"Acero",200));
   }
   
     public void setUpM03B()
     {
       Material mat = new Material(1, "Acero", 50.0);
-        Flipper maq = new Flipper();
+      Flipper maq = new Flipper();
       try
       {
         maq.agregarMaterial(mat);
@@ -153,19 +155,20 @@ public class FixtureEmpresa
       Pedido ped = new Pedido(maq, 5, new GregorianCalendar(2016, 12, 12));
       ped.setEstado(Pedido.EN_EVALUACION);
       empresaTest.getPedidos().put(10, ped);
-      Material mat1= new Material(1, "Acero", 500.0);
-      empresaTest.getInventario().put(1, mat1);
+      empresaTest.setInventario(new HashMap <Integer, Material>());
+      empresaTest.getInventario().put(1, new Material(1, "Acero", 500.0));
     }
     
     
     public void setUpM03C()
     {
-    Flipper maq = new Flipper();
+      Flipper maq = new Flipper();
+      maq.setListadoMateriales(new HashMap<Integer, Material>());
       Pedido ped = new Pedido(maq, 5, new GregorianCalendar(2016, 12, 12));
       ped.setEstado(Pedido.EN_EVALUACION);
       empresaTest.getPedidos().put(10, ped);
-      Material mat1= new Material(1, "Acero", 500.0);
-      empresaTest.getInventario().put(1, mat1);
+      empresaTest.setInventario(new HashMap <Integer, Material>());
+      empresaTest.getInventario().put(1, new Material(1, "Acero", 500.0));
     }
     
     
