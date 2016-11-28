@@ -16,7 +16,7 @@ public interface InterfazObservaciones extends Interfaz{
      * @return
      * Observacion: observacion seleccionada.
      */
-    public Observacion getObsSeleccionada();
+    public Observacion getObsSeleccionada() throws InterfazException;
     /**
      * metodo getPedido
      * Utilizado para MVC (desacoplamiento).

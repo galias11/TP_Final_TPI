@@ -176,6 +176,8 @@ public class Principal
         fecha.setTime(sdf.parse(str));
         if(fecha.before(GregorianCalendar.getInstance()))
             throw new InterfazException("Fecha en el pasado.");
+        if(!sdf.format(fecha.getTime()).equals(str))
+            throw new InterfazException("Fecha no valida");
         return fecha;
     }
     
@@ -193,6 +195,8 @@ public class Principal
         fecha.setTime(sdf.parse(str));
         if(fecha.before(GregorianCalendar.getInstance()))
             throw new InterfazException("Fecha en el pasado.");
+        if(!sdf.format(fecha.getTime()).equals(str))
+            throw new InterfazException("Fecha no valida");
         return fecha;
     }
     

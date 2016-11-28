@@ -136,8 +136,10 @@ public class VentanaMaquinas
     @Override
     public void refresh(){
         cargarCombo();
-        jTextArea1.setText(maquinas.get(Integer.parseInt((String) jComboBox1.getSelectedItem())).getDescripcion());
-        listadoMaterialesMaquina();
+        if(jComboBox1.getItemCount() > 0){
+            jTextArea1.setText(maquinas.get(Integer.parseInt((String) jComboBox1.getSelectedItem())).getDescripcion());
+            listadoMaterialesMaquina();
+        }
         listadoMaterialesInventario();
     }
     
@@ -174,7 +176,10 @@ public class VentanaMaquinas
                                                        "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
         if(strNumber == null || strNumber.isEmpty())
             throw new InterfazException("No se ha ingresado la cantidad.");
-        return Double.parseDouble(strNumber);
+        double cantidad = Double.parseDouble(strNumber);
+        if(cantidad <= 0.0)
+            throw new InterfazException("La cantidad debe ser mayor que cero.");
+        return cantidad;
     }
     
     /**
@@ -186,7 +191,10 @@ public class VentanaMaquinas
     {
         if(strNumber == null || strNumber.isEmpty())
             throw new InterfazException("No se ha ingresado la cantidad.");
-        return Double.parseDouble(strNumber);
+        double cantidad = Double.parseDouble(strNumber);
+        if(cantidad <= 0.0)
+            throw new InterfazException("La cantidad debe ser mayor que cero.");
+        return cantidad;
     }
     
     private void cargarCombo(){
@@ -278,10 +286,7 @@ public class VentanaMaquinas
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Sel", "Codigo", "Descripcion", "Cantidad"
@@ -302,10 +307,6 @@ public class VentanaMaquinas
             jTable1.getColumnModel().getColumn(0).setMinWidth(0);
             jTable1.getColumnModel().getColumn(0).setPreferredWidth(0);
             jTable1.getColumnModel().getColumn(0).setMaxWidth(0);
-            jTable1.getColumnModel().getColumn(0).setHeaderValue("Sel");
-            jTable1.getColumnModel().getColumn(1).setHeaderValue("Codigo");
-            jTable1.getColumnModel().getColumn(2).setHeaderValue("Descripcion");
-            jTable1.getColumnModel().getColumn(3).setHeaderValue("Cantidad");
         }
 
         agregar.setText("Agregar");
@@ -316,12 +317,12 @@ public class VentanaMaquinas
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.addPopupMenuListener(new javax.swing.event.PopupMenuListener() {
-            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
-                jComboBox1PopupMenuWillBecomeInvisible(evt);
+            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
             }
             public void popupMenuWillBecomeVisible(javax.swing.event.PopupMenuEvent evt) {
             }
-            public void popupMenuCanceled(javax.swing.event.PopupMenuEvent evt) {
+            public void popupMenuWillBecomeInvisible(javax.swing.event.PopupMenuEvent evt) {
+                jComboBox1PopupMenuWillBecomeInvisible(evt);
             }
         });
 
@@ -337,10 +338,7 @@ public class VentanaMaquinas
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "Sel", "Codigo", "Descripcion", "Cantidad"

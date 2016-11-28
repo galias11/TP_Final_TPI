@@ -9,6 +9,8 @@ import java.awt.Robot;
 
 import java.awt.event.InputEvent;
 
+import javax.swing.JOptionPane;
+
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
@@ -43,6 +45,8 @@ public class VentanaMaquinasTest {
         fixture.getInterfaz().refresh();
         assertTrue("VMAQ01A: Cantidad de elementos en combo incorrecta.",
                    fixture.getInterfaz().getJComboBox1().getItemCount() == 0);
+        assertTrue("VMAQ01A: Cantidad de elementos en tabla receta maquina incorrecta.",
+                   fixture.getInterfaz().getJTable1().getRowCount() == 0);
     }
     
     @Test

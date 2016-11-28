@@ -2,6 +2,7 @@
 package InterfazGrafica;
 
 import Controladora.Controladora;
+import Controladora.InterfazException;
 import Controladora.InterfazNuevoPed;
 import Controladora.InterfazObservaciones;
 
@@ -143,11 +144,15 @@ public class VentanaObservaciones
     }
     
     @Override
-    public Observacion getObsSeleccionada(){
+    public Observacion getObsSeleccionada()
+        throws InterfazException
+    {
         int row = tablaObservaciones.getSelectedRow();
         Observacion obs = null;
         if(row != -1)
             obs = (Observacion) tablaObservaciones.getValueAt(row, 0);
+        else
+            throw new InterfazException("No se ha seleccionado ninguna observacion");
         return obs;
     }
     

@@ -153,7 +153,9 @@ public class NuevoPedido
     {
         int cantidad = Integer.parseInt(textCantMaq.getText());
         if(cantidad < 1)
-            throw new InterfazException("Cantidad debe ser mayor que cero.");
+            throw new InterfazException("Cantidad minima: 1.");
+        if(cantidad > 999)
+            throw new InterfazException("Cantidad maxima: 999.");
         return cantidad;
     }
   
@@ -166,6 +168,8 @@ public class NuevoPedido
         fecha.setTime(sdf.parse(fechaSol.getText()));
         if(fecha.before(GregorianCalendar.getInstance()))
             throw new InterfazException("Fecha solicitada en el pasado.");
+        if(!sdf.format(fecha.getTime()).equals(fechaSol.getText()))
+            throw new InterfazException("Fecha no valida.");
         return fecha;
     }
   
