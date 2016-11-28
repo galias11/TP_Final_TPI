@@ -9,6 +9,8 @@ import empresa.Pedido;
 
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 import org.junit.After;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -153,9 +155,10 @@ public class EmpresaTest
     }
     catch (EmpresaException e)
     {
-      assertTrue("EMP02A: El estado del pedido es iniciado o en evaluacion.",
-                 fixture.getEmpresaTest().getPedidos().get(5).getEstado() == Pedido.INICIADO ||
-                 fixture.getEmpresaTest().getPedidos().get(5).getEstado() == Pedido.EN_EVALUACION);
+      assertTrue("EMP02B: El estado del pedido es iniciado o en evaluacion.",
+                 !(fixture.getEmpresaTest().getPedidos().get(5).getEstado() == 0 ||
+                 fixture.getEmpresaTest().getPedidos().get(5).getEstado() == 1));
+      
     }
   }
 
@@ -259,7 +262,9 @@ public class EmpresaTest
     try
     {
       String str = fixture.getEmpresaTest().listarObservaciones(5);
-      assertTrue("EMP04C: La descripcion no es vacia.",str==(new Observacion(Observacion.TEMA_FECHAS,1,"obs")).toString());
+      String str2= (new Observacion(Observacion.TEMA_FECHAS,1,"obs")).toString();
+      str2 += System.lineSeparator();
+      assertTrue("EMP04C: La descripcion es vacia.",str.compareTo(str2)==0);
     }
     catch (EmpresaException e)
     {

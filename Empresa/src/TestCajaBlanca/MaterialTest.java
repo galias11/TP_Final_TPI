@@ -45,7 +45,7 @@ public class MaterialTest
   {
     Material mat1 = new Material(401, "Madera", 500);
     Material mat2 = new Material(402, "Madera", 500);
-    assertTrue("MAT01C: El objeto ingresado no es el mismo material.", fixture.getMaterialTest().equals(new Object()));
-    assertFalse("MAT01C: El objeto ingresado es el mismo material.", fixture.getMaterialTest().equals(new Object()));
+    assertTrue("MAT01C: El objeto ingresado no es el mismo material.", fixture.getMaterialTest().equals(mat1));
+    assertFalse("MAT01C: El objeto ingresado es el mismo material.", fixture.getMaterialTest().equals(mat2));
   }
 }

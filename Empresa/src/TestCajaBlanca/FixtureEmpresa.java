@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 public class FixtureEmpresa
 {
   private Empresa empresaTest = new Empresa();

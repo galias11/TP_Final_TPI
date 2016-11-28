@@ -6,6 +6,7 @@ import empresa.Operacion;
 
 import java.text.SimpleDateFormat;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
@@ -76,9 +77,10 @@ public class PedidoTest
   public void testPED03A()
   {
     fixture.setUpM03A();
+    Calendar fechas = new GregorianCalendar(2016, 12, 12);
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
     String strMaquina = String.format("TIP%06d  --  %s", fixture.getPedidoTest().getMaquina().getCodigo(),fixture.getPedidoTest().getMaquina().getDescripcion());
-    String fecha = sdf.format((new GregorianCalendar(2016, 12, 12)).getTime());
+    String fecha = sdf.format(fechas.getTime());
     String strEstado = "ACEPTADO";
     String str = String.format("Numero de pedido: PED%06d        " +
         "Fecha de pedido: %s" + System.lineSeparator() +
@@ -90,7 +92,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03A: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03A: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
 
   @Test
@@ -111,7 +113,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03B: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03B: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
   
   @Test
@@ -132,7 +134,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03C: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03C: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
   
   @Test
@@ -153,7 +155,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03D: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03D: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
   
   @Test
@@ -174,7 +176,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03E: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03E: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
   
   @Test
@@ -194,7 +196,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03F: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03F: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
   
   @Test
@@ -214,7 +216,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03G: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03G: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
   
   @Test
@@ -234,7 +236,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03H: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03H: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
   
   @Test
@@ -254,7 +256,7 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03I: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03I: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
   
   @Test
@@ -274,6 +276,6 @@ public class PedidoTest
         "Número de lote: LOT%6.6s", fixture.getPedidoTest().getNroPedido(), fecha, strMaquina,
         fixture.getPedidoTest().getCantidad(), fecha, fecha, fecha, fecha, 
         strEstado, (fixture.getPedidoTest().getNroLote() == -1 ? "" : String.format("%06d", fixture.getPedidoTest().getNroLote())));
-    assertTrue("PED03J: No se redacto la descripcion correctamente", str==fixture.getPedidoTest().toString());
+    assertTrue("PED03J: No se redacto la descripcion correctamente", str.compareTo(fixture.getPedidoTest().toString())==0);
   }
 }
