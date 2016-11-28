@@ -1,10 +1,13 @@
 package TestCajaBlanca;
 
 import empresa.EmpresaException;
+import empresa.Material;
 import empresa.Observacion;
 import empresa.Operacion;
 
 import empresa.Pedido;
+
+import java.util.HashMap;
 
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -35,38 +38,92 @@ public class EmpresaTest
   @Test
   public void testEMP01A()
   {
-
+      boolean assertError = false;
+      try
+      {
+        HashMap<Integer, Material> faltante=fixture.getEmpresaTest().consultaFaltantes(10);
+      }
+      catch (AssertionError e)
+      {
+        assertError = true;
+      }
+      catch (EmpresaException e)
+      {
+        assertError = true;
+      }
+      if (!assertError)
+        fail("Se esperaba un error de asercion");
   }
 
 
   @Test
   public void testEMP01B()
   {
-
+      fixture.setUpM01B();
+      boolean assertError = false;
+      try
+      {
+        HashMap<Integer, Material> faltante=fixture.getEmpresaTest().consultaFaltantes(10);
+      }
+      catch (AssertionError e)
+      {
+        assertError = true;
+      }
+      catch (EmpresaException e)
+      {
+        assertError = true;
+      }
+      if (!assertError)
+        fail("Se esperaba un error de asercion");
   }
 
   @Test
   public void testEMP01C()
   {
+    fixture.setUpM01C();
+        try {
+            HashMap<Integer, Material> faltante=fixture.getEmpresaTest().consultaFaltantes(10);
+            assertTrue("La lista de materiales deberia ser vacía", faltante.isEmpty());
+            
+        } catch (EmpresaException e) {
+        }
 
-  }
+    }
 
   @Test
   public void testEMP01D()
   {
-
+      fixture.setUpM01D();
+      try {
+          HashMap<Integer, Material> faltante=fixture.getEmpresaTest().consultaFaltantes(10);
+          assertTrue("La lista de materiales deberia ser vacía", !faltante.isEmpty());
+          
+      } catch (EmpresaException e) {
+      }
   }
 
   @Test
   public void testEMP01E()
   {
-
+      fixture.setUpM01E();
+      try {
+          HashMap<Integer, Material> faltante=fixture.getEmpresaTest().consultaFaltantes(10);
+          assertTrue("La lista de materiales deberia ser vacía", faltante.isEmpty());
+          
+      } catch (EmpresaException e) {
+      }
   }
 
   @Test
   public void testEMP01F()
   {
-
+      fixture.setUpM01F();
+      try {
+          HashMap<Integer, Material> faltante=fixture.getEmpresaTest().consultaFaltantes(10);
+          assertTrue("La lista de materiales deberia ser vacía", !faltante.isEmpty());
+          
+      } catch (EmpresaException e) {
+      }
   }
 
   @Test
@@ -142,13 +199,26 @@ public class EmpresaTest
   @Test
   public void testEMP03B()
   {
+      fixture.setUpM03B();
+        try {
+            fixture.getEmpresaTest().reservarMateriales(10);
+            Material aux= new Material(1,"Material1",0);
+            assertTrue("No se redujo el inventario correctamente", fixture.getEmpresaTest().getInventario().get(aux).getCantidad()==250.0);
+        } catch (EmpresaException e) {
+        }
 
-  }
+    }
 
   @Test
   public void testEMP03C()
   {
-
+      fixture.setUpM03B();
+        try {
+            fixture.getEmpresaTest().reservarMateriales(10);
+            Material aux= new Material(1,"Material1",0);
+            assertTrue("No se redujo el inventario correctamente", fixture.getEmpresaTest().getInventario().get(aux).getCantidad()==500.0);
+        } catch (EmpresaException e) {
+        }
   }
 
   @Test
