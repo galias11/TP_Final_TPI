@@ -48,7 +48,7 @@ public interface InterfazPrincipal extends Interfaz{
      * String: cadena que describe el motivo.
      * @throws InterfazException
      * Si el usuario cancela el ingreso, o el motivo no cumple la
-     * condicion de no estar vacio / menor igual a 500 caracteres,
+     * condicion de no estar vacio / menor igual a 475 caracteres,
      * se lanza esta excepcion.
      */
     public String motivoCancelacion() throws InterfazException;

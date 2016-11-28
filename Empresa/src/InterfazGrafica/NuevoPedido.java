@@ -58,7 +58,7 @@ public class NuevoPedido
     }
     
     /*
-     * Getters para eventual Test de GUI
+     * Getters y setters para eventual Test de GUI
      */
 
 
@@ -85,6 +85,8 @@ public class NuevoPedido
     public JButton getVolver() {
         return volver;
     }
+    
+    
 
     /*
      * **********************************************

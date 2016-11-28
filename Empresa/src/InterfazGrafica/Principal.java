@@ -132,6 +132,8 @@ public class Principal
     public JTable getTablaStock() {
         return tablaStock;
     }
+    
+    
 
     /*
      * **************************
@@ -167,6 +169,23 @@ public class Principal
     {
         String str = JOptionPane.showInputDialog(null, "Ingrese la fecha propuesta de producción. (Formato: AAAA/MM/DD)",
                                                  "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+        if(str == null)
+            throw new InterfazException("CANCEL");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar fecha = Calendar.getInstance();
+        fecha.setTime(sdf.parse(str));
+        if(fecha.before(GregorianCalendar.getInstance()))
+            throw new InterfazException("Fecha en el pasado.");
+        return fecha;
+    }
+    
+    /**
+     * Metodo que reemplaza el inputDialog con un String recibido como paramtro, utilizado unicamente
+     * para Testing
+     */
+    public Calendar getFecha(String str)
+        throws InterfazException, ParseException
+    {
         if(str == null)
             throw new InterfazException("CANCEL");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -311,6 +330,22 @@ public class Principal
     {
         String motivo = JOptionPane.showInputDialog(null, "Ingrese el motivo de la cancelación (hasta 475 caracters)",
                                                     "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
+        if(motivo == null)
+            throw new InterfazException("CANCEL");
+        if(motivo.isEmpty())
+            throw new InterfazException("Motivo no valido (vacio).");
+        if(motivo.length() > 475)
+            throw new InterfazException("Motivo excede limite.");
+        return "[MOTIVO CANCELACION]: " + motivo;
+    }
+    
+    /**
+     * Metodo que omite el inputDialog reemplazandolo con un String pasado por parametro.
+     * Funcional unicamente para Testing
+     */
+    public String motivoCancelacion(String motivo)
+        throws InterfazException
+    {
         if(motivo == null)
             throw new InterfazException("CANCEL");
         if(motivo.isEmpty())

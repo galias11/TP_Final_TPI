@@ -177,6 +177,18 @@ public class VentanaMaquinas
         return Double.parseDouble(strNumber);
     }
     
+    /**
+     * Metodo para testing.
+     * Reemplaza el inputDialog con un string que simula el input de dicho elemento.
+     */
+    public double getCantidad(String strNumber)
+        throws InterfazException
+    {
+        if(strNumber == null || strNumber.isEmpty())
+            throw new InterfazException("No se ha ingresado la cantidad.");
+        return Double.parseDouble(strNumber);
+    }
+    
     private void cargarCombo(){
         jComboBox1.removeAllItems();
         Iterator<Maquina> itMaq = maquinas.values().iterator();
