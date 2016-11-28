@@ -485,4 +485,30 @@ public class Pedido {
                 break;
         }
     }
+    
+  /*
+   * ***********************************************
+   * Equals utilizado para el test de persistencia.
+   * ***********************************************
+   */
+
+
+  @Override
+  public boolean equals(Object object)
+  {
+    if (this == object)
+    {
+      return true;
+    }
+    if (!(object instanceof Pedido))
+    {
+      return false;
+    }
+    final Pedido other = (Pedido) object;
+    if (nroPedido != other.nroPedido)
+    {
+      return false;
+    }
+    return true;
+  }
 }
