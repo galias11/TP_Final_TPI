@@ -1,0 +1,23 @@
+ChangeLog v3.0
+
+Principal:
+- Se modifico metodo getFecha para que no solo chequee que el parseo de la cadena sea exitoso,
+sino tambien que verifique la inversa, es decir que la fecha obtenida coincida con la cadena 
+ingresada (testPRI04F).
+
+NuevoPedido:
+- Se modifico metodo getCantidad para que verifique que la cantidad ingresada no sea mayor que
+999, en cuyo caso lanza una excepcion (test NPED02I y NPED02J).
+- Se modifico metodo getFecha para que verifique la correspondencia entre la fecha parseada y
+la cadena ingresada para evitar el desface producido por el parseo (test NPED03E y NPED03F).
+
+VentanaMaquinas:
+- Se modifico metodo refresh() para que verifique si hay alguna maquina en el listado de productos
+previo a cargar el comboBox y actualizar la pantalla, si es asi no actualiza los datos de la 
+maquina y su receta (test VMAQ01A y VMAQ06B).
+- Se modifico metodo getCantidad para que comprueba si la cantidad ingresada es mayor que cero.
+(test VMAQ05I, VMAQ05J, VMAQ05K, VMAQ05L).
+
+VentanaObservaciones:
+- Se agrego condicion de que se lance una excepcion si al ejecutar el metodo no hay ninguna observacion
+seleccionada. (test VOBS02D).
