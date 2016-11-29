@@ -25,4 +25,9 @@
    <list n="listOfChildren">
       <hash><url n="URL" path="Empresa/Empresa.jpr"/></hash>
    </list>
+   <hash n="oracle.jdeveloper.maven.compiler.MavenConfiguration">
+      <hash n="oracle.jdeveloper.maven.compiler.MavenConfiguration">
+         <url n="pomfileURL" path="Version3POM.xml"/>
+      </hash>
+   </hash>
 </jws:workspace>

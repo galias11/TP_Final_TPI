@@ -33,12 +33,12 @@ public class FixtureEmpresa {
         empresaTest.setUser(empresaTest.getListaEmpleados().get(9999));   
         fechaAux = GregorianCalendar.getInstance();
         fechaAux.add(Calendar.DAY_OF_YEAR, 1);
+        Pedido.setUltLote(0);
+        Pedido.setUltPedido(0);
     }
     
     public void tearDown(){
         empresaTest = new Empresa();
-        Pedido.setUltLote(0);
-        Pedido.setUltPedido(0);
     }
     
     // SetUps para metodo aceptarPedido ***********************************************************

@@ -69,7 +69,7 @@ public class EmpresaTest {
                 && fixture.getEmpresaTest().getInventario().get(402).getCantidad() == 150.0
                 && fixture.getEmpresaTest().getInventario().get(403).getCantidad() == 325.0);
         } catch(EmpresaException ex){
-            fail("EMP01A: Excepcion no esperada");
+            fail("EMP01A: Excepcion no esperada: " + ex.toString());
         }
     }
     

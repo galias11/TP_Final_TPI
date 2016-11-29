@@ -78,7 +78,7 @@ public class EmpresaTest {
         fixture.setUpM01D();
         try {
             HashMap<Integer, Material> faltante = fixture.getEmpresaTest().consultaFaltantes(10);
-            assertTrue("La lista de materiales deberia ser vacía", !faltante.isEmpty());
+            assertTrue("La lista de materiales deberia ser vacía", faltante.isEmpty());
 
         } catch (EmpresaException e) {
         }
