@@ -139,13 +139,110 @@
       <object class="java.util.TreeSet"/>
      </void>
      <void property="maquina">
-      <object class="empresa.Flipper" id="Flipper0"/>
+      <object class="empresa.Flipper" id="Flipper0">
+       <void property="listadoMateriales">
+        <void method="put">
+         <int>401</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>200.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>401</int>
+          </void>
+          <void property="descripcion">
+           <string>Madera</string>
+          </void>
+         </object>
+        </void>
+        <void method="put">
+         <int>403</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>100.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>403</int>
+          </void>
+          <void property="descripcion">
+           <string>Vidrio</string>
+          </void>
+         </object>
+        </void>
+        <void method="put">
+         <int>405</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>50.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>405</int>
+          </void>
+          <void property="descripcion">
+           <string>Goma</string>
+          </void>
+         </object>
+        </void>
+        <void method="put">
+         <int>409</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>10.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>409</int>
+          </void>
+          <void property="descripcion">
+           <string>Pegamento</string>
+          </void>
+         </object>
+        </void>
+       </void>
+      </object>
      </void>
      <void property="nroLote">
       <int>-1</int>
      </void>
      <void property="nroPedido">
       <int>2</int>
+     </void>
+    </object>
+   </void>
+   <void method="put">
+    <int>3</int>
+    <object class="empresa.Pedido">
+     <void property="cantidad">
+      <int>1</int>
+     </void>
+     <void property="fechaEntrega">
+      <object class="java.util.GregorianCalendar">
+       <void property="time">
+        <object class="java.util.Date">
+         <long>1483326000000</long>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void property="fechaPedido">
+      <object class="java.util.GregorianCalendar">
+       <void property="time">
+        <object class="java.util.Date">
+         <long>1480388400000</long>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void property="listaObservaciones">
+      <object class="java.util.TreeSet"/>
+     </void>
+     <void property="maquina">
+      <object idref="Flipper0"/>
+     </void>
+     <void property="nroLote">
+      <int>-1</int>
+     </void>
+     <void property="nroPedido">
+      <int>3</int>
      </void>
     </object>
    </void>
@@ -228,6 +325,38 @@
    <void method="put">
     <int>100003</int>
     <object idref="Simulador0"/>
+   </void>
+   <void id="ConsolaGrupal0" index="100002">
+    <void property="listadoMateriales">
+     <void method="put">
+      <int>401</int>
+      <object class="empresa.Material">
+       <void property="cantidad">
+        <double>50.0</double>
+       </void>
+       <void property="codigoMaterial">
+        <int>401</int>
+       </void>
+       <void property="descripcion">
+        <string>Madera</string>
+       </void>
+      </object>
+     </void>
+     <void method="put">
+      <int>402</int>
+      <object class="empresa.Material">
+       <void property="cantidad">
+        <double>60.0</double>
+       </void>
+       <void property="codigoMaterial">
+        <int>402</int>
+       </void>
+       <void property="descripcion">
+        <string>Plastico</string>
+       </void>
+      </object>
+     </void>
+    </void>
    </void>
    <void method="put">
     <int>100004</int>

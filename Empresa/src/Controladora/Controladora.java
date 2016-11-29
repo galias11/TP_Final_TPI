@@ -344,7 +344,7 @@ public class Controladora implements ActionListener{
             JOptionPane.showMessageDialog(null, "Error al insertar la observacion: " + ex.toString(),
                                           "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
         } catch (InterfazException ex){
-            JOptionPane.showMessageDialog(null, "Observacion mayor a 500 caracteres",
+            JOptionPane.showMessageDialog(null, "Observacion invalida: " + ex.toString(),
                                           "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
         }
     }
