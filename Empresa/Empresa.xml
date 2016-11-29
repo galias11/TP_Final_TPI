@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_77" class="java.beans.XMLDecoder">
+ <object class="empresa.Empresa" id="Empresa0">
+  <void property="pedidos">
+   <void method="put">
+    <int>1</int>
+    <object class="empresa.Pedido">
+     <void property="cantidad">
+      <int>20</int>
+     </void>
+     <void property="fechaEntrega">
+      <object class="java.util.GregorianCalendar">
+       <void property="time">
+        <object class="java.util.Date">
+         <long>1487991600000</long>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void property="fechaPedido">
+      <object class="java.util.GregorianCalendar">
+       <void property="time">
+        <object class="java.util.Date">
+         <long>1480388400000</long>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void property="listaObservaciones">
+      <object class="java.util.TreeSet"/>
+     </void>
+     <void property="maquina">
+      <object class="empresa.Simulador" id="Simulador0"/>
+     </void>
+     <void property="nroLote">
+      <int>-1</int>
+     </void>
+     <void property="nroPedido">
+      <int>1</int>
+     </void>
+    </object>
+   </void>
+   <void method="put">
+    <int>2</int>
+    <object class="empresa.Pedido">
+     <void property="cantidad">
+      <int>100</int>
+     </void>
+     <void property="fechaEntrega">
+      <object class="java.util.GregorianCalendar">
+       <void property="time">
+        <object class="java.util.Date">
+         <long>1514862000000</long>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void property="fechaPedido">
+      <object class="java.util.GregorianCalendar">
+       <void property="time">
+        <object class="java.util.Date">
+         <long>1480388400000</long>
+        </object>
+       </void>
+      </object>
+     </void>
+     <void property="listaObservaciones">
+      <object class="java.util.TreeSet"/>
+     </void>
+     <void property="maquina">
+      <object class="empresa.Flipper" id="Flipper0"/>
+     </void>
+     <void property="nroLote">
+      <int>-1</int>
+     </void>
+     <void property="nroPedido">
+      <int>2</int>
+     </void>
+    </object>
+   </void>
+  </void>
+  <void property="productos">
+   <void method="put">
+    <int>100003</int>
+    <object idref="Simulador0"/>
+   </void>
+   <void method="put">
+    <int>100004</int>
+    <object idref="Flipper0"/>
+   </void>
+  </void>
+ </object>
+</java>
