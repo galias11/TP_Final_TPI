@@ -232,7 +232,6 @@ public class Pedido {
         Iterator<Material> it = maquina.getListadoMateriales().values().iterator();
         while(it.hasNext()){
             Material itMat = it.next();
-            JOptionPane.showMessageDialog(null, "" + itMat.getCodigoMaterial());
             Material auxM = new Material(itMat.getCodigoMaterial(), itMat.getDescripcion(), (Math.rint(itMat.getCantidad() * 1000) * cantidad) / 1000);
             necesidad.put(auxM.getCodigoMaterial(), auxM);
         }

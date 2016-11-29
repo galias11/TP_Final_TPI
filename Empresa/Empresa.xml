@@ -8,6 +8,9 @@
      <void property="cantidad">
       <int>20</int>
      </void>
+     <void property="estado">
+      <int>1</int>
+     </void>
      <void property="fechaEntrega">
       <object class="java.util.GregorianCalendar">
        <void property="time">
@@ -26,11 +29,79 @@
        </void>
       </object>
      </void>
+     <void property="fechaPropProduccion">
+      <object class="java.util.GregorianCalendar">
+       <void property="time">
+        <object class="java.util.Date">
+         <long>1485745200000</long>
+        </object>
+       </void>
+      </object>
+     </void>
      <void property="listaObservaciones">
       <object class="java.util.TreeSet"/>
      </void>
      <void property="maquina">
-      <object class="empresa.Simulador" id="Simulador0"/>
+      <object class="empresa.Simulador" id="Simulador0">
+       <void property="listadoMateriales">
+        <void method="put">
+         <int>402</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>75.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>402</int>
+          </void>
+          <void property="descripcion">
+           <string>Plastico</string>
+          </void>
+         </object>
+        </void>
+        <void method="put">
+         <int>403</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>10.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>403</int>
+          </void>
+          <void property="descripcion">
+           <string>Vidrio</string>
+          </void>
+         </object>
+        </void>
+        <void method="put">
+         <int>405</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>20.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>405</int>
+          </void>
+          <void property="descripcion">
+           <string>Goma</string>
+          </void>
+         </object>
+        </void>
+        <void method="put">
+         <int>408</int>
+         <object class="empresa.Material">
+          <void property="cantidad">
+           <double>200.0</double>
+          </void>
+          <void property="codigoMaterial">
+           <int>408</int>
+          </void>
+          <void property="descripcion">
+           <string>Alambre</string>
+          </void>
+         </object>
+        </void>
+       </void>
+      </object>
      </void>
      <void property="nroLote">
       <int>-1</int>
@@ -79,7 +150,81 @@
     </object>
    </void>
   </void>
-  <void property="productos">
+  <void id="HashMap0" property="productos">
+   <void id="ConsolaIndividual0" index="100001">
+    <void property="listadoMateriales">
+     <void method="put">
+      <int>401</int>
+      <object class="empresa.Material">
+       <void property="cantidad">
+        <double>150.0</double>
+       </void>
+       <void property="codigoMaterial">
+        <int>401</int>
+       </void>
+       <void property="descripcion">
+        <string>Madera</string>
+       </void>
+      </object>
+     </void>
+     <void method="put">
+      <int>402</int>
+      <object class="empresa.Material">
+       <void property="cantidad">
+        <double>50.0</double>
+       </void>
+       <void property="codigoMaterial">
+        <int>402</int>
+       </void>
+       <void property="descripcion">
+        <string>Plastico</string>
+       </void>
+      </object>
+     </void>
+     <void method="put">
+      <int>403</int>
+      <object class="empresa.Material">
+       <void property="cantidad">
+        <double>25.0</double>
+       </void>
+       <void property="codigoMaterial">
+        <int>403</int>
+       </void>
+       <void property="descripcion">
+        <string>Vidrio</string>
+       </void>
+      </object>
+     </void>
+     <void method="put">
+      <int>404</int>
+      <object class="empresa.Material">
+       <void property="cantidad">
+        <double>50.0</double>
+       </void>
+       <void property="codigoMaterial">
+        <int>404</int>
+       </void>
+       <void property="descripcion">
+        <string>Metal</string>
+       </void>
+      </object>
+     </void>
+     <void method="put">
+      <int>406</int>
+      <object class="empresa.Material">
+       <void property="cantidad">
+        <double>100.0</double>
+       </void>
+       <void property="codigoMaterial">
+        <int>406</int>
+       </void>
+       <void property="descripcion">
+        <string>Tornillos</string>
+       </void>
+      </object>
+     </void>
+    </void>
+   </void>
    <void method="put">
     <int>100003</int>
     <object idref="Simulador0"/>
