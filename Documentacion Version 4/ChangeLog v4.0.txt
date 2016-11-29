@@ -1,0 +1,16 @@
+ChangeLog v4.0
+
+- Se observo mensaje erroneo al cancelar ingreso de cantidad en ventana maquinas.
+Se tomo en cuenta diferenciar dicha excepcion para no mostrar un error:
+Se eliminan metodos equals que se utilizaban para test de persistencia:
+Clase: Maquina, Sector, Pedido, Empleado.
+
+
+- Se observa un mensaje ambiguo al iniciar evaluacion de un pedido:
+Se modifica dicho mensaje.
+
+- Se observa un mensaje ambiguo al aceptar un pedido.
+Se modifico dicho mensaje.
+
+- Se observa mensaje de error incorrecto al intentar insertar una observacion vacia.
+Se corrige problema con el mensaje en controladora.
