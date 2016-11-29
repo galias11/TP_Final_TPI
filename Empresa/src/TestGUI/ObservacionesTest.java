@@ -116,7 +116,7 @@ public class ObservacionesTest {
         obs3.setFecha(new GregorianCalendar(2017, 05, 30));
         Point pTabla = fixture.getInterfaz().getTablaObservaciones().getLocationOnScreen();
         Rectangle rTabla = fixture.getInterfaz().getTablaObservaciones().getCellRect(0, 2, false); 
-        robot.mouseMove(pTabla.x + rTabla.x, pTabla.y + rTabla.y + 5);
+        robot.mouseMove(pTabla.x + rTabla.x, pTabla.y + rTabla.y + 10);
         robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
         robot.delay(20);
         robot.mouseRelease(InputEvent.BUTTON1_MASK);
