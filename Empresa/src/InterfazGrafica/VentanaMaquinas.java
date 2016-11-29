@@ -174,8 +174,10 @@ public class VentanaMaquinas
     {
         String strNumber = JOptionPane.showInputDialog(null, "Ingrese la cantidad.",
                                                        "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
-        if(strNumber == null || strNumber.isEmpty())
+        if(strNumber.isEmpty())
             throw new InterfazException("No se ha ingresado la cantidad.");
+        if(strNumber == null)
+            throw new InterfazException("CANCEL");
         double cantidad = Double.parseDouble(strNumber);
         if(cantidad <= 0.0)
             throw new InterfazException("La cantidad debe ser mayor que cero.");
@@ -189,8 +191,10 @@ public class VentanaMaquinas
     public double getCantidad(String strNumber)
         throws InterfazException
     {
-        if(strNumber == null || strNumber.isEmpty())
+        if(strNumber.isEmpty())
             throw new InterfazException("No se ha ingresado la cantidad.");
+        if(strNumber == null)
+            throw new InterfazException("CANCEL");        
         double cantidad = Double.parseDouble(strNumber);
         if(cantidad <= 0.0)
             throw new InterfazException("La cantidad debe ser mayor que cero.");

@@ -232,6 +232,7 @@ public class Pedido {
         Iterator<Material> it = maquina.getListadoMateriales().values().iterator();
         while(it.hasNext()){
             Material itMat = it.next();
+            JOptionPane.showMessageDialog(null, "" + itMat.getCodigoMaterial());
             Material auxM = new Material(itMat.getCodigoMaterial(), itMat.getDescripcion(), (Math.rint(itMat.getCantidad() * 1000) * cantidad) / 1000);
             necesidad.put(auxM.getCodigoMaterial(), auxM);
         }
@@ -485,30 +486,5 @@ public class Pedido {
                 break;
         }
     }
-    
-  /*
-   * ***********************************************
-   * Equals utilizado para el test de persistencia.
-   * ***********************************************
-   */
-
-
-  @Override
-  public boolean equals(Object object)
-  {
-    if (this == object)
-    {
-      return true;
-    }
-    if (!(object instanceof Pedido))
-    {
-      return false;
-    }
-    final Pedido other = (Pedido) object;
-    if (nroPedido != other.nroPedido)
-    {
-      return false;
-    }
-    return true;
-  }
+ 
 }

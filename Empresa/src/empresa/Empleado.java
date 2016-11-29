@@ -107,30 +107,5 @@ public class Empleado {
         assert(sector != null) : ("Sector nulo");
         
     }
-
-  /*
-   * ***********************************************
-   * Equals utilizado para el test de persistencia.
-   * ***********************************************
-   */
-
-  @Override
-  public boolean equals(Object object)
-  {
-    if (this == object)
-    {
-      return true;
-    }
-    if (!(object instanceof Empleado))
-    {
-      return false;
-    }
-    final Empleado other = (Empleado) object;
-    if (legajo != other.legajo)
-    {
-      return false;
-    }
-    return true;
-  }
 }
 

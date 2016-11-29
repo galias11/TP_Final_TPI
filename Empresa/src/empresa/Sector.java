@@ -119,29 +119,4 @@ public class Sector {
         assert(permisos != null) : ("Lista de permisos nula");
     }
     
-  /*
-   * ***********************************************
-   * Equals utilizado para el test de persistencia.
-   * ***********************************************
-   */
-
-
-  @Override
-  public boolean equals(Object object)
-  {
-    if (this == object)
-    {
-      return true;
-    }
-    if (!(object instanceof Sector))
-    {
-      return false;
-    }
-    final Sector other = (Sector) object;
-    if (!(nombre == null? other.nombre == null: nombre.equals(other.nombre)))
-    {
-      return false;
-    }
-    return true;
-  }
 }

@@ -675,7 +675,7 @@ public class Empresa {
     {
         empresa.verificarInvariante();
         XMLEncoder encoder = null;
-        encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("empresaTest.xml")));
+        encoder = new XMLEncoder(new BufferedOutputStream(new FileOutputStream("Empresa.xml")));
         encoder.writeObject(empresa);
         encoder.close();
     }
@@ -685,7 +685,7 @@ public class Empresa {
     {
         Empresa empresa = null;
         XMLDecoder decoder = null;
-        decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream("empresaTest.xml")));
+        decoder = new XMLDecoder(new BufferedInputStream(new FileInputStream("Empresa.xml")));
         empresa = (Empresa) decoder.readObject();
         int ultPedido = empresa.getPedidos().size();
         int ultLote = 0;

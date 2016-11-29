@@ -241,7 +241,7 @@ public class Controladora implements ActionListener{
             Pedido pedSeleccionado = princ.pedidoSeleccionado();
             Calendar fechaPropuesta = princ.getFecha();
             modelo.inciarEvaluacionPedido(pedSeleccionado.getNroPedido(), fechaPropuesta);
-            JOptionPane.showMessageDialog(null, String.format("PED%06d ha sido aceptado", pedSeleccionado.getNroPedido()),
+            JOptionPane.showMessageDialog(null, String.format("PED%06d evaluacion iniciada.", pedSeleccionado.getNroPedido()),
                                           "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
             princ.refresh();
         } catch(InterfazException ex){
@@ -262,7 +262,7 @@ public class Controladora implements ActionListener{
             Pedido pedSeleccionado = princ.pedidoSeleccionado();
             Calendar fechaDefinitiva = princ.getFecha();
             modelo.aceptarPedido(pedSeleccionado.getNroPedido(), fechaDefinitiva);
-            JOptionPane.showMessageDialog(null, String.format("Se ha asignado un lote y fecha definitiva a PED%06d ", pedSeleccionado.getNroPedido()),
+            JOptionPane.showMessageDialog(null, String.format("PED%06d Aceptado: Se ha asignado un lote y fecha definitiva.", pedSeleccionado.getNroPedido()),
                                           "GuiLeoCrisAl S.A.", JOptionPane.INFORMATION_MESSAGE);
             princ.refresh();
         } catch(ParseException ex){
@@ -405,8 +405,9 @@ public class Controladora implements ActionListener{
             JOptionPane.showMessageDialog(null, "Error al agregar el material. " + ex.toString(),
                                                       "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
         } catch(InterfazException ex) {
-            JOptionPane.showMessageDialog(null, "Error: " + ex.toString()
-                                          , "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
+            if(!ex.toString().equals("CANCEL"))
+                JOptionPane.showMessageDialog(null, "Error: " + ex.toString()
+                                              , "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
         } catch(NumberFormatException ex){
             JOptionPane.showMessageDialog(null, "Formato numerico incorrecto. " + ex.toString(), 
                                           "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);     
@@ -445,9 +446,10 @@ public class Controladora implements ActionListener{
         } catch(EmpresaException ex){
                 JOptionPane.showMessageDialog(null, "Error al modificar la cantidad en la receta. " + ex.toString(), 
                                               "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);        
-        } catch(InterfazException ex){
-                JOptionPane.showMessageDialog(null, "Error: " + ex.toString(), 
-                                              "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);        
+        } catch(InterfazException ex) {
+            if(!ex.toString().equals("CANCEL"))
+                JOptionPane.showMessageDialog(null, "Error: " + ex.toString()
+                                              , "GuiLeoCriasAl S.A.", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

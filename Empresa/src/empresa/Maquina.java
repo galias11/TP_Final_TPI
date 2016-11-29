@@ -171,29 +171,4 @@ public class Maquina {
         assert(listadoMateriales != null) : ("Listado de materiales nulo.");
     }
     
-  /*
-   * ***********************************************
-   * Equals utilizado para el test de persistencia.
-   * ***********************************************
-   */
-
-
-  @Override
-  public boolean equals(Object object)
-  {
-    if (this == object)
-    {
-      return true;
-    }
-    if (!(object instanceof Maquina))
-    {
-      return false;
-    }
-    final Maquina other = (Maquina) object;
-    if (codigo != other.codigo)
-    {
-      return false;
-    }
-    return true;
-  }
 }
